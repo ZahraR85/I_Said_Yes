@@ -2,18 +2,24 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import logo from "../images/logo8.jpg";
-import { FaHome, FaUser, FaShoppingCart, FaTimes, FaBars } from "react-icons/fa";
+import {
+  FaHome,
+  FaUser,
+  FaShoppingCart,
+  FaTimes,
+  FaBars,
+} from "react-icons/fa";
 
 const Navbar1 = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { 
-    userId, 
-    hoveredDropdown, 
-    setHoveredDropdown, 
-    isAuthenticated, 
-    role, 
-    signOut, 
-    shoppingCardCount 
+  const {
+    userId,
+    hoveredDropdown,
+    setHoveredDropdown,
+    isAuthenticated,
+    role,
+    signOut,
+    shoppingCardCount,
   } = useAppContext();
   //const location = useLocation();
   //const navigate = useNavigate();
@@ -43,7 +49,10 @@ const Navbar1 = () => {
         <div>
           <ul className="flex font-bold text-BgFont items-center space-x-12">
             <li>
-              <Link to="/" className="flex items-center space-x-1 hover:underline">
+              <Link
+                to="/"
+                className="flex items-center space-x-1 hover:underline"
+              >
                 <FaHome className="text-xl" />
                 <span>Home</span>
               </Link>
@@ -82,7 +91,10 @@ const Navbar1 = () => {
           </li>
           <li>
             {isAuthenticated ? (
-              <button className="hidden lg:block hover:underline" onClick={signOut}>
+              <button
+                className="hidden lg:block hover:underline"
+                onClick={signOut}
+              >
                 Sign Out
               </button>
             ) : (
@@ -104,17 +116,18 @@ const Navbar1 = () => {
           {/* Admin Panel dropdown moved here */}
           {isAuthenticated && role === "admin" && (
             <li className="relative group">
-              <span 
+              <span
                 className="hover:underline"
-                onMouseEnter={handleMouseEnter} 
+                onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
                 Admin Panel
               </span>
               {/* Dropdown */}
-              <div 
+              <div
                 className="absolute top-full left-1/2 transform -translate-x-1/2 w-[200px] max-w-[50vw] bg-gray-100 text-BgFont shadow-lg mt-2 p-4 opacity-0 group-hover:opacity-100 
-                group-hover:visible group-hover:translate-y-0 transition-all duration-300" >
+                group-hover:visible group-hover:translate-y-0 transition-all duration-300"
+              >
                 <ul className="flex flex-col items-start space-y-4">
                   <li className="hover:underline hover:bg-BgKhaki p-2 rounded-md">
                     <Link to="/GalleryManagement">Gallery Management</Link>
@@ -123,8 +136,11 @@ const Navbar1 = () => {
                     <Link to="/Admin/Venue">Venue Management</Link>
                   </li>
                   <li>
-                    <Link to="/AdminMusicOption" className="hover:underline hover:bg-BgKhaki p-2 rounded-md">
-                    Music Management
+                    <Link
+                      to="/AdminMusicOption"
+                      className="hover:underline hover:bg-BgKhaki p-2 rounded-md"
+                    >
+                      Music Management
                     </Link>
                   </li>
                 </ul>
@@ -141,6 +157,14 @@ const Navbar1 = () => {
             <Link to="/VenueSelections">Book your Venue</Link>
           </li>
           <li className="hover:underline">
+            <Link
+              to="/ReceptionSelector"
+              className="text-BgFont hover:underline"
+            >
+              Reception
+            </Link>
+          </li>
+          <li className="hover:underline">
             <Link to="/Catering">Catering</Link>
           </li>
           <li className="hover:underline">
@@ -152,7 +176,6 @@ const Navbar1 = () => {
           <li className="hover:underline">
             <Link to="/Musics">Music Band</Link>
           </li>
-          
         </ul>
       </div>
 
@@ -161,7 +184,9 @@ const Navbar1 = () => {
         <div className="fixed inset-0 z-50 flex">
           <div className="w-64 bg-BgKhaki shadow-lg">
             <div className="flex items-center justify-between p-4">
-              <span className="text-BgFont text-xl font-semibold">I Said Yes!</span>
+              <span className="text-BgFont text-xl font-semibold">
+                I Said Yes!
+              </span>
               <button
                 className="text-lg font-semibold text-BgFont focus:outline-none"
                 onClick={() => setMenuOpen(false)}
@@ -171,7 +196,6 @@ const Navbar1 = () => {
             </div>
             <hr />
             <div className="flex flex-col gap-4 p-6">
-              
               <Link to="/dashboard" className="text-BgFont hover:underline">
                 Dashboard
               </Link>
@@ -181,8 +205,17 @@ const Navbar1 = () => {
               <Link to="/Guests" className="text-BgFont hover:underline">
                 Invitation of Guests
               </Link>
-              <Link to="/VenueSelections" className="text-BgFont hover:underline">
+              <Link
+                to="/VenueSelections"
+                className="text-BgFont hover:underline"
+              >
                 Book your Venue
+              </Link>
+              <Link
+                to="/ReceptionSelector"
+                className="text-BgFont hover:underline"
+              >
+                Reception
               </Link>
               <Link to="/Catering" className="text-BgFont hover:underline">
                 Catering
@@ -197,15 +230,29 @@ const Navbar1 = () => {
                 Music Band
               </Link>
               {/* Admin Panel dropdown moved here */}
-          {isAuthenticated && role === "admin" && (
-            <div className="flex flex-col gap-4">
-    
-            <br />
-            <Link to="/GalleryManagement" className="text-BgFont hover:underline">Gallery Management</Link>
-            <Link to="/Admin/Venue" className="text-BgFont hover:underline">Venue Management</Link>
-            <Link to="/AdminMusicOption" className="text-BgFont hover:underline">Music Management</Link>
-            </div>
-          )}
+              {isAuthenticated && role === "admin" && (
+                <div className="flex flex-col gap-4">
+                  <br />
+                  <Link
+                    to="/GalleryManagement"
+                    className="text-BgFont hover:underline"
+                  >
+                    Gallery Management
+                  </Link>
+                  <Link
+                    to="/Admin/Venue"
+                    className="text-BgFont hover:underline"
+                  >
+                    Venue Management
+                  </Link>
+                  <Link
+                    to="/AdminMusicOption"
+                    className="text-BgFont hover:underline"
+                  >
+                    Music Management
+                  </Link>
+                </div>
+              )}
             </div>
             <hr />
             <br />
@@ -225,13 +272,11 @@ const Navbar1 = () => {
                 <span>Signin | Register</span>
               </Link>
             )}
-
           </div>
           <div
             className="flex-1 bg-black opacity-50"
             onClick={() => setMenuOpen(false)}
           ></div>
-          
         </div>
       )}
     </nav>
@@ -239,4 +284,3 @@ const Navbar1 = () => {
 };
 
 export default Navbar1;
-
