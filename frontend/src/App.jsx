@@ -31,6 +31,7 @@ import FAQ from "./pages/FAQ.jsx";
 import SuccessPage from "./pages/SuccessPage.jsx";
 import CancelPage from "./pages/CancelPage.jsx";
 import Menu from "./pages/Menu.jsx";
+import StarterPage from "./pages/StarterPage";
 import "./index.css";
 
 function App() {
@@ -63,8 +64,9 @@ function App() {
 
             <Route path="/photography" element={<Photography />} />
             <Route path="/Makeup" element={<MakeupSelector />} />
-            <Route path="/Catering" element={<Catering />} />
             <Route path="/ReceptionSelector" element={<ReceptionSelector />} />
+            <Route path="/Catering" element={<Catering />} />
+            <Route path="/Catering/Starter" element={<StarterPage />} />
             <Route path="/Menu" element={<Menu />} />
             <Route path="/Guests" element={<Guests />} />
             <Route path="/Musics" element={<Musics />} />

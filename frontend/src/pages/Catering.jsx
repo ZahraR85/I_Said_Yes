@@ -173,6 +173,12 @@ const Catering = () => {
       toast.error("Failed to save data!");
     }
   };
+  const navigateToFeaturePage = (featureName) => {
+    navigate(`/catering/${featureName.toLowerCase()}`, {
+      state: { featureName },
+    });
+  };
+
   return (
     <div className="flex justify-center items-start pt-20 min-h-screen bg-[url('./images/catering.png')] bg-cover bg-center">
       <ToastContainer />
@@ -226,11 +232,11 @@ const Catering = () => {
                   {feature.price} €
                 </td>
                 <td className="border border-gray-300 text-center px-2 sm:px-4 py-2">
-                  price
+                  {formData[feature.name]?.price || 0} €
                 </td>
                 <td className="border border-gray-300 text-center px-2 sm:px-4 py-2">
                   <button
-                    onClick={() => handleChange(feature.name)}
+                    onClick={() => navigateToFeaturePage(feature.name)}
                     className="bg-BgPinkMiddle text-BgFont font-bold py-2 px-4 rounded hover:bg-BgPinkDark"
                   >
                     {feature.name}
