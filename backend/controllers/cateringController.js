@@ -1,38 +1,56 @@
 import Catering from "../models/catering.js";
 
-// Fetch or Create Catering for User
-export const getOrCreateCatering = async (req, res) => {
-  const { userID } = req.query;
-
+// Add a new catering item
+export const addCateringItem = async (req, res) => {
   try {
-    let catering = await Catering.findOne({ userID });
-
-    if (!catering) {
-      catering = new Catering({ userID });
-      await catering.save();
-    }
-
-    res.status(200).json(catering);
+    const cateringItem = new Catering(req.body);
+    await cateringItem.save();
+    res.status(201).json({ message: "Catering item added successfully", cateringItem });
   } catch (error) {
-    console.error("Error fetching catering data:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error adding catering item:", error);
+    res.status(500).json({ message: "Failed to add catering item", error });
   }
 };
 
-// Update Catering
-export const updateCatering = async (req, res) => {
-  const { userID } = req.body;
-
+// Get all catering items
+export const getCateringItems = async (req, res) => {
   try {
-    const catering = await Catering.findOneAndUpdate(
-      { userID },
-      { ...req.body, total: undefined }, // Remove "total" to rely on the schema pre-save hook
-      { new: true, upsert: true, runValidators: true }
-    );
-
-    res.status(200).json(catering);
+    const cateringItems = await Catering.find();
+    res.status(200).json(cateringItems);
   } catch (error) {
-    console.error("Error updating catering data:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error fetching catering items:", error);
+    res.status(500).json({ message: "Failed to fetch catering items", error });
+  }
+};
+
+// Update a catering item
+export const updateCateringItem = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const updatedItem = await Catering.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    if (!updatedItem) {
+      return res.status(404).json({ message: "Catering item not found" });
+    }
+    res.status(200).json({ message: "Catering item updated successfully", updatedItem });
+  } catch (error) {
+    console.error("Error updating catering item:", error);
+    res.status(500).json({ message: "Failed to update catering item", error });
+  }
+};
+
+// Delete a catering item
+export const deleteCateringItem = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletedItem = await Catering.findByIdAndDelete(id);
+    if (!deletedItem) {
+      return res.status(404).json({ message: "Catering item not found" });
+    }
+    res.status(200).json({ message: "Catering item deleted successfully", deletedItem });
+  } catch (error) {
+    console.error("Error deleting catering item:", error);
+    res.status(500).json({ message: "Failed to delete catering item", error });
   }
 };

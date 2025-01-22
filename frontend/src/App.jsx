@@ -6,6 +6,7 @@ import Homepage from "./pages/Homepage";
 import Dashboard from "./pages/Dashboard.jsx";
 import UserInfo from "./pages/UserInfo.jsx";
 import AdminVenuePage from "./AdminVenue/AdminVenuePage.jsx";
+import AdminCatering from "./AdminVenue/AdminCatering.jsx";
 //import VenueList from './pages/AdminVenue/VenueList.jsx';
 import VenueDetialsAdmin from "./AdminVenue/VenueDetialsAdmin.jsx";
 //import VenueCard from './AdminVenue/VenueCard.jsx';
@@ -55,6 +56,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             {/* Admin Routes */}
             <Route path="/Admin/Venue" element={<AdminVenuePage />} />
+            <Route path="/Admin/AdminCatering" element={<AdminCatering />} />
             <Route path="/Admin/Venue/:id" element={<VenueDetialsAdmin />} />
             {/* User Routes */}
             <Route path="/venueSelections" element={<VenueSelection />} />

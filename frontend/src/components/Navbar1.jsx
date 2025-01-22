@@ -137,6 +137,14 @@ const Navbar1 = () => {
                   </li>
                   <li>
                     <Link
+                      to="/Admin/AdminCatering"
+                      className="hover:underline hover:bg-BgKhaki p-2 rounded-md"
+                    >
+                      Catering Management
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
                       to="/AdminMusicOption"
                       className="hover:underline hover:bg-BgKhaki p-2 rounded-md"
                     >
