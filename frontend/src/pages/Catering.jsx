@@ -1,82 +1,25 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
+import { useCateringContext } from "../context/CateringContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../App.css";
 
-const features = [
-  {
-    name: "Starter",
-    price: 10,
-    description:
-      " Contains Onion Rings, Chicken Wings, Fish and Chips, Mozzarella Sticks, and Stuffed Mushrooms. Available in classic, spicy, gluten-free, keto-friendly, and kids’ special models.",
-  },
-  {
-    name: "MainCourse",
-    price: 15,
-    description:
-      "Includes Grilled Chicken Breast, Beef Steak, Vegetarian Lasagna, Shrimp Alfredo, and Lamb Chops. Options available are gourmet, low-calorie, vegan, BBQ-style, and international fusion.",
-  },
-  {
-    name: "Dessert",
-    price: 6,
-    description:
-      "Features Chocolate Fudge Cake, Strawberry Cheesecake, Ice Cream Sundaes, Tiramisu, and Crème Brûlée. Available in sugar-free, classic, seasonal fruits, mini-portions, and deluxe servings.",
-  },
-  {
-    name: "ColdDrink",
-    price: 5,
-    description:
-      "Offers Cola, Lemonade, Iced Tea, Fruit Punch, and Sparkling Water. Variants include diet, classic, natural sweeteners, carbonated, and alcohol-free mocktail mixes.",
-  },
-  {
-    name: "CafeBar",
-    price: 4,
-    description:
-      "Provides Espresso, Cappuccino, Latte, Hot Chocolate, and Iced Coffee. Choose from regular, decaf, organic, blended flavors (vanilla, hazelnut), and extra-strong options.",
-  },
-  {
-    name: "Fruits",
-    price: 5,
-    description:
-      "Features Fresh Apple Slices, Banana Halves, Orange Wedges, Berries Mix, and Exotic Fruit Platters. Available in seasonal selections, tropical medleys, organic, dried fruits mix, and cocktail garnish sets.",
-  },
-  {
-    name: "Cake",
-    price: 3,
-    description:
-      "Includes Vanilla Sponge, Chocolate Truffle, Red Velvet, Carrot Cake, and Black Forest. Variants include personalized designs, mini cupcakes, layered cakes, gluten-free, and special occasion cakes.",
-  },
-  {
-    name: "Waiter",
-    price: 20,
-    description:
-      "Services include Table Serving, Buffet Assistance, Beverage Refills, Special Requests Handling, and Cleanup Support. Models offered are standard service, premium service, international cuisine experts, event-specific attire, and multilingual waitstaff.",
-  },
-];
-
 const Catering = () => {
   const { userId, isAuthenticated, addToShoppingCard } = useAppContext();
+  const { featuresState } = useCateringContext();
   const navigate = useNavigate();
-  const location = useLocation(); // Get location state
-  const [formData, setFormData] = useState({
-    Starter: 0,
-    MainCourse: 0,
-    Dessert: 0,
-    ColdDrink: 0,
-    CafeBar: 0,
-    Fruits: 0,
-    Cake: 0,
-    Waiter: 0,
-  });
-
   const [total, setTotal] = useState(0);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [description, setDescription] = useState(
-    "This Price is the base price per each Person as deposit. We have variety of Menu for Starter which can see in our Menu Form. Select a feature to see its description here!"
-  );
+
+  useEffect(() => {
+    const total = Object.values(featuresState).reduce(
+      (sum, price) => sum + price,
+      0
+    );
+    setTotal(total);
+  }, [featuresState]);
 
   // Redirect to SignIn if not authenticated
   useEffect(() => {
@@ -87,6 +30,7 @@ const Catering = () => {
       }, 3000);
     }
   }, [isAuthenticated, navigate]);
+
   // Fetch existing data for the user
   useEffect(() => {
     if (userId) {

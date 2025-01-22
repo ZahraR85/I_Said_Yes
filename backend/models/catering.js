@@ -13,3 +13,21 @@ const cateringSchema = new Schema(
   },
   { timestamps: true }
 );
+// Pre-save hook to calculate the total
+cateringSchema.pre("save", function (next) {
+    const calculateTotal = (item) => this[item].selected * this[item].price;
+
+    this.total =
+        calculateTotal("Starter") +
+        calculateTotal("MainCourse") +
+        calculateTotal("Dessert") +
+        calculateTotal("ColdDrink") +
+        calculateTotal("CafeBar") +
+        calculateTotal("Fruiets") +
+        calculateTotal("Cake") +
+        calculateTotal("Waiter");
+
+    next();
+});
+
+export default model("Catering", cateringSchema);

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useCateringContext } from "../context/CateringContext";
 
 const starterItems = [
   { name: "Onion Rings", price: 10 },
@@ -10,10 +11,15 @@ const starterItems = [
 ];
 
 const StarterPage = () => {
-  const location = useLocation();
+  const { featuresState, updateFeaturePrice } = useCateringContext();
   const navigate = useNavigate();
-  const featureName = location.state?.featureName || "Starter";
-  const [selectedItems, setSelectedItems] = useState({});
+  const [selectedItems, setSelectedItems] = useState(() => {
+    const initialData = {};
+    starterItems.forEach((item) => {
+      initialData[item.name] = 0;
+    });
+    return initialData;
+  });
 
   const handleItemChange = (e, item) => {
     const quantity = Math.max(0, parseInt(e.target.value) || 0);
@@ -24,16 +30,17 @@ const StarterPage = () => {
   };
 
   const handleSave = () => {
-    const totalOfStarter = Object.values(selectedItems).reduce(
+    const total = Object.values(selectedItems).reduce(
       (sum, price) => sum + price,
       0
     );
-    navigate("/catering", { state: { featureName, totalOfStarter } }); // Pass total to Catering
+    updateFeaturePrice("Starter", total); // Update context with the total
+    navigate("/catering");
   };
 
   return (
     <div className="flex flex-col items-center p-6">
-      <h1 className="text-2xl font-bold mb-4">{featureName} Items</h1>
+      <h1 className="text-2xl font-bold mb-4">Starter Items</h1>
       <table className="table-auto w-full max-w-4xl border-collapse border border-gray-300">
         <thead>
           <tr>
@@ -53,6 +60,7 @@ const StarterPage = () => {
                   type="number"
                   min="0"
                   className="w-full p-2 border rounded"
+                  defaultValue={selectedItems[item.name]}
                   onChange={(e) => handleItemChange(e, item)}
                 />
               </td>
