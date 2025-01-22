@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -60,7 +60,7 @@ const features = [
 const Catering = () => {
   const { userId, isAuthenticated, addToShoppingCard } = useAppContext();
   const navigate = useNavigate();
-
+  const location = useLocation(); // Get location state
   const [formData, setFormData] = useState({
     Starter: 0,
     MainCourse: 0,
@@ -90,7 +90,7 @@ const Catering = () => {
   // Fetch existing data for the user
   useEffect(() => {
     if (userId) {
-      const fetchReceptionData = async () => {
+      const fetchCateringData = async () => {
         try {
           const response = await axios.get(
             `${import.meta.env.VITE_API_URL}/caterings?userID=${userId}`
@@ -108,9 +108,22 @@ const Catering = () => {
           //toast.warn("please add your entertain");
         }
       };
-      fetchReceptionData();
+      fetchCateringData();
     }
   }, [userId]);
+
+  // Handle navigation state updates (e.g., from StarterPage)
+  useEffect(() => {
+    if (
+      location.state?.featureName === "Starter" &&
+      location.state.totalOfStarter
+    ) {
+      setFormData((prev) => ({
+        ...prev,
+        Starter: location.state.totalOfStarter, // Update Starter price with received total
+      }));
+    }
+  }, [location.state]);
 
   // Calculate total price dynamically
   useEffect(() => {
@@ -232,7 +245,7 @@ const Catering = () => {
                   {feature.price} €
                 </td>
                 <td className="border border-gray-300 text-center px-2 sm:px-4 py-2">
-                  {formData[feature.name]?.price || 0} €
+                  {formData[feature.name] || 0} €
                 </td>
                 <td className="border border-gray-300 text-center px-2 sm:px-4 py-2">
                   <button

@@ -24,11 +24,11 @@ const StarterPage = () => {
   };
 
   const handleSave = () => {
-    const total = Object.values(selectedItems).reduce(
+    const totalOfStarter = Object.values(selectedItems).reduce(
       (sum, price) => sum + price,
       0
     );
-    navigate("/catering", { state: { featureName, total } });
+    navigate("/catering", { state: { featureName, totalOfStarter } }); // Pass total to Catering
   };
 
   return (

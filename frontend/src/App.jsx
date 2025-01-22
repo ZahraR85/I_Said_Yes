@@ -31,7 +31,7 @@ import FAQ from "./pages/FAQ.jsx";
 import SuccessPage from "./pages/SuccessPage.jsx";
 import CancelPage from "./pages/CancelPage.jsx";
 import Menu from "./pages/Menu.jsx";
-import StarterPage from "./pages/StarterPage";
+import StarterPage from "./pages/CateringPages/StarterPage";
 import "./index.css";
 
 function App() {
