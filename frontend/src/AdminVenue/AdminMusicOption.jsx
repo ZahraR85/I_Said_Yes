@@ -26,7 +26,9 @@ const MusicOptionsPage = () => {
   // Function to fetch music options
   const fetchMusicOptions = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/musicoptions`);
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/musicoptions`
+      );
       setMusicOptions(response.data);
     } catch (error) {
       console.error("Error fetching music options", error);
@@ -62,7 +64,10 @@ const MusicOptionsPage = () => {
   const handleAddOption = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/musicoptions`, newOption);
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/musicoptions`,
+        newOption
+      );
       setNewOption({
         category: "",
         name: "",
@@ -71,11 +76,11 @@ const MusicOptionsPage = () => {
         additionalFeatures: [],
         sampleLink: "",
       });
-      toast.success('MusicOption added successfully');
+      toast.success("MusicOption added successfully");
       fetchMusicOptions(); // Refresh the list after adding
     } catch (error) {
       console.error("Error adding music option", error);
-      toast.alert('Failed to add MusicOption');
+      toast.alert("Failed to add MusicOption");
     }
   };
 
@@ -91,7 +96,10 @@ const MusicOptionsPage = () => {
   const handleUpdateOption = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`${import.meta.env.VITE_API_URL}/musicoptions/${editingId}`, newOption);
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/musicoptions/${editingId}`,
+        newOption
+      );
       setIsEditing(false);
       setEditingId(null);
       setNewOption({
@@ -102,11 +110,11 @@ const MusicOptionsPage = () => {
         additionalFeatures: [],
         sampleLink: "",
       });
-      toast.success('Music option updated successfully');
+      toast.success("Music option updated successfully");
       fetchMusicOptions(); // Refresh the list after updating
     } catch (error) {
       console.error("Error updating music option", error);
-      toast.alert('Failed to update Music option');
+      toast.alert("Failed to update Music option");
     }
   };
 
@@ -114,11 +122,11 @@ const MusicOptionsPage = () => {
   const handleDeleteOption = async (id) => {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/musicoptions/${id}`);
-      toast.success('Music option deleted successfully');
+      toast.success("Music option deleted successfully");
       fetchMusicOptions(); // Refresh the list after deleting
     } catch (error) {
       console.error("Error deleting music option", error);
-      toast.alert('Failed to delete Music option');
+      toast.alert("Failed to delete Music option");
     }
   };
 
@@ -191,7 +199,9 @@ const MusicOptionsPage = () => {
 
       {/* Music Options List Section */}
       <div className="w-full p-6 bg-customBg1 shadow-lg rounded-lg space-y-5">
-        <h2 className="text-2xl text-BgFont font-bold mb-4">Available Music Options</h2>
+        <h2 className="text-2xl text-BgFont font-bold mb-4">
+          Available Music Options
+        </h2>
         <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
           {musicOptions.map((option) => (
             <li
@@ -200,8 +210,16 @@ const MusicOptionsPage = () => {
             >
               <div className="p-4">
                 <h3 className="font-bold text-lg text-BgFont">{option.name}</h3>
-                <p className="text-BgFont font-semibold">Category: {option.category}</p>
-                <p className="text-BgFont font-bold">Price per Hour: <span className="text-red-500 font-bold"> {option.pricePerHour} €</span></p>
+                <p className="text-BgFont font-semibold">
+                  Category: {option.category}
+                </p>
+                <p className="text-BgFont font-bold">
+                  Price per Hour:{" "}
+                  <span className="text-red-500 font-bold">
+                    {" "}
+                    {option.pricePerHour} €
+                  </span>
+                </p>
                 <p className="text-BgFont text-sm">{option.description}</p>
               </div>
               <div className="mt-4 p-4">
@@ -221,7 +239,6 @@ const MusicOptionsPage = () => {
             </li>
           ))}
         </ul>
-
       </div>
     </div>
   );

@@ -57,8 +57,9 @@ const AdminCatering = () => {
       }
 
       const formData = new FormData();
+      formData.append("userId", userId);
       formData.append("ItemName", ItemName);
-      formData.append("imagePath", imagePath);
+      formData.append("image", imagePath);
       formData.append("VariantDescription", description);
       formData.append("price", price);
       formData.append("category", category);
@@ -97,7 +98,7 @@ const AdminCatering = () => {
 
       const formData = new FormData();
       formData.append("ItemName", ItemName);
-      formData.append("imagePath", imagePath);
+      formData.append("image", imagePath);
       formData.append("VariantDescription", description);
       formData.append("price", price);
       formData.append("category", category);
@@ -133,13 +134,13 @@ const AdminCatering = () => {
     }
   };
 
-  const handleEditClick = (item) => {
-    setEditingItemId(item._id);
+  const handleEditFromCategory = (item) => {
+    setEditingItemId(item._id); // Set the item being edited
     setItemName(item.ItemName);
     setDescription(item.description);
     setPrice(item.price);
     setCategory(item.category);
-    setImagePath(null);
+    setImagePath(null); // Reset the image input
   };
 
   const categories = [
@@ -200,7 +201,7 @@ const AdminCatering = () => {
           </select>
           {editingItemId ? (
             <button
-              onClick={handleUpdateItem}
+              onClick={handleEditFromCategory}
               className="bg-blue-500 text-white px-4 py-2 rounded"
             >
               Update Item
@@ -218,7 +219,7 @@ const AdminCatering = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {categories.map((cat) => (
             <Link
-              to={`/catering/category/${cat.toLowerCase()}`}
+              to={`/Admin/AdminCatering/category/${cat}`} // No toLowerCase()
               key={cat}
               className="block bg-white shadow-md rounded-lg p-6 text-center hover:shadow-lg"
             >

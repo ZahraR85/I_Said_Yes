@@ -83,10 +83,11 @@ export const updateCateringItem = async (req, res) => {
 
 // Get catering items by category
 export const getCateringByCategory = async (req, res) => {
-  const { category } = req.params;
-
   try {
-    const items = await Catering.find({ category });
+    const category = req.params.category;
+    const items = await Catering.find({
+      category: { $regex: new RegExp(`^${category}$`, "i") },
+    });
     res.json(items);
   } catch (error) {
     res.status(500).json({ message: error.message });

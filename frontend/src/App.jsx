@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import UserInfo from "./pages/UserInfo.jsx";
 import AdminVenuePage from "./AdminVenue/AdminVenuePage.jsx";
 import AdminCatering from "./AdminVenue/AdminCatering.jsx";
+import CategoryItems from "./AdminVenue/CategoryItems.jsx";
 //import VenueList from './pages/AdminVenue/VenueList.jsx';
 import VenueDetialsAdmin from "./AdminVenue/VenueDetialsAdmin.jsx";
 //import VenueCard from './AdminVenue/VenueCard.jsx';
@@ -57,6 +58,11 @@ function App() {
             {/* Admin Routes */}
             <Route path="/Admin/Venue" element={<AdminVenuePage />} />
             <Route path="/Admin/AdminCatering" element={<AdminCatering />} />
+            <Route
+              path="/Admin/AdminCatering/category/:category"
+              element={<CategoryItems />}
+            />
+            ;
             <Route path="/Admin/Venue/:id" element={<VenueDetialsAdmin />} />
             {/* User Routes */}
             <Route path="/venueSelections" element={<VenueSelection />} />
@@ -65,7 +71,6 @@ function App() {
             <Route path="/photography" element={<Photography />} />
             <Route path="/Makeup" element={<MakeupSelector />} />
             <Route path="/ReceptionSelector" element={<ReceptionSelector />} />
-
             {/* Catering Routes */}
             <Route
               path="/Catering/*"
@@ -79,7 +84,6 @@ function App() {
                 </CateringProvider>
               }
             />
-
             <Route path="/Menu" element={<Menu />} />
             <Route path="/Guests" element={<Guests />} />
             <Route path="/Musics" element={<Musics />} />
