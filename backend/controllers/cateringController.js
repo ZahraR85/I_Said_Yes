@@ -9,6 +9,22 @@ export const getCateringItems = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// Get a single catering item by ID
+export const getCateringItemById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cateringItem = await Catering.findById(id);
+
+    if (!cateringItem) {
+      return res.status(404).json({ message: "Catering item not found" });
+    }
+
+    res.status(200).json(cateringItem);
+  } catch (error) {
+    console.error("Error fetching catering item by ID:", error);
+    res.status(500).json({ message: "Failed to fetch catering item", error });
+  }
+};
 
 // Add a new catering item
 export const addCateringItem = async (req, res) => {

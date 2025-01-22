@@ -5,6 +5,7 @@ import {
   deleteCateringItem,
   updateCateringItem,
   getCateringByCategory,
+  getCateringItemById,
 } from "../controllers/cateringController.js";
 import { verifyToken, adminOnly } from "../middleware/auth.js";
 import fileUploader from "../middleware/multer.js";
@@ -14,6 +15,9 @@ const router = express.Router();
 
 // Get all catering items
 router.get("/", getCateringItems);
+
+// Get a single catering item by ID
+router.get("/:id", getCateringItemById);
 
 // Add a new catering item
 router.post("/", verifyToken, adminOnly, fileUploader.single("image"), cloudUploader, addCateringItem);

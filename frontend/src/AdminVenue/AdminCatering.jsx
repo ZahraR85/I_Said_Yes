@@ -84,7 +84,7 @@ const AdminCatering = () => {
     }
   };
 
-  const handleUpdateItem = async () => {
+  /*const handleUpdateItem = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -133,7 +133,7 @@ const AdminCatering = () => {
       toast.error("Failed to update item");
     }
   };
-
+*/
   const handleEditFromCategory = (item) => {
     setEditingItemId(item._id); // Set the item being edited
     setItemName(item.ItemName);
