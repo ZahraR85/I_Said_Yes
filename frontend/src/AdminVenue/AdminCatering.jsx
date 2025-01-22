@@ -13,7 +13,6 @@ const AdminCatering = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
-  const [editingItemId, setEditingItemId] = useState(null);
   const { userId, isAuthenticated, role } = useAppContext();
   const navigate = useNavigate();
 
@@ -84,65 +83,6 @@ const AdminCatering = () => {
     }
   };
 
-  /*const handleUpdateItem = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("No token found in localStorage");
-      }
-
-      if (!ItemName || !category) {
-        alert("ItemName and category are required to update an item");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("ItemName", ItemName);
-      formData.append("image", imagePath);
-      formData.append("VariantDescription", description);
-      formData.append("price", price);
-      formData.append("category", category);
-
-      if (imagePath) {
-        formData.append("image", imagePath);
-      } else {
-        formData.append("keepExistingImage", true);
-      }
-
-      await axios.put(
-        `${import.meta.env.VITE_API_URL}/caterings/${editingItemId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      toast.success("Catering item updated successfully");
-      fetchItems();
-      setItemName("");
-      setImagePath(null);
-      setDescription("");
-      setPrice("");
-      setCategory("");
-      setEditingItemId(null);
-    } catch (error) {
-      console.error("Error updating catering item:", error);
-      toast.error("Failed to update item");
-    }
-  };
-*/
-  const handleEditFromCategory = (item) => {
-    setEditingItemId(item._id); // Set the item being edited
-    setItemName(item.ItemName);
-    setDescription(item.description);
-    setPrice(item.price);
-    setCategory(item.category);
-    setImagePath(null); // Reset the image input
-  };
-
   const categories = [
     "Starter",
     "MainCourse",
@@ -159,7 +99,7 @@ const AdminCatering = () => {
       <ToastContainer />
       <div className="p-6">
         <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-          <h2 className="text-2xl font-bold mb-4">Add / Edit Catering Items</h2>
+          <h2 className="text-2xl font-bold mb-4">Add Catering Items</h2>
           <input
             type="text"
             placeholder="Item Name"
@@ -199,27 +139,18 @@ const AdminCatering = () => {
               </option>
             ))}
           </select>
-          {editingItemId ? (
-            <button
-              onClick={handleEditFromCategory}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Update Item
-            </button>
-          ) : (
-            <button
-              onClick={handleAddItem}
-              className="bg-green-500 text-white px-4 py-2 rounded"
-            >
-              Add Item
-            </button>
-          )}
+          <button
+            onClick={handleAddItem}
+            className="bg-green-500 text-white px-4 py-2 rounded"
+          >
+            Add Item
+          </button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {categories.map((cat) => (
             <Link
-              to={`/Admin/AdminCatering/category/${cat}`} // No toLowerCase()
+              to={`/Admin/AdminCatering/category/${cat}`}
               key={cat}
               className="block bg-white shadow-md rounded-lg p-6 text-center hover:shadow-lg"
             >

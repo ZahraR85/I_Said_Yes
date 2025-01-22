@@ -6,7 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const EditCateringItem = () => {
-  const { id } = useParams(); // Get the item ID from the URL
+  const { id } = useParams();
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [ItemName, setItemName] = useState("");
@@ -60,16 +60,11 @@ const EditCateringItem = () => {
       const formData = new FormData();
       formData.append("userId", userId);
       formData.append("ItemName", ItemName);
-      formData.append("image", imagePath);
+      if (imagePath) formData.append("image", imagePath);
+      else formData.append("keepExistingImage", true);
       formData.append("VariantDescription", VariantDescription);
       formData.append("price", price);
       formData.append("category", category);
-
-      if (imagePath) {
-        formData.append("image", imagePath); // Add new image if selected
-      } else {
-        formData.append("keepExistingImage", true); // Indicate to keep the current image
-      }
 
       await axios.put(
         `${import.meta.env.VITE_API_URL}/caterings/${id}`,
@@ -83,7 +78,7 @@ const EditCateringItem = () => {
       );
 
       toast.success("Catering item updated successfully.");
-      navigate(-1); // Navigate back to the previous page
+      navigate(-1);
     } catch (error) {
       console.error("Error updating item:", error);
       toast.error("Failed to update item.");
@@ -138,41 +133,35 @@ const EditCateringItem = () => {
             required
           >
             <option value="" disabled>
-              Select a Category
+              Select Category
             </option>
-            {[
-              "Starter",
-              "MainCourse",
-              "Dessert",
-              "ColdDrink",
-              "CafeBar",
-              "Fruits",
-              "Cake",
-              "Waiter",
-            ].map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
+            <option value="Starter">Starter</option>
+            <option value="MainCourse">Main Course</option>
+            <option value="Dessert">Dessert</option>
+            <option value="ColdDrink">Cold Drink</option>
+            <option value="CafeBar">Cafe Bar</option>
+            <option value="Fruits">Fruits</option>
+            <option value="Cake">Cake</option>
+            <option value="Waiter">Waiter</option>
           </select>
         </div>
+        {item?.image && (
+          <div className="mt-4">
+            <p>Current Image:</p>
+            <img
+              src={`${import.meta.env.VITE_API_URL}/${item.image}`}
+              alt={ItemName}
+              className="h-20 mt-2 border"
+            />
+          </div>
+        )}
         <div>
-          <label className="block text-sm font-medium mb-1">Image</label>
+          <label className="block text-sm font-medium mb-1">New Image</label>
           <input
             type="file"
             onChange={(e) => setImagePath(e.target.files[0])}
             className="w-full border border-gray-300 rounded px-3 py-2"
           />
-          {item?.image && (
-            <div className="mt-2">
-              <p>Current Image:</p>
-              <img
-                src={`${import.meta.env.VITE_API_URL}/${item.image}`}
-                alt={ItemName}
-                className="h-20 mt-2 border"
-              />
-            </div>
-          )}
         </div>
         <button
           type="submit"

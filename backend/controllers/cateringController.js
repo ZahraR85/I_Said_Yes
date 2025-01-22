@@ -71,7 +71,6 @@ export const deleteCateringItem = async (req, res) => {
   }
 };
 
-// Update a catering item
 export const updateCateringItem = async (req, res) => {
   const { id } = req.params;
   const { userId, category, ItemName, price, VariantDescription, keepExistingImage } = req.body;
@@ -84,16 +83,27 @@ export const updateCateringItem = async (req, res) => {
     VariantDescription,
   };
 
-  if (keepExistingImage !== "true" && req.file) {
-    updateData.imagePath = req.cloudinaryURL;
-  }
-
   try {
+    // Handle the image update logic
+    if (keepExistingImage === "false" && req.file) {
+      // Use the uploaded image if keepExistingImage is explicitly false
+      updateData.imagePath = req.cloudinaryURL;
+    } else if (keepExistingImage === "false" && !req.file) {
+      // If no image is provided and keepExistingImage is false, return an error
+      return res.status(400).json({ message: "New image must be provided if not keeping the existing one" });
+    }
+
+    // Update the catering item in the database
     const updatedItem = await Catering.findByIdAndUpdate(id, updateData, { new: true });
+
+    if (!updatedItem) {
+      return res.status(404).json({ message: "Catering item not found" });
+    }
+
     res.json(updatedItem);
   } catch (error) {
     console.error("Error updating catering item:", error);
-    res.status(500).send("Error updating catering item");
+    res.status(500).json({ message: "Error updating catering item", error });
   }
 };
 
