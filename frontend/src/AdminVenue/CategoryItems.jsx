@@ -1,12 +1,28 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useAppContext } from "../context/AppContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../App.css";
 
 const CategoryItems = () => {
   const { category } = useParams();
-  const navigate = useNavigate(); // Hook to navigate between pages
+  const navigate = useNavigate();
+  const { userId, isAuthenticated, role } = useAppContext();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const IMAGES_PER_PAGE = 15;
+
+  useEffect(() => {
+    if (!isAuthenticated || role !== "admin") {
+      toast.warn("You must sign in as Admin to access this page.");
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000);
+    }
+  }, [isAuthenticated, role, navigate]);
 
   useEffect(() => {
     const fetchCategoryItems = async () => {
@@ -47,11 +63,24 @@ const CategoryItems = () => {
       console.error("Error deleting item:", error);
     }
   };
+  const currentImages = allImages.slice(
+    (currentPage - 1) * IMAGES_PER_PAGE,
+    currentPage * IMAGES_PER_PAGE
+  );
+
+  const totalPages = Math.ceil(allImages.length / IMAGES_PER_PAGE);
+
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
 
   if (loading) return <div>Loading...</div>;
 
   return (
     <div className="p-6">
+      <ToastContainer />
       <h2 className="text-lg lg:text-2xl font-bold mb-4 capitalize">
         Items in {category}
       </h2>
@@ -90,6 +119,35 @@ const CategoryItems = () => {
           </div>
         ))}
         {items.length === 0 && <p>No items found in this category.</p>}
+
+        {/* Pagination Controls */}
+        <div className="flex justify-center items-center space-x-4 mt-6">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded ${
+              currentPage === 1
+                ? "bg-gray-300"
+                : "bg-BgPinkMiddle hover:bg-BgPinkDark text-white"
+            }`}
+          >
+            Previous
+          </button>
+          <span className="text-BgFont font-bold">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`px-4 py-2 rounded ${
+              currentPage === totalPages
+                ? "bg-gray-300"
+                : "bg-BgPinkMiddle hover:bg-BgPinkDark text-white"
+            }`}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
