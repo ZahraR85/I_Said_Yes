@@ -95,9 +95,9 @@ const AdminCatering = () => {
   ];
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="flex justify-center items-start pt-20 min-h-screen bg-[url('./images/catering.png')] bg-cover bg-center">
       <ToastContainer />
-      <div className="p-6">
+      <div className="max-w-full sm:max-w-5xl sm:w-3/5 w-full text-center p-4 sm:p-8 bg-customBg1 shadow-lg rounded-lg space-y-5">
         <div className="bg-white shadow-md rounded-lg p-6 mb-6">
           <h2 className="text-2xl font-bold mb-4">Add Catering Items</h2>
           <input
