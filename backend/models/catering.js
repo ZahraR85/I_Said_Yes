@@ -1,7 +1,8 @@
 import { Schema, model } from "mongoose";
 
 const cateringSchema = new Schema(
-  {
+  { 
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     category: {
       type: String,
       enum: ['Starter', 'MainCourse', 'Dessert', 'ColdDrink', 'CafeBar', 'Fruits', 'Cake', 'Waiter'],
@@ -20,10 +21,9 @@ const cateringSchema = new Schema(
       type: String,
       required: false,
     },
-    additionalFeatures: [String], // Optional array of features
-    sampleLink: {
-      type: String, // URL to a sample performance
-      required: false,
+    imagePath: {
+      type: String,
+      required: true, // Path to the Cloudinary-hosted image
     },
   },
   { timestamps: true }

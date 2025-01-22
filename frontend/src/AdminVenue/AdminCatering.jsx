@@ -1,213 +1,233 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "../App.css";
 
 const AdminCatering = () => {
-  const [formData, setFormData] = useState({
-    category: "",
-    ItemName: "",
-    price: "",
-    VariantDescription: "",
-    additionalFeatures: [],
-    sampleLink: "",
-  });
+  const [allItems, setAllItems] = useState([]); // All catering items
+  const [ItemName, setItemName] = useState("");
+  const [imagePath, setImagePath] = useState(null);
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [category, setCategory] = useState("");
+  const [editingItemId, setEditingItemId] = useState(null);
+  const { userId, isAuthenticated, role } = useAppContext();
+  const navigate = useNavigate();
 
-  const [cateringItems, setCateringItems] = useState([]);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-
-  // Fetch catering items
   useEffect(() => {
-    const fetchCateringItems = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/caterings`
-        );
-        setCateringItems(response.data);
-      } catch (error) {
-        console.error("Error fetching catering items:", error);
-      }
-    };
+    if (!isAuthenticated || role !== "admin") {
+      toast.warn("You must sign in as Admin to access this page.");
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000);
+    }
+  }, [isAuthenticated, role, navigate]);
 
-    fetchCateringItems();
+  const fetchItems = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/caterings`
+      );
+      setAllItems(response.data);
+    } catch (error) {
+      console.error("Error fetching catering items:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchItems();
   }, []);
 
-  // Handle input change
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // Handle form submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleAddItem = async () => {
     try {
-      const url = isEditMode
-        ? `${import.meta.env.VITE_API_URL}/caterings/${editingId}`
-        : `${import.meta.env.VITE_API_URL}/caterings`;
-      const method = isEditMode ? "put" : "post";
-      const response = await axios[method](url, formData);
-
-      toast.success(
-        `Catering item ${isEditMode ? "updated" : "added"} successfully!`
-      );
-
-      if (isEditMode) {
-        setCateringItems((prev) =>
-          prev.map((item) =>
-            item._id === editingId ? response.data.updatedItem : item
-          )
-        );
-      } else {
-        setCateringItems((prev) => [...prev, response.data.cateringItem]);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found");
+        throw new Error("No token found in localStorage");
       }
 
-      setFormData({
-        category: "",
-        ItemName: "",
-        price: "",
-        VariantDescription: "",
-        additionalFeatures: [],
-        sampleLink: "",
+      if (!userId || !ItemName || !category || !imagePath) {
+        alert(
+          "User ID, ItemName, category, and image are required to add an item"
+        );
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("ItemName", ItemName);
+      formData.append("imagePath", imagePath);
+      formData.append("VariantDescription", description);
+      formData.append("price", price);
+      formData.append("category", category);
+
+      await axios.post(`${import.meta.env.VITE_API_URL}/caterings`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
-      setIsEditMode(false);
-      setEditingId(null);
+
+      toast.success("Catering item added successfully");
+      fetchItems();
+      setItemName("");
+      setImagePath(null);
+      setDescription("");
+      setPrice("");
+      setCategory("");
     } catch (error) {
-      console.error("Error saving catering item:", error);
-      toast.error("Failed to save catering item!");
+      console.error("Error adding catering item:", error);
+      toast.error("Failed to add item");
     }
   };
 
-  // Handle edit
-  const handleEdit = (item) => {
-    setFormData(item);
-    setIsEditMode(true);
-    setEditingId(item._id);
-  };
-
-  // Handle delete
-  const handleDelete = async (id) => {
+  const handleUpdateItem = async () => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/caterings/${id}`);
-      setCateringItems((prev) => prev.filter((item) => item._id !== id));
-      toast.success("Catering item deleted successfully!");
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No token found in localStorage");
+      }
+
+      if (!ItemName || !category) {
+        alert("ItemName and category are required to update an item");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("ItemName", ItemName);
+      formData.append("imagePath", imagePath);
+      formData.append("VariantDescription", description);
+      formData.append("price", price);
+      formData.append("category", category);
+
+      if (imagePath) {
+        formData.append("image", imagePath);
+      } else {
+        formData.append("keepExistingImage", true);
+      }
+
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/caterings/${editingItemId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      toast.success("Catering item updated successfully");
+      fetchItems();
+      setItemName("");
+      setImagePath(null);
+      setDescription("");
+      setPrice("");
+      setCategory("");
+      setEditingItemId(null);
     } catch (error) {
-      console.error("Error deleting catering item:", error);
-      toast.error("Failed to delete catering item!");
+      console.error("Error updating catering item:", error);
+      toast.error("Failed to update item");
     }
   };
+
+  const handleEditClick = (item) => {
+    setEditingItemId(item._id);
+    setItemName(item.ItemName);
+    setDescription(item.description);
+    setPrice(item.price);
+    setCategory(item.category);
+    setImagePath(null);
+  };
+
+  const categories = [
+    "Starter",
+    "MainCourse",
+    "Dessert",
+    "ColdDrink",
+    "CafeBar",
+    "Fruits",
+    "Cake",
+    "Waiter",
+  ];
 
   return (
-    <div className="p-6">
+    <div className="bg-gray-100 min-h-screen">
       <ToastContainer />
-      <h1 className="text-2xl font-bold mb-6">Manage Catering Items</h1>
-
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="mb-6">
-        <div className="mb-4">
-          <label className="block font-bold mb-2">Category</label>
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleInputChange}
-            className="border p-2 w-full"
-            required
-          >
-            <option value="">Select a category</option>
-            <option value="Starter">Starter</option>
-            <option value="MainCourse">Main Course</option>
-            <option value="Dessert">Dessert</option>
-            <option value="ColdDrink">Cold Drink</option>
-            <option value="CafeBar">Cafe Bar</option>
-            <option value="Fruits">Fruits</option>
-            <option value="Cake">Cake</option>
-            <option value="Waiter">Waiter</option>
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block font-bold mb-2">Item Name</label>
+      <div className="p-6">
+        <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+          <h2 className="text-2xl font-bold mb-4">Add / Edit Catering Items</h2>
           <input
             type="text"
-            name="ItemName"
-            value={formData.ItemName}
-            onChange={handleInputChange}
-            className="border p-2 w-full"
-            required
+            placeholder="Item Name"
+            value={ItemName}
+            onChange={(e) => setItemName(e.target.value)}
+            className="w-full mb-4 p-2 border rounded"
           />
-        </div>
-        <div className="mb-4">
-          <label className="block font-bold mb-2">Price (€)</label>
+          <input
+            type="file"
+            onChange={(e) => setImagePath(e.target.files[0])}
+            className="w-full mb-4 p-2 border rounded"
+          />
+          <textarea
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full mb-4 p-2 border rounded"
+          />
           <input
             type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleInputChange}
-            className="border p-2 w-full"
-            required
+            placeholder="Price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="w-full mb-4 p-2 border rounded"
           />
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full mb-4 p-2 border rounded"
+          >
+            <option value="" disabled>
+              Select a Category
+            </option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+          {editingItemId ? (
+            <button
+              onClick={handleUpdateItem}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Update Item
+            </button>
+          ) : (
+            <button
+              onClick={handleAddItem}
+              className="bg-green-500 text-white px-4 py-2 rounded"
+            >
+              Add Item
+            </button>
+          )}
         </div>
-        <div className="mb-4">
-          <label className="block font-bold mb-2">Variant Description</label>
-          <textarea
-            name="VariantDescription"
-            value={formData.VariantDescription}
-            onChange={handleInputChange}
-            className="border p-2 w-full"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block font-bold mb-2">Sample Link</label>
-          <input
-            type="url"
-            name="sampleLink"
-            value={formData.sampleLink}
-            onChange={handleInputChange}
-            className="border p-2 w-full"
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-green-500 text-white px-4 py-2 rounded"
-        >
-          {isEditMode ? "Update" : "Add"}
-        </button>
-      </form>
 
-      {/* Catering Items List */}
-      <table className="table-auto w-full border-collapse border border-gray-300">
-        <thead>
-          <tr>
-            <th className="border px-4 py-2">Category</th>
-            <th className="border px-4 py-2">Item Name</th>
-            <th className="border px-4 py-2">Price (€)</th>
-            <th className="border px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cateringItems.map((item) => (
-            <tr key={item._id}>
-              <td className="border px-4 py-2">{item.category}</td>
-              <td className="border px-4 py-2">{item.ItemName}</td>
-              <td className="border px-4 py-2">{item.price}</td>
-              <td className="border px-4 py-2">
-                <button
-                  onClick={() => handleEdit(item)}
-                  className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(item._id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {categories.map((cat) => (
+            <Link
+              to={`/catering/category/${cat.toLowerCase()}`}
+              key={cat}
+              className="block bg-white shadow-md rounded-lg p-6 text-center hover:shadow-lg"
+            >
+              <h3 className="text-xl font-bold mb-2">{cat}</h3>
+              <p>Manage all {cat} items</p>
+            </Link>
           ))}
-        </tbody>
-      </table>
+        </div>
+      </div>
     </div>
   );
 };
