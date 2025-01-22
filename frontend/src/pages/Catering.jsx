@@ -42,8 +42,8 @@ const Catering = () => {
             `${import.meta.env.VITE_API_URL}/caterings?userID=${userId}`
           );
           if (response.data) {
-            setFormData(response.data);
-            setIsEditMode(true);
+            setFormData(response.data); // Set the fetched data into formData state
+            setIsEditMode(true); // Toggle edit mode if data is fetched
           }
         } catch (error) {
           console.error("Error fetching catering data:", error);
@@ -62,6 +62,11 @@ const Catering = () => {
 
   // Handle form submission
   const handleSubmit = async () => {
+    if (!userId) {
+      toast.error("User not authenticated or user ID is missing.");
+      return; // Exit the function if userId is missing
+    }
+
     try {
       // Save catering data
       const response = await axios.post(
@@ -98,6 +103,7 @@ const Catering = () => {
 
   return (
     <div className="p-6">
+      <ToastContainer />
       <h1 className="text-2xl font-bold mb-6">Catering Features</h1>
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
@@ -127,6 +133,12 @@ const Catering = () => {
       <h2 className="text-xl font-bold mt-4">
         Total Catering Price: {total} €
       </h2>
+      <button
+        onClick={handleSubmit}
+        className="mt-4 bg-green-500 text-white px-4 py-2 rounded"
+      >
+        {isEditMode ? "Update Catering" : "Save Catering"}
+      </button>
     </div>
   );
 };
