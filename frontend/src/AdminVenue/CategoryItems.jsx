@@ -9,7 +9,7 @@ import "../App.css";
 const CategoryItems = () => {
   const { category } = useParams();
   const navigate = useNavigate();
-  const { userId, isAuthenticated, role } = useAppContext();
+  const { isAuthenticated, role } = useAppContext();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,12 +63,13 @@ const CategoryItems = () => {
       console.error("Error deleting item:", error);
     }
   };
-  const currentImages = allImages.slice(
+
+  // Pagination logic
+  const totalPages = Math.ceil(items.length / IMAGES_PER_PAGE);
+  const currentItems = items.slice(
     (currentPage - 1) * IMAGES_PER_PAGE,
     currentPage * IMAGES_PER_PAGE
   );
-
-  const totalPages = Math.ceil(allImages.length / IMAGES_PER_PAGE);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -85,7 +86,7 @@ const CategoryItems = () => {
         Items in {category}
       </h2>
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        {items.map((item) => (
+        {currentItems.map((item) => (
           <div
             key={item._id}
             className="bg-white text-center shadow-md rounded-lg border-2 border-BgPinkDark cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-primary transition-all duration-300 ease-out"
@@ -118,36 +119,36 @@ const CategoryItems = () => {
             </div>
           </div>
         ))}
-        {items.length === 0 && <p>No items found in this category.</p>}
+        {currentItems.length === 0 && <p>No items found in this category.</p>}
+      </div>
 
-        {/* Pagination Controls */}
-        <div className="flex justify-center items-center space-x-4 mt-6">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className={`px-4 py-2 rounded ${
-              currentPage === 1
-                ? "bg-gray-300"
-                : "bg-BgPinkMiddle hover:bg-BgPinkDark text-white"
-            }`}
-          >
-            Previous
-          </button>
-          <span className="text-BgFont font-bold">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className={`px-4 py-2 rounded ${
-              currentPage === totalPages
-                ? "bg-gray-300"
-                : "bg-BgPinkMiddle hover:bg-BgPinkDark text-white"
-            }`}
-          >
-            Next
-          </button>
-        </div>
+      {/* Pagination Controls */}
+      <div className="flex justify-center items-center space-x-4 mt-6">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={`px-4 py-2 rounded ${
+            currentPage === 1
+              ? "bg-gray-300"
+              : "bg-BgPinkMiddle hover:bg-BgPinkDark text-white"
+          }`}
+        >
+          Previous
+        </button>
+        <span className="text-BgFont font-bold">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className={`px-4 py-2 rounded ${
+            currentPage === totalPages
+              ? "bg-gray-300"
+              : "bg-BgPinkMiddle hover:bg-BgPinkDark text-white"
+          }`}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
