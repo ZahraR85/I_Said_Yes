@@ -33,6 +33,7 @@ import SuccessPage from "./pages/SuccessPage.jsx";
 import CancelPage from "./pages/CancelPage.jsx";
 import Menu from "./pages/Menu.jsx";
 import StarterPage from "./pages/StarterPage.jsx";
+import MainCoursePage from "./pages/MainCoursePage.jsx";
 import "./index.css";
 
 function App() {
@@ -71,6 +72,7 @@ function App() {
                   <Routes>
                     <Route path="/" element={<Catering />} />
                     <Route path="Starter" element={<StarterPage />} />
+                    <Route path="maincourse" element={<MainCoursePage />} />
                   </Routes>
                 </CateringProvider>
               }

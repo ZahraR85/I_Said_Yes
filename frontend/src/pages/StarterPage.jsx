@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCateringContext } from "../context/CateringContext";
 
@@ -11,61 +11,65 @@ const starterItems = [
 ];
 
 const StarterPage = () => {
-  const { featuresState, updateFeaturePrice } = useCateringContext();
+  const { state, updateFeature } = useCateringContext();
   const navigate = useNavigate();
-  const [selectedItems, setSelectedItems] = useState(() => {
+  const [selectedItems, setSelectedItems] = useState(
+    state.features.Starter.selectedItems || {}
+  );
+
+  useEffect(() => {
+    // Initialize state with default values if not present
     const initialData = {};
     starterItems.forEach((item) => {
-      initialData[item.name] = 0;
+      initialData[item.name] = selectedItems[item.name] || 0;
     });
-    return initialData;
-  });
+    setSelectedItems(initialData);
+  }, [state.features.Starter.selectedItems]);
 
   const handleItemChange = (e, item) => {
     const quantity = Math.max(0, parseInt(e.target.value) || 0);
-    setSelectedItems((prev) => ({
-      ...prev,
-      [item.name]: quantity * item.price,
-    }));
+    const newSelectedItems = { ...selectedItems, [item.name]: quantity };
+    const totalPrice = starterItems.reduce(
+      (sum, item) => sum + (newSelectedItems[item.name] || 0) * item.price,
+      0
+    );
+
+    setSelectedItems(newSelectedItems);
+    updateFeature("Starter", totalPrice, newSelectedItems); // Update context
   };
 
   const handleSave = () => {
-    const total = Object.values(selectedItems).reduce(
-      (sum, price) => sum + price,
-      0
-    );
-    updateFeaturePrice("Starter", total); // Update context with the total
     navigate("/catering");
   };
 
   return (
-    <div className="flex flex-col items-center p-6">
+    <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Starter Items</h1>
-      <table className="table-auto w-full max-w-4xl border-collapse border border-gray-300">
+      <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
           <tr>
-            <th className="border border-gray-300 px-4 py-2">Item</th>
-            <th className="border border-gray-300 px-4 py-2">Price (€)</th>
-            <th className="border border-gray-300 px-4 py-2">Quantity</th>
-            <th className="border border-gray-300 px-4 py-2">Total (€)</th>
+            <th className="border px-4 py-2">Item</th>
+            <th className="border px-4 py-2">Price (€)</th>
+            <th className="border px-4 py-2">Quantity</th>
+            <th className="border px-4 py-2">Total (€)</th>
           </tr>
         </thead>
         <tbody>
           {starterItems.map((item) => (
             <tr key={item.name}>
-              <td className="border border-gray-300 px-4 py-2">{item.name}</td>
-              <td className="border border-gray-300 px-4 py-2">{item.price}</td>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="border px-4 py-2">{item.name}</td>
+              <td className="border px-4 py-2">{item.price}</td>
+              <td className="border px-4 py-2">
                 <input
                   type="number"
                   min="0"
                   className="w-full p-2 border rounded"
-                  defaultValue={selectedItems[item.name]}
+                  value={selectedItems[item.name]}
                   onChange={(e) => handleItemChange(e, item)}
                 />
               </td>
-              <td className="border border-gray-300 px-4 py-2">
-                {selectedItems[item.name] || 0} €
+              <td className="border px-4 py-2">
+                {(selectedItems[item.name] || 0) * item.price} €
               </td>
             </tr>
           ))}
@@ -73,7 +77,7 @@ const StarterPage = () => {
       </table>
       <button
         onClick={handleSave}
-        className="mt-4 bg-green-500 text-white py-2 px-6 rounded"
+        className="mt-4 bg-green-500 text-white px-6 py-2 rounded"
       >
         Save and Return
       </button>

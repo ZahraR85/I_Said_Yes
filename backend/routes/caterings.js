@@ -1,23 +1,12 @@
 import express from "express";
-import {
-  createOrUpdateCatering,
-  getCatering,
-  getCateringById,
-  deleteCatering,
-} from "../controllers/CateringController.js";
+import { getOrCreateCatering, updateCatering } from "../controllers/catering.js";
 
 const router = express.Router();
 
-// Route to create or update a reception (using POST for both)
-router.post("/", createOrUpdateCatering);
+// Get or Create Catering
+router.get("/", getOrCreateCatering);
 
-// Route to get all receptions for a user
-router.get("/", getCatering);
-
-// Route to get a specific reception by ID
-router.get("/:id", getCateringById);
-
-// Route to delete a reception by ID
-router.delete("/:id", deleteCatering);
+// Update Catering
+router.post("/", updateCatering);
 
 export default router;
