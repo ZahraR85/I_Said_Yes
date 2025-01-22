@@ -95,40 +95,42 @@ const AdminCatering = () => {
   ];
 
   return (
-    <div className="flex justify-center items-start pt-20 min-h-screen bg-[url('./images/catering.png')] bg-cover bg-center">
+    <div className="flex justify-center items-start pt-10 min-h-screen bg-[url('./images/cateringso2.jpg')] bg-cover bg-center">
       <ToastContainer />
       <div className="max-w-full sm:max-w-5xl sm:w-3/5 w-full text-center p-4 sm:p-8 bg-customBg1 shadow-lg rounded-lg space-y-5">
         <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-          <h2 className="text-2xl font-bold mb-4">Add Catering Items</h2>
+          <h2 className="text-BgFont text-2xl font-bold mb-4">
+            Add Catering Items
+          </h2>
           <input
             type="text"
             placeholder="Item Name"
             value={ItemName}
             onChange={(e) => setItemName(e.target.value)}
-            className="w-full mb-4 p-2 border rounded"
+            className="w-full lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
           />
           <input
             type="file"
             onChange={(e) => setImagePath(e.target.files[0])}
-            className="w-full mb-4 p-2 border rounded"
+            className="w-full lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
           />
           <textarea
-            placeholder="Description"
+            placeholder="Description of Variant and ..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full mb-4 p-2 border rounded"
+            className="w-full lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
           />
           <input
             type="number"
             placeholder="Price"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="w-full mb-4 p-2 border rounded"
+            className="w-full lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
           />
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full mb-4 p-2 border rounded"
+            className="w-full text-BgFont lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
           >
             <option value="" disabled>
               Select a Category
@@ -141,21 +143,24 @@ const AdminCatering = () => {
           </select>
           <button
             onClick={handleAddItem}
-            className="bg-green-500 text-white px-4 py-2 rounded"
+            className="bg-BgPinkMiddle text-BgFont text-sm lg:text-lg font-bold hover:bg-BgPinkDark lg:hover:text-xl hover:text-lg w-full lg:p-4 p-2 rounded"
           >
             Add Item
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-BgFont ">
           {categories.map((cat) => (
             <Link
               to={`/Admin/AdminCatering/category/${cat}`}
               key={cat}
-              className="block bg-white shadow-md rounded-lg p-6 text-center hover:shadow-lg"
+              className="bg-white shadow-md p-4 rounded-lg border-2 border-BgPinkDark cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-primary transition-all duration-300 ease-out"
             >
-              <h3 className="text-xl font-bold mb-2">{cat}</h3>
-              <p>Manage all {cat} items</p>
+              <h3 className="text-xl text-BgFont font-bold mb-4">{cat}</h3>
+              <p className="text-sm text-BgFont">
+                See & Manage all <span className="font-bold">{cat}</span> items
+                by clicking here
+              </p>
             </Link>
           ))}
         </div>
