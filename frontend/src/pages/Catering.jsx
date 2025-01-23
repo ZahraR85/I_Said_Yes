@@ -4,20 +4,21 @@ import { useNavigate } from "react-router-dom";
 const CateringPage = () => {
   const [cateringItems, setCateringItems] = useState([]); // All catering items
   const [filteredItems, setFilteredItems] = useState([]); // Filtered items based on category
-  const [selectedCategory, setSelectedCategory] = useState("All"); // Default category
+  const [selectedCategory, setSelectedCategory] = useState("all"); // Default category
   const [quantities, setQuantities] = useState({}); // Quantity for each item
 
   const navigate = useNavigate();
+
   // Fetch all catering items
   useEffect(() => {
     const fetchCateringItems = async () => {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_API_URL}/caterings`
-        ); // Replace with your actual API endpoint
+        );
         const data = await response.json();
         setCateringItems(data);
-        setFilteredItems(data);
+        setFilteredItems(data); // Set all items initially
       } catch (error) {
         console.error("Error fetching catering items:", error);
       }
@@ -30,11 +31,11 @@ const CateringPage = () => {
   const handleCategoryChange = (e) => {
     const category = e.target.value;
     setSelectedCategory(category);
-    if (category === "All") {
+    if (category === "all") {
       setFilteredItems(cateringItems);
     } else {
       const filtered = cateringItems.filter(
-        (item) => item.category === category
+        (item) => item.category.toLowerCase() === category.toLowerCase()
       );
       setFilteredItems(filtered);
     }
@@ -51,8 +52,20 @@ const CateringPage = () => {
   // Handle save button
   const handleSave = (item) => {
     const selectedQuantity = quantities[item._id] || 0;
-    console.log(`Saved item: ${item.name}, Quantity: ${selectedQuantity}`);
+    console.log(`Saved item: ${item.ItemName}, Quantity: ${selectedQuantity}`);
     // You can add the logic to save the selected item to the shopping cart or server here
+  };
+
+  // Handle save all button
+  const handleSaveAll = () => {
+    // Logic for saving all selected items
+    Object.keys(quantities).forEach((itemId) => {
+      const item = cateringItems.find((item) => item._id === itemId);
+      const selectedQuantity = quantities[itemId];
+      console.log(
+        `Saved item: ${item.ItemName}, Quantity: ${selectedQuantity}`
+      );
+    });
   };
 
   return (
@@ -72,8 +85,13 @@ const CateringPage = () => {
         >
           <option value="all">All</option>
           <option value="starter">Starter</option>
-          <option value="main">Main Course</option>
+          <option value="maincourse">Main Course</option>
           <option value="dessert">Dessert</option>
+          <option value="colddrink">Cold Drink</option>
+          <option value="cafebar">Cafe Bar</option>
+          <option value="fruits">Fruits</option>
+          <option value="cake">Cake</option>
+          <option value="waiter">Waiter</option>
           {/* Add more categories as needed */}
         </select>
       </div>
@@ -84,7 +102,7 @@ const CateringPage = () => {
           <tr>
             <th className="border border-gray-300 px-4 py-2">Image</th>
             <th className="border border-gray-300 px-4 py-2">Name</th>
-            <th className="border border-gray-300 px-4 py-2">category</th>
+            <th className="border border-gray-300 px-4 py-2">Category</th>
             <th className="border border-gray-300 px-4 py-2">Description</th>
             <th className="border border-gray-300 px-4 py-2">Price</th>
             <th className="border border-gray-300 px-4 py-2">Quantity</th>
@@ -140,7 +158,7 @@ const CateringPage = () => {
       {/* Save all selected items */}
       <div className="mt-4">
         <button
-          onClick={handleSave}
+          onClick={handleSaveAll}
           className="bg-green-500 text-white px-4 py-2 rounded"
         >
           Save All Selections
