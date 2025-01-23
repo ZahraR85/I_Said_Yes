@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 const CateringPage = () => {
   const [cateringItems, setCateringItems] = useState([]); // All catering items
   const [filteredItems, setFilteredItems] = useState([]); // Filtered items based on category
@@ -26,7 +27,7 @@ const CateringPage = () => {
   }, []);
 
   // Handle category change
-  const handleCategoryChange = async (e) => {
+  const handleCategoryChange = (e) => {
     const category = e.target.value;
     setSelectedCategory(category);
     if (category === "All") {
@@ -82,6 +83,7 @@ const CateringPage = () => {
         <thead>
           <tr>
             <th className="border border-gray-300 px-4 py-2">Image</th>
+            <th className="border border-gray-300 px-4 py-2">category</th>
             <th className="border border-gray-300 px-4 py-2">Name</th>
             <th className="border border-gray-300 px-4 py-2">Description</th>
             <th className="border border-gray-300 px-4 py-2">Price</th>
@@ -103,7 +105,7 @@ const CateringPage = () => {
                 {item.ItemName}
               </td>
               <td className="border border-gray-300 px-4 py-2">
-                {item.description}
+                {item.VariantDescription}
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 ${item.price}
