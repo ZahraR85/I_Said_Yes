@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const CateringPage = () => {
+const Catering = () => {
   const [cateringItems, setCateringItems] = useState([]); // All catering items
   const [filteredItems, setFilteredItems] = useState([]); // Filtered items based on category
   const [selectedCategory, setSelectedCategory] = useState("all"); // Default category
@@ -106,6 +106,9 @@ const CateringPage = () => {
             <th className="border border-gray-300 px-4 py-2">Description</th>
             <th className="border border-gray-300 px-4 py-2">Price</th>
             <th className="border border-gray-300 px-4 py-2">Quantity</th>
+            <th className="border border-gray-300 px-4 py-2">
+              Price * quantity
+            </th>
             <th className="border border-gray-300 px-4 py-2">Action</th>
           </tr>
         </thead>
@@ -143,6 +146,12 @@ const CateringPage = () => {
                 />
               </td>
               <td className="border border-gray-300 px-4 py-2">
+                {/* Calculate total price: quantity * price */}$
+                {quantities[item._id]
+                  ? (quantities[item._id] * item.price).toFixed(2)
+                  : "0.00"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
                 <button
                   onClick={() => handleSave(item)}
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -168,4 +177,4 @@ const CateringPage = () => {
   );
 };
 
-export default CateringPage;
+export default Catering;
