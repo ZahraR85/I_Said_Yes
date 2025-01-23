@@ -3,7 +3,7 @@ import { createContext, useContext, useReducer } from "react";
 const CateringContext = createContext();
 
 const initialState = {
-  features: {
+  categories: {
     Starter: {
       totalPrice: 0,
       selectedItems: {}, // Keeps track of individual item quantities
@@ -41,13 +41,13 @@ const initialState = {
 
 const cateringReducer = (state, action) => {
   switch (action.type) {
-    case "UPDATE_FEATURE":
-      const { feature, totalPrice, selectedItems } = action.payload;
+    case "UPDATE_CATEGORY":
+      const { category, totalPrice, selectedItems } = action.payload;
       return {
         ...state,
-        features: {
-          ...state.features,
-          [feature]: { totalPrice, selectedItems },
+        categoies: {
+          ...state.categories,
+          [category]: { totalPrice, selectedItems },
         },
       };
     default:
@@ -58,15 +58,15 @@ const cateringReducer = (state, action) => {
 export const CateringProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cateringReducer, initialState);
 
-  const updateFeature = (feature, totalPrice, selectedItems) => {
+  const updateCategory = (category, totalPrice, selectedItems) => {
     dispatch({
-      type: "UPDATE_FEATURE",
-      payload: { feature, totalPrice, selectedItems },
+      type: "UPDATE_CATEGORY",
+      payload: { category, totalPrice, selectedItems },
     });
   };
 
   return (
-    <CateringContext.Provider value={{ state, updateFeature }}>
+    <CateringContext.Provider value={{ state, updateCategory }}>
       {children}
     </CateringContext.Provider>
   );

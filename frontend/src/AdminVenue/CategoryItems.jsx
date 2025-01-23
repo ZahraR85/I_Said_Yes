@@ -24,6 +24,7 @@ const CategoryItems = () => {
     }
   }, [isAuthenticated, role, navigate]);
 
+  // Fetch items for the selected category
   useEffect(() => {
     const fetchCategoryItems = async () => {
       try {

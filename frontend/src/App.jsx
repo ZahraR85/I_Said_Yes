@@ -30,6 +30,7 @@ import CategoryDetails from "./components/CategoryDetails.jsx";
 import ShoppingCard from "./pages/ShoppingCard.jsx";
 import SearchVenue from "./components/SearchVenue.jsx";
 import VenueDetail from "./components/VenueDetail.jsx";
+import CateringItemsSelection from "./pages/CateringItemsSelection.jsx";
 import AboutUs from "./pages/AboutUs.jsx";
 import FAQ from "./pages/FAQ.jsx";
 import SuccessPage from "./pages/SuccessPage.jsx";
@@ -47,6 +48,11 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Homepage />} />
+            <Route path="/Menu" element={<Menu />} />
+            <Route path="/aboutus" element={<AboutUs />} />
+            <Route path="/FAQ" element={<FAQ />} />
+            <Route path="/Success" element={<SuccessPage />} />
+            <Route path="/Cancel" element={<CancelPage />} />
             <Route path="/ShoppingCard" element={<ShoppingCard />} />
             <Route path="/Dashboard" element={<Dashboard />} />
             <Route path="/Gallery" element={<Gallery />} />
@@ -56,6 +62,13 @@ function App() {
             <Route path="/AdminMusicOption" element={<AdminMusicOption />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/Guests" element={<Guests />} />
+            <Route path="/Musics" element={<Musics />} />
+            <Route
+              path="Catering/CateringItemsSelection"
+              element={<CateringItemsSelection />}
+            />
+            <Route path="/searchvenues" element={<SearchVenue />} />
             {/* Admin Routes */}
             <Route path="/Admin/Venue" element={<AdminVenuePage />} />
             <Route path="/Admin/AdminCatering" element={<AdminCatering />} />
@@ -89,14 +102,6 @@ function App() {
                 </CateringProvider>
               }
             />
-            <Route path="/Menu" element={<Menu />} />
-            <Route path="/Guests" element={<Guests />} />
-            <Route path="/Musics" element={<Musics />} />
-            <Route path="/searchvenues" element={<SearchVenue />} />
-            <Route path="/aboutus" element={<AboutUs />} />
-            <Route path="/FAQ" element={<FAQ />} />
-            <Route path="/Success" element={<SuccessPage />} />
-            <Route path="/Cancel" element={<CancelPage />} />
           </Routes>
         </Layout>
       </Router>

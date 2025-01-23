@@ -1,53 +1,39 @@
 import { Schema, model } from "mongoose";
 
-const SelectionSchema = new Schema({
-  cateringID: {
-    type: Schema.Types.ObjectId, // Reference to MusicOption collection
-    ref: "Catering",
-    required: true,
-  },
-  Quantity: {
-    type: Number,
-    required: true,
-  },
-  totalPrice: {
-    type: Number,
-    required: true,
-  },
-  VariantDescription: {
-    type: String,
-    required: true,
-  },
-});
-
-const CustomRequestSchema = new Schema({
-  description: {
-    type: String,
-    required: true,
-  },
-  details: {
-    type: String,
-    required: false,
-  },
-});
-
-const cateringSelectionSchema = new Schema(
+const customerCateringSchema = new Schema(
   {
-    userID: {
-      type: Schema.Types.ObjectId, // Reference to User model
-      ref: "User",
-      required: true,
-      // trim: true,
-    },
-    selections: [SelectionSchema], // Array of selected options
-    customRequests: [CustomRequestSchema], // Array of custom requests
-    totalCost: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Reference to the user who makes the selection
+    selectedItems: [
+      {
+        category: {
+          type: String,
+          enum: [
+            "Starter",
+            "MainCourse",
+            "Dessert",
+            "ColdDrink",
+            "CafeBar",
+            "Fruits",
+            "Cake",
+            "Waiter",
+          ],
+          required: true,
+        },
+        items: [
+          {
+            cateringItemId: { type: Schema.Types.ObjectId, ref: "Catering", required: true }, // Reference to the catering item
+            itemName: { type: String, required: true },
+            quantity: { type: Number, required: true, default: 1 },
+            price: { type: Number, required: true },
+            description: { type: String, required: true },
+          },
+        ],
+        categoryTotal: { type: Number, required: true, default: 0 },
+      },
+    ],
+    grandTotal: { type: Number, required: true, default: 0 }, // Sum of all category totals
   },
   { timestamps: true }
 );
 
-export default model("CateringSelection", cateringSelectionSchema);
+export default model("CustomerCatering", customerCateringSchema);

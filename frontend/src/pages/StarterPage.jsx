@@ -14,7 +14,7 @@ const StarterPage = () => {
   const { state, updateFeature } = useCateringContext();
   const navigate = useNavigate();
   const [selectedItems, setSelectedItems] = useState(
-    state.features.Starter.selectedItems || {}
+    state.categories.Starter.selectedItems || {}
   );
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const StarterPage = () => {
       initialData[item.name] = selectedItems[item.name] || 0;
     });
     setSelectedItems(initialData);
-  }, [state.features.Starter.selectedItems]);
+  }, [state.categories.Starter.selectedItems]);
 
   const handleItemChange = (e, item) => {
     const quantity = Math.max(0, parseInt(e.target.value) || 0);
