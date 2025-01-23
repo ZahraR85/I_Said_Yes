@@ -63,7 +63,6 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/Guests" element={<Guests />} />
             <Route path="/Musics" element={<Musics />} />
-
             <Route path="/cateringPage" element={<CateringPage />} />
             <Route path="/cateringPage/:id" element={<ItemDetailPage />} />
             <Route path="/searchvenues" element={<SearchVenue />} />
