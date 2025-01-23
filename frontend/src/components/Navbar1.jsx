@@ -176,6 +176,9 @@ const Navbar1 = () => {
             <Link to="/Catering">Catering</Link>
           </li>
           <li className="hover:underline">
+            <Link to="/cateringPage">Catering</Link>
+          </li>
+          <li className="hover:underline">
             <Link to="/photography">Photography</Link>
           </li>
           <li className="hover:underline">
