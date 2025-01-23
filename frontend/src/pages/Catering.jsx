@@ -43,16 +43,23 @@ const CateringItemsPage = () => {
   }, []);
 
   // Handle category selection
-  const handleCategoryChange = (e) => {
+  const handleCategoryChange = async (e) => {
     const category = e.target.value;
     setSelectedCategory(category);
 
-    // Filter items based on selected category
     if (category === "All") {
+      // Show all items if "All" is selected
       setFilteredItems(items);
     } else {
-      const filtered = items.filter((item) => item.category === category);
-      setFilteredItems(filtered);
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/caterings/category/${category}`
+        );
+        const data = await response.json();
+        setFilteredItems(data);
+      } catch (error) {
+        console.error("Error fetching items by category:", error);
+      }
     }
   };
 
@@ -76,7 +83,7 @@ const CateringItemsPage = () => {
       <h1 className="text-2xl font-bold mb-4">Catering Items</h1>
 
       {/* Category Selection */}
-      <div className="mb-4">
+      <div className="mb-4 text-center">
         <label htmlFor="category" className="mr-2">
           Select Category:
         </label>

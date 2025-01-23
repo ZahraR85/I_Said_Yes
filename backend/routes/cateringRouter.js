@@ -6,6 +6,7 @@ import {
   updateCateringItem,
   getCateringByCategory,
   getCateringItemById,
+  getCateringCategories,
 } from "../controllers/cateringController.js";
 import { verifyToken, adminOnly } from "../middleware/auth.js";
 import fileUploader from "../middleware/multer.js";
@@ -30,5 +31,8 @@ router.put("/:id", verifyToken, adminOnly, fileUploader.single("image"), cloudUp
 
 // Get catering items by category
 router.get("/category/:category", getCateringByCategory);
+
+// Get all unique catering categories
+router.get("/categories", getCateringCategories);
 
 export default router;
