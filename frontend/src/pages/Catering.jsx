@@ -83,8 +83,8 @@ const CateringPage = () => {
         <thead>
           <tr>
             <th className="border border-gray-300 px-4 py-2">Image</th>
-            <th className="border border-gray-300 px-4 py-2">category</th>
             <th className="border border-gray-300 px-4 py-2">Name</th>
+            <th className="border border-gray-300 px-4 py-2">category</th>
             <th className="border border-gray-300 px-4 py-2">Description</th>
             <th className="border border-gray-300 px-4 py-2">Price</th>
             <th className="border border-gray-300 px-4 py-2">Quantity</th>
@@ -103,6 +103,9 @@ const CateringPage = () => {
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {item.ItemName}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {item.category}
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {item.VariantDescription}
