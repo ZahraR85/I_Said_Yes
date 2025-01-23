@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const ItemDetailPage = () => {
   const { id } = useParams(); // Get the item ID from the URL
   const [item, setItem] = useState(null); // Item details
   const [quantity, setQuantity] = useState(0); // Quantity for the item
   const [totalPrice, setTotalPrice] = useState(0); // Calculated total price
+  const navigate = useNavigate(); // Hook to navigate after adding to cart
 
-  // Fetch item details by ID
   useEffect(() => {
     const fetchItemDetails = async () => {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_API_URL}/caterings/${id}`
-        ); // Replace with your actual API endpoint
+        );
         const data = await response.json();
         setItem(data);
         setTotalPrice(data.price * quantity); // Calculate initial total price
@@ -25,13 +25,17 @@ const ItemDetailPage = () => {
     fetchItemDetails();
   }, [id, quantity]);
 
-  // Handle quantity change and update total price
   const handleQuantityChange = (e) => {
     const newQuantity = e.target.value;
     setQuantity(newQuantity);
     if (item) {
       setTotalPrice(item.price * newQuantity); // Recalculate total price
     }
+  };
+
+  const handleAddToCart = () => {
+    // Logic to save item to cart (e.g., store in localStorage or backend)
+    navigate("/cateringPage"); // Navigate back to the previous page
   };
 
   if (!item) {
@@ -71,7 +75,10 @@ const ItemDetailPage = () => {
             <p className="font-bold">Total Price: ${totalPrice.toFixed(2)}</p>
           </div>
 
-          <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600">
+          <button
+            onClick={handleAddToCart}
+            className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600"
+          >
             Add to Cart
           </button>
         </div>

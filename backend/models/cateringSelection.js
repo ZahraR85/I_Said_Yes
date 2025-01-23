@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 const customerCateringSchema = new Schema(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Reference to the user who makes the selection
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Reference to the user
     selectedItems: [
       {
         category: {
@@ -21,17 +21,17 @@ const customerCateringSchema = new Schema(
         },
         items: [
           {
-            cateringItemId: { type: Schema.Types.ObjectId, ref: "Catering", required: true }, // Reference to the catering item
+            cateringItemId: { type: Schema.Types.ObjectId, ref: "Catering", required: true },
             itemName: { type: String, required: true },
             quantity: { type: Number, required: true, default: 1 },
             price: { type: Number, required: true },
             description: { type: String, required: true },
           },
         ],
-        categoryTotal: { type: Number, required: true, default: 0 },
+        categoryTotalPrice: { type: Number, required: true, default: 0 },
       },
     ],
-    grandTotal: { type: Number, required: true, default: 0 }, // Sum of all category totals
+    grandTotal: { type: Number, required: true, default: 0 }, // Total of all categories' totals
   },
   { timestamps: true }
 );

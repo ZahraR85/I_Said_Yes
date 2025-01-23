@@ -2,17 +2,17 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const CateringPage = () => {
-  const [cateringItems, setCateringItems] = useState([]); // All catering items
-  const [filteredItems, setFilteredItems] = useState([]); // Filtered items based on category
-  const [selectedCategory, setSelectedCategory] = useState("All"); // Default category
+  const [cateringItems, setCateringItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [cart, setCart] = useState([]); // State to store cart items
 
-  // Fetch all catering items
   useEffect(() => {
     const fetchCateringItems = async () => {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_API_URL}/caterings`
-        ); // Replace with your actual API endpoint
+        );
         const data = await response.json();
         setCateringItems(data);
         setFilteredItems(data);
@@ -24,7 +24,6 @@ const CateringPage = () => {
     fetchCateringItems();
   }, []);
 
-  // Handle category change
   const handleCategoryChange = (e) => {
     const category = e.target.value;
     setSelectedCategory(category);
@@ -38,65 +37,114 @@ const CateringPage = () => {
     }
   };
 
+  const handleAddToCart = (item, quantity) => {
+    setCart((prevCart) => {
+      const existingItemIndex = prevCart.findIndex(
+        (cartItem) => cartItem.itemName === item.ItemName
+      );
+      if (existingItemIndex !== -1) {
+        const updatedCart = [...prevCart];
+        updatedCart[existingItemIndex].quantity += quantity;
+        updatedCart[existingItemIndex].totalPrice =
+          updatedCart[existingItemIndex].quantity *
+          updatedCart[existingItemIndex].price;
+        return updatedCart;
+      } else {
+        return [
+          ...prevCart,
+          { ...item, quantity, totalPrice: item.price * quantity },
+        ];
+      }
+    });
+  };
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Catering Menu</h1>
-      {/* total prices for each Category*/}
+
+      {/* Display Cart Table */}
+      {cart.length > 0 && (
+        <div className="mb-6">
+          <table className="min-w-full table-auto border border-gray-300">
+            <thead>
+              <tr>
+                <th className="border-b p-2">Category</th>
+                <th className="border-b p-2">Item</th>
+                <th className="border-b p-2">Quantity</th>
+                <th className="border-b p-2">Total Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cart.map((cartItem, index) => (
+                <tr key={index}>
+                  <td className="border-b p-2">{cartItem.category}</td>
+                  <td className="border-b p-2">{cartItem.ItemName}</td>
+                  <td className="border-b p-2">{cartItem.quantity}</td>
+                  <td className="border-b p-2">${cartItem.totalPrice}</td>
+                </tr>
+              ))}
+              <tr>
+                <td colSpan="3" className="text-right font-bold">
+                  Grand Total:
+                </td>
+                <td className="font-bold">
+                  ${cart.reduce((total, item) => total + item.totalPrice, 0)}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
+
       <div>
-        <label htmlFor="category">SStarter:</label>
-        <p id="category" className="bg-pink-50">
-          total of each item per quantity
-        </p>
-      </div>
-      {/* Category Filter */}
-      <div className="mb-4">
-        <label htmlFor="category" className="mr-2 font-semibold">
-          Filter by Category:
-        </label>
-        <select
-          id="category"
-          value={selectedCategory}
-          onChange={handleCategoryChange}
-          className="border rounded px-4 py-2"
-        >
-          <option value="all">All</option>
-          <option value="starter">Starter</option>
-          <option value="maincourse">Main Course</option>
-          <option value="dessert">Dessert</option>
-          <option value="colddrink">Cold Drink</option>
-          <option value="cafebar">Cafe Bar</option>
-          <option value="fruits">Fruits</option>
-          <option value="cake">Cake</option>
-          <option value="waiter">Waiter</option>
-          {/* Add more categories as needed */}
-        </select>
-      </div>
-
-      {/* Catering Items Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredItems.map((item) => (
-          <div
-            key={item._id}
-            className="border rounded-lg p-4 bg-white shadow-md"
+        {/* Category Filter */}
+        <div className="mb-4">
+          <label htmlFor="category" className="mr-2 font-semibold">
+            Filter by Category:
+          </label>
+          <select
+            id="category"
+            value={selectedCategory}
+            onChange={handleCategoryChange}
+            className="border rounded px-4 py-2"
           >
-            <img
-              src={item.imagePath}
-              alt={item.ItemName}
-              className="h-40 w-full object-cover rounded"
-            />
-            <h2 className="text-xl font-semibold mt-2">{item.ItemName}</h2>
-            <p className="text-gray-600">{item.category}</p>
-            <p className="font-bold text-lg">${item.price}</p>
+            <option value="all">All</option>
+            <option value="starter">Starter</option>
+            <option value="maincourse">Main Course</option>
+            <option value="dessert">Dessert</option>
+            <option value="colddrink">Cold Drink</option>
+            <option value="cafebar">Cafe Bar</option>
+            <option value="fruits">Fruits</option>
+            <option value="cake">Cake</option>
+            <option value="waiter">Waiter</option>
+          </select>
+        </div>
 
-            {/* Link to item detail page */}
-            <Link
-              to={`/cateringPage/${item._id}`}
-              className="mt-2 inline-block text-blue-500 hover:text-blue-700"
+        {/* Catering Items Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredItems.map((item) => (
+            <div
+              key={item._id}
+              className="border rounded-lg p-4 bg-white shadow-md"
             >
-              View Details
-            </Link>
-          </div>
-        ))}
+              <img
+                src={item.imagePath}
+                alt={item.ItemName}
+                className="h-40 w-full object-cover rounded"
+              />
+              <h2 className="text-xl font-semibold mt-2">{item.ItemName}</h2>
+              <p className="text-gray-600">{item.category}</p>
+              <p className="font-bold text-lg">${item.price}</p>
+
+              <button
+                onClick={() => handleAddToCart(item, 1)}
+                className="mt-2 inline-block text-blue-500 hover:text-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

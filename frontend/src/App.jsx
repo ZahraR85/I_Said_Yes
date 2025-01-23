@@ -30,7 +30,6 @@ import CategoryDetails from "./components/CategoryDetails.jsx";
 import ShoppingCard from "./pages/ShoppingCard.jsx";
 import SearchVenue from "./components/SearchVenue.jsx";
 import VenueDetail from "./components/VenueDetail.jsx";
-import CateringItemsSelection from "./pages/CateringItemsSelection.jsx";
 import CateringPage from "./pages/CateringPage.jsx";
 import ItemDetailPage from "./pages/ItemDetailPage.jsx";
 import AboutUs from "./pages/AboutUs.jsx";
@@ -38,8 +37,6 @@ import FAQ from "./pages/FAQ.jsx";
 import SuccessPage from "./pages/SuccessPage.jsx";
 import CancelPage from "./pages/CancelPage.jsx";
 import Menu from "./pages/Menu.jsx";
-import StarterPage from "./pages/StarterPage.jsx";
-import MainCoursePage from "./pages/MainCoursePage.jsx";
 import "./index.css";
 
 function App() {
@@ -66,10 +63,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/Guests" element={<Guests />} />
             <Route path="/Musics" element={<Musics />} />
-            <Route
-              path="Catering/CateringItemsSelection"
-              element={<CateringItemsSelection />}
-            />
+
             <Route path="/cateringPage" element={<CateringPage />} />
             <Route path="/cateringPage/:id" element={<ItemDetailPage />} />
             <Route path="/searchvenues" element={<SearchVenue />} />
@@ -93,19 +87,7 @@ function App() {
             <Route path="/photography" element={<Photography />} />
             <Route path="/Makeup" element={<MakeupSelector />} />
             <Route path="/ReceptionSelector" element={<ReceptionSelector />} />
-            {/* Catering Routes */}
-            <Route
-              path="/Catering/*"
-              element={
-                <CateringProvider>
-                  <Routes>
-                    <Route path="/" element={<Catering />} />
-                    <Route path="Starter" element={<StarterPage />} />
-                    <Route path="maincourse" element={<MainCoursePage />} />
-                  </Routes>
-                </CateringProvider>
-              }
-            />
+            <Route path="/Catering" element={<Catering />} />
           </Routes>
         </Layout>
       </Router>
