@@ -22,7 +22,7 @@ const MusicSelectionForm = () => {
     if (!isAuthenticated) {
       toast.warn("You must sign in to access this page.");
       setTimeout(() => {
-        //navigate("/signin");
+        navigate("/signin");
       }, 3000);
     }
   }, [isAuthenticated, navigate]);

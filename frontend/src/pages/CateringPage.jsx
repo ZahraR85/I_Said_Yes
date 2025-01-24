@@ -19,8 +19,8 @@ const CateringPage = () => {
     if (!isAuthenticated) {
       toast.warn("You must sign in to access this page.");
       setTimeout(() => {
-        //navigate("/signin");
-      }, 3000);
+        navigate("/signin");
+      }, 2000);
     }
   }, [isAuthenticated, navigate]);
 
@@ -136,6 +136,7 @@ const CateringPage = () => {
 
   return (
     <div className="p-6">
+      <ToastContainer />
       <h1 className="text-2xl font-bold mb-4">Catering Menu</h1>
 
       {cart.length > 0 && (

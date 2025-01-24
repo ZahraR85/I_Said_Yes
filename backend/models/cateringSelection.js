@@ -26,7 +26,7 @@ const cateringSelectionSchema = new Schema(
             itemName: { type: String, required: true },
             quantity: { type: Number, required: true, default: 1 },
             price: { type: Number, required: true },
-            description: { type: String, required: true },
+            description: { type: String, required: false },
           },
         ],
         categoryTotalPrice: { type: Number, required: true, default: 0 },
