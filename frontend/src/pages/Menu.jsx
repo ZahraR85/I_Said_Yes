@@ -74,7 +74,7 @@ const Menu = () => {
         { name: "Grilled Chicken with Herbs", price: 15 },
         { name: "Beef Stroganoff with Rice", price: 18 },
         { name: "Vegetarian Lasagna", price: 14 },
-        { name: "Pan-Seared Salmon with Lemon Butter Sauce", price: 20 },
+        { name: "Pan-Seared Salmon with Lemon Butter Sauce", price: 12 },
         { name: "Lamb Chops with Rosemary Sauce", price: 22 },
         {
           name: "Shrimp Alfredo",

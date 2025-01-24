@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 const CateringPage = () => {
   const [cateringItems, setCateringItems] = useState([]);
@@ -121,27 +121,38 @@ const CateringPage = () => {
         </div>
 
         {/* Catering Items Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-BgFont text-center">
           {filteredItems.map((item) => (
             <div
               key={item._id}
-              className="border rounded-lg p-4 bg-white shadow-md"
+              className="border rounded-lg bg-white shadow-md"
             >
               <img
                 src={item.imagePath}
                 alt={item.ItemName}
                 className="h-40 w-full object-cover rounded"
               />
-              <h2 className="text-xl font-semibold mt-2">{item.ItemName}</h2>
-              <p className="text-gray-600">{item.category}</p>
-              <p className="font-bold text-lg">${item.price}</p>
-
-              <button
-                onClick={() => handleAddToCart(item, 1)}
-                className="mt-2 inline-block text-blue-500 hover:text-blue-700"
-              >
-                Add to Cart
-              </button>
+              <h2 className="text-m lg:text-lg font-bold px-2 lg:px-4 mt-2">
+                {item.ItemName}
+              </h2>
+              <p className="text-m px-2 lg:px-4">{item.category}</p>
+              <p className="font-bold text-m lg:text-lg px-2 lg:px-4">
+                {item.price} €
+              </p>
+              <div>
+                <button
+                  onClick={() => handleAddToCart(item, 1)}
+                  className="m-2 p-2 inline-block text-m font-semibold bg-BgPinkMiddle hover:text-lg hover:bg-BgPinkDark"
+                >
+                  Add to Cart
+                </button>
+                <button
+                  onClick={() => Navigate(`/cateringPage/${item._id}`)}
+                  className="m-2 p-2 inline-block text-m font-semibold bg-BgPinkMiddle hover:text-lg hover:bg-BgPinkDark"
+                >
+                  See Detail
+                </button>
+              </div>
             </div>
           ))}
         </div>
