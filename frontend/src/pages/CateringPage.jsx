@@ -211,15 +211,17 @@ const CateringPage = () => {
   return (
     <div className="p-6">
       <ToastContainer />
-      <h1 className="text-2xl font-bold mb-4">Catering Menu</h1>
+      <h1 className="text-2xl font-bold text-BgFont text-center m-6">
+        Select your favorite Menu from here
+      </h1>
 
       {cart.length > 0 && (
         <div className="mb-6">
-          <table className="min-w-full table-auto border border-gray-300">
+          <table className="min-w-full table-auto border border-gray-300 text-center text-BgFont">
             <thead>
-              <tr className="bg-BgPinkMiddle text-BgFont">
+              <tr className="bg-BgKhaki text-BgFont">
                 <th className="border-b p-2">Category</th>
-                <th className="border-b p-2">Item</th>
+                <th className="border-b p-2">Name of Items</th>
                 <th className="border-b p-2">Quantity</th>
                 <th className="border-b p-2">Description</th>
                 <th className="border-b p-2">Total Price</th>
@@ -228,9 +230,9 @@ const CateringPage = () => {
             </thead>
             <tbody>
               {cart.map((cartItem, index) => (
-                <tr key={index} className="bg-BgPinkLight">
+                <tr key={index} className="bg-gray-50">
                   <td className="border-b p-2">{cartItem.category}</td>
-                  <td className="border-b p-2">{cartItem.ItemName}</td>
+                  <td className="border-b p-2">{cartItem.itemName}</td>
                   <td className="border-b p-2">
                     {editMode === index ? (
                       <input
@@ -261,27 +263,27 @@ const CateringPage = () => {
                     )}
                   </td>
                   <td className="border-b p-2">
-                    ${(cartItem.quantity * cartItem.price).toFixed(2)}
+                    {(cartItem.quantity * cartItem.price).toFixed(2)} €
                   </td>
                   <td className="border-b p-2">
                     {editMode === index ? (
                       <button
                         onClick={() => handleSave(index)}
-                        className="px-2 py-1 bg-green-500 text-white rounded"
+                        className="px-2 py-1 bg-green-500 text-BgFont rounded"
                       >
                         Save
                       </button>
                     ) : (
                       <button
                         onClick={() => setEditMode(index)}
-                        className="px-2 py-1 bg-blue-500 text-white rounded"
+                        className="px-2 py-1 bg-BgPinkMiddle font-bold text-BgFont hover:bg-BgPinkDark rounded"
                       >
                         Edit
                       </button>
                     )}
                     <button
                       onClick={() => handleDeleteRow(index)}
-                      className="ml-2 px-2 py-1 bg-red-500 text-white rounded"
+                      className="ml-2 px-2 py-1 bg-BgPinkMiddle font-bold text-BgFont hover:bg-BgPinkDark rounded"
                     >
                       Delete
                     </button>
@@ -289,17 +291,17 @@ const CateringPage = () => {
                 </tr>
               ))}
               <tr>
-                <td colSpan="4" className="text-right font-bold">
+                <td colSpan="4" className="text-right font-bold p-4">
                   Grand Total:
                 </td>
-                <td className="font-bold">
-                  $
+                <td className="font-bold text-red-500">
                   {cart
                     .reduce(
                       (total, item) => total + item.quantity * item.price,
                       0
                     )
-                    .toFixed(2)}
+                    .toFixed(2)}{" "}
+                  €
                 </td>
               </tr>
             </tbody>
@@ -309,15 +311,15 @@ const CateringPage = () => {
 
       {/* Category Filter */}
       <div>
-        <div className="mb-4">
-          <label htmlFor="category" className="mr-2 font-semibold">
+        <div className="m-4 lg:mb-10 font-bold text-center lg:mt-20 text-BgFont">
+          <label htmlFor="category" className="mr-2 text-lg lg:text-xl">
             Filter by Category:
           </label>
           <select
             id="category"
             value={selectedCategory}
             onChange={handleCategoryChange}
-            className="border rounded px-4 py-2 bg-BgPinkMiddle text-BgFont"
+            className="w-1/5 text-center lg:mb-4 mb-2 lg:p-2 p-1 text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark "
           >
             <option value="all">All</option>
             <option value="starter">Starter</option>
@@ -332,19 +334,19 @@ const CateringPage = () => {
         </div>
 
         {/* Catering Items Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-BgFont text-center">
           {filteredItems.map((item) => (
             <div
               key={item._id}
-              className="border rounded-lg bg-white shadow-md"
+              className="border-4 border-BgPinkDark rounded-lg cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-primary transition-all duration-300 ease-out"
             >
               <img
                 src={item.imagePath}
-                alt={item.ItemName}
+                alt={item.itemName}
                 className="h-40 w-full object-cover rounded"
               />
               <h2 className="text-m lg:text-lg font-bold px-2 lg:px-4 mt-2">
-                {item.ItemName}
+                {item.itemName}
               </h2>
               <p className="text-m px-2 lg:px-4">{item.category}</p>
               <p className="font-bold text-m lg:text-lg px-2 lg:px-4">
@@ -352,13 +354,13 @@ const CateringPage = () => {
               </p>
               <button
                 onClick={() => handleAddToCart(item)}
-                className="m-2 p-2 inline-block text-m font-semibold bg-BgPinkMiddle hover:bg-BgPinkDark text-white rounded"
+                className="m-2 p-2 inline-block text-m font-semibold bg-BgPinkMiddle hover:bg-BgPinkDark rounded"
               >
                 Add to Cart
               </button>
               <button
                 onClick={() => navigate(`/cateringPage/${item._id}`)}
-                className="m-2 p-2 inline-block text-m font-semibold bg-BgPinkDark hover:bg-BgPinkMiddle text-white rounded"
+                className="m-2 p-2 inline-block text-m font-semibold bg-BgPinkDark hover:bg-BgPinkMiddle rounded"
               >
                 See Details
               </button>
