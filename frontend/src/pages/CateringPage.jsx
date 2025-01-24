@@ -41,6 +41,32 @@ const CateringPage = () => {
     fetchCateringItems();
   }, []);
 
+  useEffect(() => {
+    const fetchUserCart = async () => {
+      if (!userId) return;
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/cateringselections/${userId}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          const userCart = data.selectedItems.flatMap((category) =>
+            category.items.map((item) => ({
+              ...item,
+              category: category.category,
+              categoryTotalPrice: category.categoryTotalPrice,
+            }))
+          );
+          setCart(userCart);
+        }
+      } catch (error) {
+        console.error("Error fetching user's catering selections:", error);
+      }
+    };
+
+    fetchUserCart();
+  }, [userId]);
+
   const handleCategoryChange = (e) => {
     const category = e.target.value;
     setSelectedCategory(category);
@@ -51,6 +77,54 @@ const CateringPage = () => {
         (item) => item.category.toLowerCase() === category.toLowerCase()
       );
       setFilteredItems(filtered);
+    }
+  };
+
+  const handleDeleteRow = async (index) => {
+    const updatedCart = [...cart];
+    const [removedItem] = updatedCart.splice(index, 1); // Remove the item locally
+
+    setCart(updatedCart);
+
+    try {
+      // Send the updated cart to the backend
+      const selectedItems = updatedCart.map((item) => ({
+        category: item.category,
+        items: [
+          {
+            cateringItemId: item.cateringItemId,
+            itemName: item.itemName,
+            quantity: item.quantity,
+            price: item.price,
+            description: item.description,
+          },
+        ],
+        categoryTotalPrice: item.quantity * item.price,
+      }));
+      const grandTotal = updatedCart.reduce(
+        (total, item) => total + item.quantity * item.price,
+        0
+      );
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/cateringselections/${userId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ selectedItems, grandTotal }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error("Failed to delete row in the backend.");
+      } else {
+        toast.success("Item deleted successfully.");
+      }
+    } catch (error) {
+      console.error("Error deleting row in the backend:", error);
+      toast.error("Failed to delete item.");
     }
   };
 
@@ -205,6 +279,12 @@ const CateringPage = () => {
                         Edit
                       </button>
                     )}
+                    <button
+                      onClick={() => handleDeleteRow(index)}
+                      className="ml-2 px-2 py-1 bg-red-500 text-white rounded"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
