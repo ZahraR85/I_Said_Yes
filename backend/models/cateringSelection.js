@@ -23,7 +23,7 @@ const cateringSelectionSchema = new Schema(
         items: [
           {
             cateringItemId: { type: Schema.Types.ObjectId, ref: "Catering", required: true },
-            itemName: { type: String, required: true },
+            ItemName: { type: String, required: true },
             quantity: { type: Number, required: true, default: 1 },
             price: { type: Number, required: true },
             description: { type: String, required: false },

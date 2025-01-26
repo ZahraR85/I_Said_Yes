@@ -93,7 +93,7 @@ const CateringPage = () => {
         items: [
           {
             cateringItemId: item.cateringItemId,
-            itemName: item.itemName,
+            ItemName: item.ItemName,
             quantity: item.quantity,
             price: item.price,
             description: item.description,
@@ -170,7 +170,7 @@ const CateringPage = () => {
       items: [
         {
           cateringItemId: item._id,
-          itemName: item.ItemName,
+          ItemName: item.ItemName, // Corrected here
           quantity: item.quantity,
           price: item.price,
           description: item.description,
@@ -204,7 +204,6 @@ const CateringPage = () => {
     } catch (error) {
       console.error("Error saving catering details:", error);
     }
-
     setEditMode(null);
   };
 
@@ -232,7 +231,7 @@ const CateringPage = () => {
               {cart.map((cartItem, index) => (
                 <tr key={index} className="bg-gray-50">
                   <td className="border-b p-2">{cartItem.category}</td>
-                  <td className="border-b p-2">{cartItem.itemName}</td>
+                  <td className="border-b p-2">{cartItem.ItemName}</td>
                   <td className="border-b p-2">
                     {editMode === index ? (
                       <input
@@ -342,11 +341,11 @@ const CateringPage = () => {
             >
               <img
                 src={item.imagePath}
-                alt={item.itemName}
+                alt={item.ItemName}
                 className="h-40 w-full object-cover rounded"
               />
               <h2 className="text-m lg:text-lg font-bold px-2 lg:px-4 mt-2">
-                {item.itemName}
+                {item.ItemName}
               </h2>
               <p className="text-m px-2 lg:px-4">{item.category}</p>
               <p className="font-bold text-m lg:text-lg px-2 lg:px-4">
