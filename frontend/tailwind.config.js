@@ -20,8 +20,8 @@ export default {
       BgKhaki : "#d5c0b5",
       BgKhakiDark : "#888884",
       BgFont: "#624e40",
-      btnLight: "#DBD084",
-      btnDark: "#DBC537",
+      LightGold: "#DBD084",
+      DarkGold: "#DBC537",
       bgfooter: "#b39b81",
       bgbackground:"#e6e4df"
     },

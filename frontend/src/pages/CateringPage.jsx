@@ -14,6 +14,9 @@ const CateringPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [cart, setCart] = useState([]);
   const [editMode, setEditMode] = useState(null); // To track which row is being edited
+  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const [itemsPerPage] = useState(10); // Number of items per page (can be changed)
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -78,6 +81,27 @@ const CateringPage = () => {
         (item) => item.category.toLowerCase() === category.toLowerCase()
       );
       setFilteredItems(filtered);
+    }
+    setCurrentPage(1); // Reset to the first page when category changes
+  };
+
+  // Get the items for the current page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Pagination Controls
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
     }
   };
 
@@ -248,7 +272,7 @@ const CateringPage = () => {
       {cart.length > 0 && (
         <div className="mb-6">
           <table className="min-w-full table-auto border border-gray-300 text-center text-BgFont">
-            <thead>
+            <thead className="text-sm lg:text-m">
               <tr className="bg-BgKhaki text-BgFont">
                 <th className="border-b p-2">Category</th>
                 <th className="border-b p-2">Name of Items</th>
@@ -258,7 +282,7 @@ const CateringPage = () => {
                 <th className="border-b p-2">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-sm lg:text-m">
               {cart.map((cartItem, index) => (
                 <tr key={index} className="bg-gray-50">
                   <td className="border-b p-2">{cartItem.category}</td>
@@ -299,14 +323,14 @@ const CateringPage = () => {
                     {editMode === index ? (
                       <button
                         onClick={() => handleSave(index)}
-                        className="px-2 py-1 bg-green-500 text-BgFont rounded"
+                        className="px-2 py-1 lg:px-4 lg:py-2 bg-LightGold font-bold text-BgFont hover:bg-DarkGold rounded"
                       >
                         Save
                       </button>
                     ) : (
                       <button
                         onClick={() => setEditMode(index)}
-                        className="px-2 py-1 bg-BgPinkMiddle font-bold text-BgFont hover:bg-BgPinkDark rounded"
+                        className="px-2 py-1 lg:px-4 lg:py-2 bg-BgPinkMiddle font-bold text-BgFont hover:bg-BgPinkDark rounded"
                       >
                         Edit
                       </button>
@@ -340,7 +364,7 @@ const CateringPage = () => {
           <div className="flex justify-center mt-4">
             <button
               onClick={handleShoppingCard}
-              className="px-4 py-2 bg-BgPinkDark text-BgFont font-bold rounded hover:bg-BgPinkMiddle"
+              className="w-2/3 px-4 py-2 bg-BgPinkMiddle text-BgFont font-bold rounded hover:bg-BgPinkDark hover:text-xl"
             >
               Add to Shopping Cart
             </button>
@@ -374,7 +398,7 @@ const CateringPage = () => {
 
         {/* Catering Items Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-BgFont text-center">
-          {filteredItems.map((item) => (
+          {currentItems.map((item) => (
             <div
               key={item._id}
               className="border-4 border-BgPinkDark rounded-lg cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-primary transition-all duration-300 ease-out"
@@ -399,13 +423,33 @@ const CateringPage = () => {
               </button>
               <button
                 onClick={() => navigate(`/cateringPage/${item._id}`)}
-                className="m-2 p-2 inline-block text-m font-semibold bg-BgPinkDark hover:bg-BgPinkMiddle rounded"
+                className="m-2 p-2 inline-block text-m font-semibold bg-BgPinkMiddle hover:bg-BgPinkDark rounded"
               >
                 See Details
               </button>
             </div>
           ))}
         </div>
+      </div>
+      {/* Pagination */}
+      <div className="flex justify-center mt-6 lg:mt-10">
+        <button
+          onClick={prevPage}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-BgPinkMiddle text-BgFont rounded-l hover:bg-BgPinkDark"
+        >
+          Previous
+        </button>
+        <span className="px-4 py-2 text-BgFont">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={nextPage}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-BgPinkMiddle text-BgFont rounded-r hover:bg-BgPinkDark"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
