@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AppProvider } from "./context/AppContext";
-import { CateringProvider } from "./context/CateringContext";
 import Layout from "./pages/Layout";
 import Homepage from "./pages/Homepage";
 import Dashboard from "./pages/Dashboard.jsx";

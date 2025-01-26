@@ -154,7 +154,7 @@ const AdminCatering = () => {
             <Link
               to={`/Admin/AdminCatering/category/${cat}`}
               key={cat}
-              className="bg-white shadow-md p-4 rounded-lg border-2 border-BgPinkDark cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-primary transition-all duration-300 ease-out"
+              className="bg-white shadow-md p-4 rounded-lg border-4 border-BgPinkDark cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-primary transition-all duration-300 ease-out"
             >
               <h3 className="text-xl text-BgFont font-bold mb-4">{cat}</h3>
               <p className="text-sm text-BgFont">

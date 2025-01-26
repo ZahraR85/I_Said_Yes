@@ -1,11 +1,28 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAppContext } from "../context/AppContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../App.css";
 
 const CateringPage = () => {
+  const { userId, isAuthenticated, addToShoppingCard } = useAppContext();
   const [cateringItems, setCateringItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [cart, setCart] = useState([]); // State to store cart items
+  const [cart, setCart] = useState([]);
+  const [editMode, setEditMode] = useState(null); // To track which row is being edited
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      toast.warn("You must sign in to access this page.");
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000);
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     const fetchCateringItems = async () => {
@@ -24,6 +41,32 @@ const CateringPage = () => {
     fetchCateringItems();
   }, []);
 
+  useEffect(() => {
+    const fetchUserCart = async () => {
+      if (!userId) return;
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/cateringselections/${userId}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          const userCart = data.selectedItems.flatMap((category) =>
+            category.items.map((item) => ({
+              ...item,
+              category: category.category,
+              categoryTotalPrice: category.categoryTotalPrice,
+            }))
+          );
+          setCart(userCart);
+        }
+      } catch (error) {
+        console.error("Error fetching user's catering selections:", error);
+      }
+    };
+
+    fetchUserCart();
+  }, [userId]);
+
   const handleCategoryChange = (e) => {
     const category = e.target.value;
     setSelectedCategory(category);
@@ -37,58 +80,228 @@ const CateringPage = () => {
     }
   };
 
-  const handleAddToCart = (item, quantity) => {
+  const handleDeleteRow = async (index) => {
+    const updatedCart = [...cart];
+    const [removedItem] = updatedCart.splice(index, 1); // Remove the item locally
+
+    setCart(updatedCart);
+
+    try {
+      // Send the updated cart to the backend
+      const selectedItems = updatedCart.map((item) => ({
+        category: item.category,
+        items: [
+          {
+            cateringItemId: item.cateringItemId,
+            itemName: item.itemName,
+            quantity: item.quantity,
+            price: item.price,
+            description: item.description,
+          },
+        ],
+        categoryTotalPrice: item.quantity * item.price,
+      }));
+      const grandTotal = updatedCart.reduce(
+        (total, item) => total + item.quantity * item.price,
+        0
+      );
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/cateringselections/${userId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ selectedItems, grandTotal }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error("Failed to delete row in the backend.");
+      } else {
+        toast.success("Item deleted successfully.");
+      }
+    } catch (error) {
+      console.error("Error deleting row in the backend:", error);
+      toast.error("Failed to delete item.");
+    }
+  };
+
+  const handleAddToCart = (item) => {
     setCart((prevCart) => {
       const existingItemIndex = prevCart.findIndex(
-        (cartItem) => cartItem.itemName === item.ItemName
+        (cartItem) => cartItem.ItemName === item.ItemName
       );
       if (existingItemIndex !== -1) {
-        const updatedCart = [...prevCart];
-        updatedCart[existingItemIndex].quantity += quantity;
-        updatedCart[existingItemIndex].totalPrice =
-          updatedCart[existingItemIndex].quantity *
-          updatedCart[existingItemIndex].price;
-        return updatedCart;
-      } else {
-        return [
-          ...prevCart,
-          { ...item, quantity, totalPrice: item.price * quantity },
-        ];
+        return prevCart; // Prevent duplicates
       }
+      return [...prevCart, { ...item, quantity: 1, description: "" }];
     });
+  };
+
+  const handleQuantityChange = (index, quantity) => {
+    setCart((prevCart) => {
+      const updatedCart = [...prevCart];
+      updatedCart[index].quantity = quantity;
+      return updatedCart;
+    });
+  };
+
+  const handleDescriptionChange = (index, description) => {
+    setCart((prevCart) => {
+      const updatedCart = [...prevCart];
+      updatedCart[index].description = description;
+      return updatedCart;
+    });
+  };
+
+  const handleSave = async (index) => {
+    if (!userId) {
+      console.error("User ID is undefined. Cannot save catering details.");
+      toast.error("Unable to save: User not identified.");
+      return;
+    }
+    const updatedCart = [...cart];
+    setCart(updatedCart);
+
+    const selectedItems = updatedCart.map((item) => ({
+      category: item.category,
+      items: [
+        {
+          cateringItemId: item._id,
+          itemName: item.ItemName,
+          quantity: item.quantity,
+          price: item.price,
+          description: item.description,
+        },
+      ],
+      categoryTotalPrice: item.quantity * item.price,
+    }));
+
+    const grandTotal = updatedCart.reduce(
+      (total, item) => total + item.quantity * item.price,
+      0
+    );
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/cateringselections/${userId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ selectedItems, grandTotal }),
+        }
+      );
+
+      if (response.ok) {
+        console.log("Catering details saved successfully.");
+      } else {
+        console.error("Failed to save catering details.");
+      }
+    } catch (error) {
+      console.error("Error saving catering details:", error);
+    }
+
+    setEditMode(null);
   };
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Catering Menu</h1>
+      <ToastContainer />
+      <h1 className="text-2xl font-bold text-BgFont text-center m-6">
+        Select your favorite Menu from here
+      </h1>
 
-      {/* Display Cart Table */}
       {cart.length > 0 && (
         <div className="mb-6">
-          <table className="min-w-full table-auto border border-gray-300">
+          <table className="min-w-full table-auto border border-gray-300 text-center text-BgFont">
             <thead>
-              <tr>
+              <tr className="bg-BgKhaki text-BgFont">
                 <th className="border-b p-2">Category</th>
-                <th className="border-b p-2">Item</th>
+                <th className="border-b p-2">Name of Items</th>
                 <th className="border-b p-2">Quantity</th>
+                <th className="border-b p-2">Description</th>
                 <th className="border-b p-2">Total Price</th>
+                <th className="border-b p-2">Actions</th>
               </tr>
             </thead>
             <tbody>
               {cart.map((cartItem, index) => (
-                <tr key={index}>
+                <tr key={index} className="bg-gray-50">
                   <td className="border-b p-2">{cartItem.category}</td>
-                  <td className="border-b p-2">{cartItem.ItemName}</td>
-                  <td className="border-b p-2">{cartItem.quantity}</td>
-                  <td className="border-b p-2">${cartItem.totalPrice}</td>
+                  <td className="border-b p-2">{cartItem.itemName}</td>
+                  <td className="border-b p-2">
+                    {editMode === index ? (
+                      <input
+                        type="number"
+                        value={cartItem.quantity}
+                        min="1"
+                        onChange={(e) =>
+                          handleQuantityChange(index, parseInt(e.target.value))
+                        }
+                        className="border rounded px-2 py-1 w-16"
+                      />
+                    ) : (
+                      cartItem.quantity
+                    )}
+                  </td>
+                  <td className="border-b p-2">
+                    {editMode === index ? (
+                      <input
+                        type="text"
+                        value={cartItem.description}
+                        onChange={(e) =>
+                          handleDescriptionChange(index, e.target.value)
+                        }
+                        className="border rounded px-2 py-1 w-full"
+                      />
+                    ) : (
+                      cartItem.description
+                    )}
+                  </td>
+                  <td className="border-b p-2">
+                    {(cartItem.quantity * cartItem.price).toFixed(2)} €
+                  </td>
+                  <td className="border-b p-2">
+                    {editMode === index ? (
+                      <button
+                        onClick={() => handleSave(index)}
+                        className="px-2 py-1 bg-green-500 text-BgFont rounded"
+                      >
+                        Save
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setEditMode(index)}
+                        className="px-2 py-1 bg-BgPinkMiddle font-bold text-BgFont hover:bg-BgPinkDark rounded"
+                      >
+                        Edit
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleDeleteRow(index)}
+                      className="ml-2 px-2 py-1 bg-BgPinkMiddle font-bold text-BgFont hover:bg-BgPinkDark rounded"
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
               <tr>
-                <td colSpan="3" className="text-right font-bold">
+                <td colSpan="4" className="text-right font-bold p-4">
                   Grand Total:
                 </td>
-                <td className="font-bold">
-                  ${cart.reduce((total, item) => total + item.totalPrice, 0)}
+                <td className="font-bold text-red-500">
+                  {cart
+                    .reduce(
+                      (total, item) => total + item.quantity * item.price,
+                      0
+                    )
+                    .toFixed(2)}{" "}
+                  €
                 </td>
               </tr>
             </tbody>
@@ -96,17 +309,17 @@ const CateringPage = () => {
         </div>
       )}
 
+      {/* Category Filter */}
       <div>
-        {/* Category Filter */}
-        <div className="mb-4">
-          <label htmlFor="category" className="mr-2 font-semibold">
+        <div className="m-4 lg:mb-10 font-bold text-center lg:mt-20 text-BgFont">
+          <label htmlFor="category" className="mr-2 text-lg lg:text-xl">
             Filter by Category:
           </label>
           <select
             id="category"
             value={selectedCategory}
             onChange={handleCategoryChange}
-            className="border rounded px-4 py-2"
+            className="w-1/5 text-center lg:mb-4 mb-2 lg:p-2 p-1 text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark "
           >
             <option value="all">All</option>
             <option value="starter">Starter</option>
@@ -121,26 +334,35 @@ const CateringPage = () => {
         </div>
 
         {/* Catering Items Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-BgFont text-center">
           {filteredItems.map((item) => (
             <div
               key={item._id}
-              className="border rounded-lg p-4 bg-white shadow-md"
+              className="border-4 border-BgPinkDark rounded-lg cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-primary transition-all duration-300 ease-out"
             >
               <img
                 src={item.imagePath}
-                alt={item.ItemName}
+                alt={item.itemName}
                 className="h-40 w-full object-cover rounded"
               />
-              <h2 className="text-xl font-semibold mt-2">{item.ItemName}</h2>
-              <p className="text-gray-600">{item.category}</p>
-              <p className="font-bold text-lg">${item.price}</p>
-
+              <h2 className="text-m lg:text-lg font-bold px-2 lg:px-4 mt-2">
+                {item.itemName}
+              </h2>
+              <p className="text-m px-2 lg:px-4">{item.category}</p>
+              <p className="font-bold text-m lg:text-lg px-2 lg:px-4">
+                {item.price} €
+              </p>
               <button
-                onClick={() => handleAddToCart(item, 1)}
-                className="mt-2 inline-block text-blue-500 hover:text-blue-700"
+                onClick={() => handleAddToCart(item)}
+                className="m-2 p-2 inline-block text-m font-semibold bg-BgPinkMiddle hover:bg-BgPinkDark rounded"
               >
                 Add to Cart
+              </button>
+              <button
+                onClick={() => navigate(`/cateringPage/${item._id}`)}
+                className="m-2 p-2 inline-block text-m font-semibold bg-BgPinkDark hover:bg-BgPinkMiddle rounded"
+              >
+                See Details
               </button>
             </div>
           ))}

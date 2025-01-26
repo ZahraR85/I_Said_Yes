@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 
-const customerCateringSchema = new Schema(
+// Define the catering selection schema
+const cateringSelectionSchema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Reference to the user
     selectedItems: [
@@ -25,7 +26,7 @@ const customerCateringSchema = new Schema(
             itemName: { type: String, required: true },
             quantity: { type: Number, required: true, default: 1 },
             price: { type: Number, required: true },
-            description: { type: String, required: true },
+            description: { type: String, required: false },
           },
         ],
         categoryTotalPrice: { type: Number, required: true, default: 0 },
@@ -36,4 +37,5 @@ const customerCateringSchema = new Schema(
   { timestamps: true }
 );
 
-export default model("CustomerCatering", customerCateringSchema);
+// Export the model with the correct name
+export default model("CateringSelection", cateringSelectionSchema);
