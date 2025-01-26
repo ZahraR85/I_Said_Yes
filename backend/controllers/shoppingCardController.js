@@ -105,12 +105,12 @@ export const removeFromShoppingCard = async (req, res) => {
         query = { userID };
         break;
       case 'Venue':
-        model = Venue; // Assuming Venue is already imported
+        model = Venue;
         query = { userId: userID }; // Handle lowercase userId specifically for Venue
         break;
         case 'Catering':
           model = Catering;
-          query = { userId: userID };
+          query = { userId: userID };  // Handle lowercase userId specifically for Venue
           break;
       default:
         return res.status(400).json({ message: 'Invalid serviceName provided.' });

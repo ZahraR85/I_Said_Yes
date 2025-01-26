@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAppContext } from "../context/AppContext";
+import { FaTrash } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../App.css";
@@ -230,7 +231,7 @@ const CateringPage = () => {
       );
       setTimeout(() => {
         navigate("/shoppingCard");
-      }, 3000);
+      }, 2000);
     } catch (error) {
       console.error("Error adding to shopping cart:", error);
       toast.error("Failed to add to shopping cart.");
@@ -310,11 +311,12 @@ const CateringPage = () => {
                         Edit
                       </button>
                     )}
-                    <button
-                      onClick={() => handleDeleteRow(index)}
-                      className="ml-2 px-2 py-1 bg-BgPinkMiddle font-bold text-BgFont hover:bg-BgPinkDark rounded"
-                    >
-                      Delete
+                    <button>
+                      <FaTrash
+                        className="ml-4 text-red-400 text-lg lg:text-2xl cursor-pointer hover:text-red-600"
+                        onClick={() => handleDeleteRow(index)}
+                        title="Delete"
+                      />
                     </button>
                   </td>
                 </tr>
