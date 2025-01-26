@@ -1,14 +1,9 @@
 import ShoppingCard from '../models/shoppingCard.js';
-
-
 import Catering from "../models/reception.js";
 import Music from "../models/music.js";
 import Photography from "../models/photography.js";
 import Makeup from "../models/makeup.js";
 import Venue from '../models/venueSelection.js';
-
-
-import mongoose from "mongoose";
 
 // Add or update service in the shopping card
 export const createOrUpdateShoppingCard = async (req, res) => {

@@ -206,6 +206,36 @@ const CateringPage = () => {
     }
     setEditMode(null);
   };
+  const handleShoppingCard = async () => {
+    try {
+      const shoppingCartUrl = `${import.meta.env.VITE_API_URL}/shoppingcards`;
+      const grandTotal = cart.reduce(
+        (total, item) => total + item.quantity * item.price,
+        0
+      );
+
+      const shoppingCartData = {
+        userID: userId,
+        serviceName: "Catering",
+        price: grandTotal,
+      };
+
+      await axios.post(shoppingCartUrl, shoppingCartData, {
+        headers: { "Content-Type": "application/json" },
+      });
+      // Frontend-only addition (optional if the backend handles the cart data)
+      addToShoppingCard(shoppingCartData);
+      toast.success(
+        "Catering service added to your shopping cart successfully!"
+      );
+      setTimeout(() => {
+        navigate("/shoppingCard");
+      }, 3000);
+    } catch (error) {
+      console.error("Error adding to shopping cart:", error);
+      toast.error("Failed to add to shopping cart.");
+    }
+  };
 
   return (
     <div className="p-6">
@@ -305,6 +335,14 @@ const CateringPage = () => {
               </tr>
             </tbody>
           </table>
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={handleShoppingCard}
+              className="px-4 py-2 bg-BgPinkDark text-BgFont font-bold rounded hover:bg-BgPinkMiddle"
+            >
+              Add to Shopping Cart
+            </button>
+          </div>
         </div>
       )}
 
