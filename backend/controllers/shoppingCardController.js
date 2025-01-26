@@ -1,9 +1,10 @@
 import ShoppingCard from '../models/shoppingCard.js';
-import Catering from "../models/reception.js";
+//import Catering from "../models/reception.js";
 import Music from "../models/music.js";
 import Photography from "../models/photography.js";
 import Makeup from "../models/makeup.js";
 import Venue from '../models/venueSelection.js';
+import Catering from '../models/cateringSelection.js';
 
 // Add or update service in the shopping card
 export const createOrUpdateShoppingCard = async (req, res) => {
@@ -99,10 +100,6 @@ export const removeFromShoppingCard = async (req, res) => {
         model = Music;
         query = { userID };
         break;
-      case 'Catering':
-        model = Catering;
-        query = { userID };
-        break;
       case 'Photography':
         model = Photography;
         query = { userID };
@@ -111,6 +108,10 @@ export const removeFromShoppingCard = async (req, res) => {
         model = Venue; // Assuming Venue is already imported
         query = { userId: userID }; // Handle lowercase userId specifically for Venue
         break;
+        case 'Catering':
+          model = Catering;
+          query = { userId: userID };
+          break;
       default:
         return res.status(400).json({ message: 'Invalid serviceName provided.' });
     }
