@@ -1,21 +1,22 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useAppContext } from '../context/AppContext';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SearchCity from "../components/SearchCity";
 import SearchCapacity from "../components/SearchCapacity";
-import SearchPrice from '../components/SearchPrice'; // Import SearchPrice
+import SearchPrice from "../components/SearchPrice"; // Import SearchPrice
 
 const VenueSelectionPage = () => {
   const [venues, setVenues] = useState([]);
   const [filteredVenues, setFilteredVenues] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const { userId, isAuthenticated, selectedCity, setSelectedCity } = useAppContext();
-  const [selectedCapacity, setSelectedCapacity] = useState("All Capacities"); 
-  const [selectedPrice, setSelectedPrice] = useState("All Price"); 
+  const [error, setError] = useState("");
+  const { userId, isAuthenticated, selectedCity, setSelectedCity } =
+    useAppContext();
+  const [selectedCapacity, setSelectedCapacity] = useState("All Capacities");
+  const [selectedPrice, setSelectedPrice] = useState("All Price");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,7 +24,7 @@ const VenueSelectionPage = () => {
       toast.warn("You must sign in to access this page.");
       setTimeout(() => {
         navigate("/signin");
-      }, 3000); 
+      }, 3000);
     }
   }, [isAuthenticated, navigate]);
 
@@ -31,12 +32,14 @@ const VenueSelectionPage = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const venueResponse = await axios.get(`${import.meta.env.VITE_API_URL}/venues`);
+        const venueResponse = await axios.get(
+          `${import.meta.env.VITE_API_URL}/venues`
+        );
         setVenues(venueResponse.data);
         setFilteredVenues(venueResponse.data); // Initialize filteredVenues
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Failed to fetch venue data.');
+        console.error("Error fetching data:", error);
+        setError("Failed to fetch venue data.");
       } finally {
         setLoading(false);
       }
@@ -49,8 +52,8 @@ const VenueSelectionPage = () => {
 
   const handleVenueClick = (venueId) => {
     if (!isAuthenticated) {
-      toast.error('Please log in to book a venue.');
-      navigate('/login');
+      toast.error("Please log in to book a venue.");
+      navigate("/login");
       return;
     }
     navigate(`/venueBooking/${venueId}`);
@@ -63,20 +66,24 @@ const VenueSelectionPage = () => {
       filtered = filtered.filter((venue) => venue.city === city);
     }
     if (selectedCapacity !== "All Capacities") {
-      const capacityRange = selectedCapacity.split('-');
+      const capacityRange = selectedCapacity.split("-");
       if (capacityRange.length === 2) {
         const [min, max] = capacityRange.map(Number);
-        filtered = filtered.filter((venue) => venue.capacity >= min && venue.capacity <= max);
+        filtered = filtered.filter(
+          (venue) => venue.capacity >= min && venue.capacity <= max
+        );
       } else {
         const min = Number(capacityRange[0].replace("+", ""));
         filtered = filtered.filter((venue) => venue.capacity >= min);
       }
     }
     if (selectedPrice !== "All Price") {
-      const priceRange = selectedPrice.split('-');
+      const priceRange = selectedPrice.split("-");
       if (priceRange.length === 2) {
         const [min, max] = priceRange.map(Number);
-        filtered = filtered.filter((venue) => venue.price >= min && venue.price <= max);
+        filtered = filtered.filter(
+          (venue) => venue.price >= min && venue.price <= max
+        );
       } else {
         const min = Number(priceRange[0].replace("+", ""));
         filtered = filtered.filter((venue) => venue.price >= min);
@@ -97,10 +104,10 @@ const VenueSelectionPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-cover bg-center p-20 bg-BgPink">
+    <div className="relative min-h-screen bg-cover bg-center p-2 lg:p-20 bg-BgPink">
       <ToastContainer />
       <div className="absolute inset-0 bg-white/40"></div>
-      <div className="relative mx-auto w-full max-w-[calc(100%-10px)] bg-customBg shadow-md rounded-lg p-5 space-y-4">
+      <div className="relative mx-auto w-full max-w-[calc(100%-10px)] bg-customBg shadow-md rounded-lg p-2 lg:p-5 space-y-4">
         {loading && <p>Loading venues...</p>}
         {error && <p>{error}</p>}
 
@@ -132,7 +139,7 @@ const VenueSelectionPage = () => {
         </div>
 
         {/* Venue Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-6">
           {filteredVenues.map((venue) => (
             <div
               key={venue._id}
@@ -143,12 +150,22 @@ const VenueSelectionPage = () => {
                 src={`${venue.images?.[0]}`}
                 alt={venue.name}
                 className="w-full h-40 object-cover rounded-lg"
-                onError={(e) => (e.target.src = "https://via.placeholder.com/150")} // Fallback for missing images
+                onError={(e) =>
+                  (e.target.src = "https://via.placeholder.com/150")
+                } // Fallback for missing images
               />
-              <h3 className="text-xl text-BgFont font-bold mt-2 px-4">{venue.name}</h3>
-              <p className="text-sm text-BgFont lg:text-m font-semibold mt-2 px-4">Capacity: {venue.capacity}</p>
-              <p className="text-sm text-BgFont lg:text-m font-semibold mt-2 px-4">Price: ${venue.price}</p>
-              <p className="text-sm text-BgFont lg:text-m font-semibold my-2 px-4">City: {venue.city}</p>
+              <h3 className="text-m lg:text-xl text-BgFont font-bold mt-2 px-4">
+                {venue.name}
+              </h3>
+              <p className="text-sm text-BgFont lg:text-m font-semibold mt-2 px-4">
+                Capacity: {venue.capacity}
+              </p>
+              <p className="text-sm text-BgFont lg:text-m font-semibold mt-2 px-4">
+                Price: ${venue.price}
+              </p>
+              <p className="text-sm text-BgFont lg:text-m font-semibold my-2 px-4">
+                City: {venue.city}
+              </p>
             </div>
           ))}
         </div>

@@ -12,7 +12,7 @@ const SearchPrice = ({ selectedPrice, setSelectedPrice, onSearch }) => {
     { label: "5001 - 6000", value: "5001-6000" },
     { label: "6001 - 7000", value: "6001-7000" },
     { label: "7001 - 8000", value: "7001-8000" },
-    { label: "8001+", value: "8001+" }
+    { label: "8001+", value: "8001+" },
   ]);
 
   const handleSearchPrice = () => {
@@ -20,11 +20,11 @@ const SearchPrice = ({ selectedPrice, setSelectedPrice, onSearch }) => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+    <div className="flex flex-row items-center justify-center gap-4">
       <select
         value={selectedPrice}
         onChange={(e) => setSelectedPrice(e.target.value)} // Correctly update state
-        className="w-full p-1 md:w-[300px] border border-BgKhaki focus:outline-none focus:ring focus:ring-BgKhaki rounded-md bg-transparent"
+        className="p-1 lg:p-2 w-[300px]  border border-BgKhaki focus:outline-none focus:ring focus:ring-BgKhaki rounded-md bg-transparent"
       >
         {priceRanges.map((range, index) => (
           <option key={index} value={range.value} className="text-red-500">

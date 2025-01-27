@@ -186,7 +186,7 @@ const VenueBooking = () => {
     <div className="relative min-h-screen bg-cover bg-center p-4 md:p-20 bg-BgPink">
       <ToastContainer />
       <div className="absolute inset-0 bg-white/50"></div>
-      <div className="relative mx-auto w-full max-w-full md:max-w-[calc(100%-100px)] bg-customBg shadow-md rounded-lg p-4 md:p-5 space-y-4">
+      <div className="relative mx-auto w-full max-w-full lg:max-w-[calc(100%-100px)] bg-customBg shadow-md rounded-lg p-4 md:p-5 space-y-4">
         <h1 className="text-2xl md:text-3xl font-bold text-center text-BgFont">
           {venue?.name}
         </h1>
@@ -211,7 +211,7 @@ const VenueBooking = () => {
             </button>
           </div>
         </div>
-        <div className="flex flex-col md:flex-row">
+        <div className="flex flex-row">
           <div className="flex-1 my-4">
             <p className="text-sm md:text-base font-bold text-BgFont my-4">
               City: {venue?.city}
