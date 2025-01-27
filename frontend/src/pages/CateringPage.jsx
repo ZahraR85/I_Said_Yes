@@ -13,8 +13,8 @@ const CateringPage = () => {
   const [filteredItems, setFilteredItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [cart, setCart] = useState([]);
-  const [editMode, setEditMode] = useState(null); // To track which row is being edited
-  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const [editMode, setEditMode] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Number of items per page (can be changed)
 
   const navigate = useNavigate();
@@ -402,6 +402,7 @@ const CateringPage = () => {
             <div
               key={item._id}
               className="border-4 border-BgPinkDark rounded-lg cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-primary transition-all duration-300 ease-out"
+              onClick={() => navigate(`/cateringPage/${item._id}`)}
             >
               <img
                 src={item.imagePath}
@@ -421,12 +422,12 @@ const CateringPage = () => {
               >
                 Add to Cart
               </button>
-              <button
+              {/*<button
                 onClick={() => navigate(`/cateringPage/${item._id}`)}
                 className="m-2 p-2 inline-block text-m font-semibold bg-BgPinkMiddle hover:bg-BgPinkDark rounded"
               >
                 See Details
-              </button>
+              </button> */}
             </div>
           ))}
         </div>

@@ -172,9 +172,6 @@ const Navbar1 = () => {
             </Link>
           </li> */}
           <li className="hover:underline">
-            <Link to="/Catering">Catering</Link>
-          </li>
-          <li className="hover:underline">
             <Link to="/cateringPage">Catering</Link>
           </li>
           <li className="hover:underline">
@@ -224,8 +221,8 @@ const Navbar1 = () => {
               <Link to="/cateringPage" className="text-BgFont hover:underline">
                 Catering
               </Link>
-              {/*<Link to="/Catering" className="text-BgFont hover:underline">
-                Catering
+              {/*<Link to="/Reception" className="text-BgFont hover:underline">
+                Reception
               </Link> */}
               <Link to="/photography" className="text-BgFont hover:underline">
                 Photography
