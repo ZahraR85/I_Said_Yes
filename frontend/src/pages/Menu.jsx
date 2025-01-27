@@ -99,7 +99,7 @@ const Menu = () => {
         },
         {
           name: "Seafood Paella",
-          price: 30,
+          price: 26,
           variants: ["Classic", "Spicy", "Low-Calorie", "Gluten-Free"],
         },
         { name: "Baked Ziti with Meat Sauce", price: 16 },
@@ -107,8 +107,8 @@ const Menu = () => {
         { name: "Vegetarian Stir-Fry", price: 14 },
         { name: "Grilled Tuna Steak", price: 24 },
         { name: "Honey-Glazed Duck Breast", price: 26 },
-        { name: "Mushroom Risotto", price: 17 },
-        { name: "Spinach and Ricotta Ravioli", price: 15 },
+        { name: "Mushroom Risotto", price: 14 },
+        { name: "Spinach and Ricotta Ravioli", price: 16 },
         {
           name: "Chicken Tikka Masala",
           price: 18,
@@ -175,7 +175,7 @@ const Menu = () => {
         },
         {
           name: "Crème Brûlée",
-          price: 12,
+          price: 10,
           variants: [
             "Classic",
             "Sugar-Free",
@@ -184,7 +184,7 @@ const Menu = () => {
             "Deluxe",
           ],
         },
-        { name: "Carrot Cake", price: 7 },
+        { name: "Carrot Cake", price: 6 },
         { name: "Apple Pie with Vanilla Ice Cream", price: 8 },
         { name: "Peach Cobbler", price: 7 },
         { name: "Brownie Sundae", price: 9 },
@@ -211,12 +211,12 @@ const Menu = () => {
         },
         {
           name: "Lemon Meringue Pie",
-          price: 9,
+          price: 7,
           variants: ["Classic", "Mini-Portion", "Gluten-Free", "Sugar-Free"],
         },
         {
           name: "Churros with Chocolate Dip",
-          price: 8,
+          price: 6,
           variants: [
             "Classic",
             "Sugar-Free",
@@ -230,7 +230,7 @@ const Menu = () => {
           price: 7,
           variants: ["Chocolate", "Vanilla", "Coffee", "Mix"],
         },
-        { name: "Profiteroles", price: 8 },
+        { name: "Profiteroles", price: 6 },
       ],
     },
     {

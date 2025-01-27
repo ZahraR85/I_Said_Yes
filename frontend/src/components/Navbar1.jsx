@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import logo from "../images/logo8.jpg";
 import {
@@ -14,7 +14,6 @@ const Navbar1 = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const {
     userId,
-    hoveredDropdown,
     setHoveredDropdown,
     isAuthenticated,
     role,
@@ -164,14 +163,14 @@ const Navbar1 = () => {
           <li className="hover:underline">
             <Link to="/VenueSelections">Book your Venue</Link>
           </li>
-          <li className="hover:underline">
+          {/*<li className="hover:underline">
             <Link
               to="/ReceptionSelector"
               className="text-BgFont hover:underline"
             >
               Reception
             </Link>
-          </li>
+          </li> */}
           <li className="hover:underline">
             <Link to="/Catering">Catering</Link>
           </li>
@@ -222,15 +221,12 @@ const Navbar1 = () => {
               >
                 Book your Venue
               </Link>
-              <Link
-                to="/ReceptionSelector"
-                className="text-BgFont hover:underline"
-              >
-                Reception
-              </Link>
-              <Link to="/Catering" className="text-BgFont hover:underline">
+              <Link to="/cateringPage" className="text-BgFont hover:underline">
                 Catering
               </Link>
+              {/*<Link to="/Catering" className="text-BgFont hover:underline">
+                Catering
+              </Link> */}
               <Link to="/photography" className="text-BgFont hover:underline">
                 Photography
               </Link>
@@ -255,6 +251,12 @@ const Navbar1 = () => {
                     className="text-BgFont hover:underline"
                   >
                     Venue Management
+                  </Link>
+                  <Link
+                    to="/Admin/AdminCatering"
+                    className="text-BgFont hover:underline"
+                  >
+                    Catering Management
                   </Link>
                   <Link
                     to="/AdminMusicOption"

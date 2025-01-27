@@ -214,24 +214,26 @@ const Photography = () => {
   return (
     <div className="relative min-h-screen bg-cover bg-center p-4  bg-[url('https://i.postimg.cc/Kv1WnL9Q/photography.png')]">
       <div className="absolute inset-0 bg-white/60"></div>
-      <div className="relative mx-auto w-full max-w-[calc(100%-40px)] sm:max-w-[calc(60%-180px)] bg-opacity-80 shadow-md rounded-lg p-4 sm:p-8 space-y-5">
-        <h1 className="text-xl sm:text-2xl font-bold text-center text-BgFont my-4 lg:my-16">
-          Photography Services
-        </h1>
-        <ToastContainer />
+      <ToastContainer />
+      <div className="relative mx-auto w-full max-w-[calc(85%-130px)] lg:max-w-[calc(60%-160px)] bg-opacity-80 shadow-md rounded-lg p-4 sm:p-8 space-y-5">
+        <h2 className="text-sm lg:text-2xl sm:text-2xl font-bold text-center text-BgFont my-4 lg:my-16">
+          You can choose your Photography Services here!
+        </h2>
         {/* Hover Description */}
-        <div className="mt-4 text-BgFont bg-BgPink p-2 rounded">
-          <h2 className="font-bold">Description:</h2>
-          <p>{currentDescription || "Hover over an option to see details."}</p>
+        <div className="mt-2 lg:mt-4 text-BgFont bg-BgPink p-2 rounded">
+          <h2 className="text-sm lg:text-lg font-bold">Description:</h2>
+          <p className="text-sm lg:text-lg">
+            {currentDescription || "Hover over an option to see details."}
+          </p>
         </div>
         {features.map((feature) => (
           <div
             key={feature.id}
-            className="flex items-center justify-between mb-4"
+            className="flex items-center justify-between"
             onMouseEnter={() => handleMouseEnter(feature.description)}
             onMouseLeave={handleMouseLeave}
           >
-            <span className="text-sm lg:text-lg font-semibold lg:font-bold text-BgFont w-1/2">
+            <span className="text-sm lg:text-lg font-semibold lg:font-bold text-BgFont w-1/2 ">
               {feature.label}:
             </span>
             {feature.id === "physicalAlbum" ? (
@@ -241,7 +243,7 @@ const Photography = () => {
                 data-category={feature.id}
                 checked={formData[feature.id]?.selected || false}
                 onChange={handleChange}
-                className="text-center w-5 h-5"
+                className="text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center w-5 h-5"
               />
             ) : (
               <input
@@ -250,17 +252,17 @@ const Photography = () => {
                 data-category={feature.id}
                 value={formData[feature.id]?.number || 0}
                 onChange={handleChange}
-                className="border p-2 rounded w-1/3 sm:w-1/4 border-BgPinkDark hover:border-BgPinkDark hover:border-2 focus:outline-none focus:border-BgPinkDark"
+                className="border px-2 lg:p-2 rounded w-1/3 border-BgPinkDark hover:border-BgPinkDark hover:border-2 focus:outline-none focus:border-BgPinkDark"
               />
             )}
           </div>
         ))}
-        <h2 className="text-lg sm:text-xl font-bold text-BgFont text-center py-4 sm:py-6">
+        <h2 className="text-m lg:text-xl font-bold text-BgFont text-center lg:py-4">
           Total Price: {total} €
         </h2>
         <button
           onClick={handleSubmit}
-          className="bg-BgPinkMiddle text-BgFont text-lg font-bold hover:bg-BgPinkDark w-full px-4 py-2 rounded"
+          className="bg-BgPinkMiddle text-BgFont text-lg font-bold hover:bg-BgPinkDark w-full px-2 lg:px-4 py-1 lg:py-2 rounded"
           disabled={loading}
         >
           {loading ? "Processing..." : isEditMode ? "Update" : "Submit"}
