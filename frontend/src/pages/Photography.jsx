@@ -212,11 +212,11 @@ const Photography = () => {
     setCurrentDescription("");
   };
   return (
-    <div className="relative min-h-screen bg-cover bg-center p-4  bg-[url('https://i.postimg.cc/Kv1WnL9Q/photography.png')]">
+    <div className="relative min-h-screen bg-cover bg-center bg-[url('https://i.postimg.cc/Kv1WnL9Q/photography.png')]">
       <div className="absolute inset-0 bg-white/60"></div>
       <ToastContainer />
-      <div className="relative mx-auto w-full max-w-[calc(85%-130px)] lg:max-w-[calc(60%-160px)] bg-opacity-80 shadow-md rounded-lg p-4 sm:p-8 space-y-5">
-        <h2 className="text-sm lg:text-2xl sm:text-2xl font-bold text-center text-BgFont my-4 lg:my-16">
+      <div className="relative mx-auto w-full max-w-[calc(85%-170px)] lg:max-w-[calc(60%-180px)] bg-opacity-80 shadow-md rounded-lg p-4 sm:p-8 space-y-5">
+        <h2 className="text-lg lg:text-2xl font-bold text-center text-BgFont my-1 lg:my-16">
           You can choose your Photography Services here!
         </h2>
         {/* Hover Description */}
