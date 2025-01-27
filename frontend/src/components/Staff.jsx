@@ -1,4 +1,3 @@
-
 const weddingProfessionals = [
   {
     name: "Noemi Bellante",
@@ -7,7 +6,7 @@ const weddingProfessionals = [
     link: "Noemi Bellante Wedding Planner Italy",
     country: "Italy",
     flag: "🇮🇹",
-    image: "../imagess/profile3.jpg",
+    image: "../imagess/profile1.jpg",
   },
   {
     name: "Nelli",
@@ -34,7 +33,7 @@ const weddingProfessionals = [
     link: "Ayaka Ishimura Wedding & Design",
     country: "Japan",
     flag: "🇯🇵",
-    image: "../imagess/profile5.jpg",
+    image: "../imagess/profile5.JPG",
   },
   {
     name: "Elena Rossi",
@@ -43,7 +42,7 @@ const weddingProfessionals = [
     link: "Elena Rossi Events",
     country: "Italy",
     flag: "🇮🇹",
-    image: "../imagess/profile1.jpg",
+    image: "../imagess/profile6.jpg",
   },
   {
     name: "László Kovács",
@@ -52,9 +51,9 @@ const weddingProfessionals = [
     link: "László Kovács Wedding Planning",
     country: "Hungary",
     flag: "🇭🇺",
-    image: "../imagess/profile6.jpg",
+    image: "../imagess/profile3.jpg",
   },
- /* {
+  /* {
     name: "Claire Dubois",
     description:
       "Claire is a Paris-based wedding planner known for her creativity and dedication to designing fairytale weddings. She works closely with her clients to create magical moments.",
@@ -68,10 +67,12 @@ const weddingProfessionals = [
 const Staff = () => {
   return (
     <div className="relative min-h-screen bg-cover bg-center">
-    {/* Overlay for controlling opacity */}
-    {/* <div className="absolute inset-0 bg-white/50"></div>*/}
-    <div className="relative mx-auto w-full shadow-md rounded-lg p-5 space-y-4 bg-customBg1">
-      <h2 className="text-lg lg:text-3xl font-bold text-BgFont mb-12">Meet Our Team</h2>
+      {/* Overlay for controlling opacity */}
+      {/* <div className="absolute inset-0 bg-white/50"></div>*/}
+      <div className="relative mx-auto w-full shadow-md rounded-lg p-5 space-y-4 bg-customBg1">
+        <h2 className="text-lg lg:text-3xl font-bold text-BgFont mb-12">
+          Meet Our Team
+        </h2>
         <div className="grid gap-8 text-sm lg:text-lg sm:grid-cols-2 lg:grid-cols-3">
           {weddingProfessionals.map((professional, index) => (
             <div

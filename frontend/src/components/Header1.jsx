@@ -7,15 +7,16 @@ const Header1 = ({ onScrollToSearchVenues }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const sliderImages = [
-    "https://i.postimg.cc/wMB8VqcC/Makeup18.jpg",
-    "https://i.postimg.cc/1XS45qSp/bridemaids2.jpg",
-    "https://i.postimg.cc/D0Rqv49P/makeup1.jpg",
-    "https://i.postimg.cc/d3Fh4mcX/makeup2.png",
-    "https://i.postimg.cc/gJTMhj9n/music1.png",
-    "https://i.postimg.cc/2SC8M8Jq/photo1.jpg",
     "https://i.postimg.cc/FKdtnM9d/photo2.jpg",
-    "https://i.postimg.cc/BvWN4kT1/photo3.webp",
+    "https://i.postimg.cc/1XS45qSp/bridemaids2.jpg",
+    "https://i.postimg.cc/fytBhnfF/makeup20.jpg",
+    "https://i.postimg.cc/Dz7WVrc3/hair-Style1.png",
+    //"https://i.postimg.cc/wMB8VqcC/Makeup18.jpg",
+    "https://i.postimg.cc/6pPGJJgC/music2.jpg",
     "https://i.postimg.cc/T1Wpd7qp/photo5.jpg",
+    "https://i.postimg.cc/BvWN4kT1/photo3.webp",
+    "https://i.postimg.cc/KjX8JmK8/my.jpg",
+    "https://i.postimg.cc/2SC8M8Jq/photo1.jpg",
   ];
 
   const handleNext = () => {
@@ -47,7 +48,6 @@ const Header1 = ({ onScrollToSearchVenues }) => {
 
   return (
     <header className="relative h-screen overflow-hidden">
-
       <div className="relative h-full">
         <img
           src={sliderImages[currentIndex]}
