@@ -230,14 +230,15 @@ function Guest() {
   return (
     <div>
       <ToastContainer />
-      <div className="relative min-h-screen bg-cover bg-center p-5 lg:p-20 bg-[url('https://i.postimg.cc/K8V29bgB/dance-of-guests.png')]">
+      <div className="relative min-h-screen bg-cover bg-center p-5 lg:p-14 bg-[url('https://i.postimg.cc/K8V29bgB/dance-of-guests.png')]">
         {/* Overlay for controlling opacity */}
         <div className="absolute inset-0 bg-white/50"></div>
         <div className="relative mx-auto w-full lg:max-w-[calc(90%-200px)] max-w-full bg-opacity-90 shadow-md rounded-lg lg:space-y-4 space-y-2">
           {/*<div className="min-h-screen bg-BgCreme px-20 py-10">*/}
           {/*<div className="container mx-auto bg-BgGray shadow-md rounded-lg p-8 space-y-6">*/}
-          <h2 className="text-lg lg:text-2xl font-bold text-center text-BgFont mb-5">
-            Add your Guests here please!
+          <h2 className="text-lg lg:text-xl font-bold text-center text-BgFont mb-5">
+            You can Add your Guest's List here and send them invitation Card by
+            Email!
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 md:grid-cols-2 lg:gap-4 gap-2">
