@@ -104,13 +104,16 @@ const VenueSelectionPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-cover bg-center p-2 lg:p-20 bg-BgPink">
+    <div className="relative min-h-screen bg-cover bg-center p-2 lg:p-6 bg-BgPink">
       <ToastContainer />
       <div className="absolute inset-0 bg-white/40"></div>
-      <div className="relative mx-auto w-full max-w-[calc(100%-10px)] bg-customBg shadow-md rounded-lg p-2 lg:p-5 space-y-4">
+      <div className="relative mx-auto w-full max-w-[calc(100%-10px)] bg-white shadow-md rounded-lg p-2 lg:p-5 space-y-4">
         {loading && <p>Loading venues...</p>}
         {error && <p>{error}</p>}
-
+        <h2 className="text-sm lg:text-xl font-bold text-center text-BgFont mb-5">
+          You can Search your desired Venue by City, Price and capacity that you
+          need here and then select one Card to book.
+        </h2>
         {/* SearchCity Component */}
         <div className="mb-4">
           <SearchCity
