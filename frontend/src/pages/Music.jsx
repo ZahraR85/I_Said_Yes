@@ -170,16 +170,16 @@ const MusicSelectionForm = () => {
       <ToastContainer />
       {/* Overlay for controlling opacity */}
       <div className="absolute inset-0 bg-white/50"></div>
-      <div className="relative mx-auto w-full max-w-full lg:max-w-[calc(70%-100px)] bg-opacity-80 shadow-md rounded-lg p-4 space-y-6">
-        <h2 className="text-2xl font-bold text-center text-BgFont mb-4">
+      <div className="relative mx-auto w-full max-w-full lg:max-w-[calc(80%-100px)] bg-opacity-80 shadow-md rounded-lg p-4 space-y-6">
+        <h2 className="text-xl lg:text-2xl font-bold text-center text-BgFont mb-4">
           Select your Music bands
         </h2>
         <form onSubmit={handleSubmit}>
-          <h3 className="text-lg font-semibold text-BgFont border-b pb-2 mb-4">
+          <h3 className="text-sm lg:text-lg font-semibold text-BgFont border-b pb-2 mb-4">
             You can choose several Music instrument, bands, DJ and etc. Price is
             counted per hour!
           </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {musicOptions.map((option) => (
               <div
                 key={option._id}
@@ -187,8 +187,10 @@ const MusicSelectionForm = () => {
                 onMouseLeave={() => setHoveredOption(null)}
                 className="relative border p-4 rounded-lg bg-gray-50"
               >
-                <p className="font-bold text-BgFont mb-2">{option.name}</p>
-                <p className="text-BgFont font-semibold mb-2">
+                <p className="text-sm lg:text-lg font-bold text-BgFont mb-2">
+                  {option.name}
+                </p>
+                <p className="text-sm lg:text-lg text-BgFont font-semibold mb-2">
                   Price: {option.pricePerHour} €/hour
                 </p>
                 <label className="block">
@@ -200,12 +202,12 @@ const MusicSelectionForm = () => {
                     onChange={(e) =>
                       handleHoursChange(option._id, e.target.value)
                     }
-                    className="w-full p-2 border border-BgPinkDark rounded hover:border-BgPinkDark hover:border-2 focus:outline-none focus:border-BgPinkDark"
+                    className="w-full p-2 text-sm lg:text-lg border border-BgPinkDark rounded hover:border-BgPinkDark hover:border-2 focus:outline-none focus:border-BgPinkDark"
                   />
                 </label>
                 {hoveredOption === option._id && (
                   <div className="absolute top-2 left-full ml-4 p-8 bg-customBg1 border rounded shadow-lg w-96 z-10">
-                    <p className="text-xl text-BgFont font-semibold">
+                    <p className="text-sm lg:text-lg text-BgFont font-semibold">
                       {option.description}
                     </p>
                   </div>

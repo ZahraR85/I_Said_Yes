@@ -83,7 +83,7 @@ const CategoryItems = () => {
   return (
     <div className="p-6">
       <ToastContainer />
-      <h2 className="text-lg lg:text-2xl font-bold mb-4 capitalize">
+      <h2 className="text-lg lg:text-2xl font-bold mb-4 text-BgFont capitalize">
         Items in {category}
       </h2>
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-4">
