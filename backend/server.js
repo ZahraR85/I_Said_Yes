@@ -12,7 +12,7 @@ import photographyRoutes from "./routes/photographies.js";
 import makeupsRouter from "./routes/makeups.js";
 import receptionsRouter from "./routes/receptions.js";
 import cateringRouter from "./routes/cateringRouter.js";
-import cateringSelectionRouter from "./routes/CateringSelectionRouter.js";
+import cateringSelectionRouter from "./routes/cateringSelectionRouter.js";
 import guestRouter from "./routes/guest.js";
 import musicRouter from "./routes/music.js";
 import musicOptionRouter from "./routes/musicOption.js";
