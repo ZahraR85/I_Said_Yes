@@ -1,6 +1,5 @@
-
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const InformationUser = ({ userId, setWeddingDate }) => {
   const [userInfo, setUserInfo] = useState(null);
@@ -12,7 +11,9 @@ const InformationUser = ({ userId, setWeddingDate }) => {
       try {
         if (!userId) throw new Error("User ID is not provided.");
 
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/userinfoes/${userId}`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/userinfoes/${userId}`
+        );
         const data = response.data;
 
         if (data && data.weddingDate) {
@@ -39,14 +40,25 @@ const InformationUser = ({ userId, setWeddingDate }) => {
     <div className="user-info">
       {/* <h2 className="text-2xl font-bold mb-4">your Information</h2> */}
 
-
       <div className="mx-auto  max-w-[calc((6)0%-130px)] text-BgFont font-serif  space-y-4 p-4  ">
-
-        <p style={{ fontSize: "3rem", fontWeight: "bold", textAlign: "center", textTransform: "uppercase", }}>
-          {userInfo.brideName || "N/A"} <span>&</span> {userInfo.groomName || "N/A"}
+        <p
+          style={{
+            fontSize: "2rem",
+            fontWeight: "bold",
+            textAlign: "center",
+            textTransform: "uppercase",
+          }}
+        >
+          {userInfo.brideName || "N/A"} <span>&</span>{" "}
+          {userInfo.groomName || "N/A"}
         </p>
 
-        <p><strong>The Day We Will Begin Forever</strong> {userInfo.weddingDate ? new Date(userInfo.weddingDate).toLocaleDateString() : "N/A"}</p>
+        <p>
+          <strong>The Day We Will Begin Forever</strong>{" "}
+          {userInfo.weddingDate
+            ? new Date(userInfo.weddingDate).toLocaleDateString()
+            : "N/A"}
+        </p>
 
         {/* <p><strong>Our Story:</strong> {userInfo.story || "No story provided."}</p> */}
 
@@ -56,14 +68,7 @@ const InformationUser = ({ userId, setWeddingDate }) => {
         {/* <p><strong>Bride's Birthday:</strong> {userInfo.brideBirthday ? new Date(userInfo.brideBirthday).toLocaleDateString() : "N/A"}</p> */}
         {/* <p><strong>Groom's Birthday:</strong> {userInfo.groomBirthday ? new Date(userInfo.groomBirthday).toLocaleDateString() : "N/A"}</p> */}
       </div>
-
     </div>
-
-
-
-
-
-
   );
 };
 

@@ -1,19 +1,19 @@
-
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const DownCount = ({ weddingDate }) => {
   const calculateTimeLeft = () => {
     const targetDate = new Date(weddingDate); // Use weddingDate from props
     const now = new Date();
     const difference = targetDate - now;
-   
+
     let timeLeft = {};
 
     if (difference > 0) {
       timeLeft = {
         days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        hours: Math.floor(
+          (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        ),
         minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
         seconds: Math.floor((difference % (1000 * 60)) / 1000),
       };
@@ -38,29 +38,46 @@ const DownCount = ({ weddingDate }) => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-BgFont text-center font-serif mb-6">The Countdown to Us</h1>
+      <h1 className="text-2xl font-bold text-BgFont text-center font-serif mb-6">
+        The Countdown to Us
+      </h1>
       <div className="flex justify-center gap-4">
-
-        <div className="relative p-4 rounded-lg w-24 h-24 bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
-          <span className="text-5xl font-bold font-serif text-BgFont drop-shadow-md tracking-widest">
-            {timeLeft.days ?? '00'}
-          </span><br />
+        <div className="relative p-4 rounded-lg w-20 h-20 bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
+          <span className="text-4xl font-bold font-serif text-BgFont drop-shadow-md tracking-widest">
+            {timeLeft.days ?? "00"}
+          </span>
+          <br />
           <p className="text-xs text-BgFont font-serif uppercase tracking-wider mt-1">
             Days
           </p>
         </div>
 
-        <div className="relative p-4 rounded-lg w-24 h-24 bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
-          <span className="text-5xl font-bold text-BgFont font-serif drop-shadow-md tracking-widest">{timeLeft.hours ?? '00'}</span><br />
-          <p className="text-xs text-BgFont uppercase font-serif tracking-wider mt-1">Hours</p>
+        <div className="relative p-4 rounded-lg w-20 h-20 bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
+          <span className="text-4xl font-bold text-BgFont font-serif drop-shadow-md tracking-widest">
+            {timeLeft.hours ?? "00"}
+          </span>
+          <br />
+          <p className="text-xs text-BgFont uppercase font-serif tracking-wider mt-1">
+            Hours
+          </p>
         </div>
-        <div className="relative p-4 rounded-lg w-24 h-24 bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
-          <span className="text-5xl font-bold text-BgFont font-serif drop-shadow-md tracking-widest">{timeLeft.minutes ?? '00'}</span><br />
-          <p className="text-xs text-BgFont uppercase font-serif tracking-wider mt-1">Minutes</p>
+        <div className="relative p-4 rounded-lg w-20 h-20 bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
+          <span className="text-4xl font-bold text-BgFont font-serif drop-shadow-md tracking-widest">
+            {timeLeft.minutes ?? "00"}
+          </span>
+          <br />
+          <p className="text-xs text-BgFont uppercase font-serif tracking-wider mt-1">
+            Minutes
+          </p>
         </div>
-        <div className="relative p-4 rounded-lg w-24 h-24 bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
-          <span className="text-5xl font-bold text-BgFont font-serif drop-shadow-md tracking-widest">{timeLeft.seconds ?? '00'}</span><br />
-          <p className="text-xs text-BgFont uppercase font-serif tracking-wider mt-1">Seconds</p>
+        <div className="relative p-4 rounded-lg w-20 h-20 bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
+          <span className="text-4xl font-bold text-BgFont font-serif drop-shadow-md tracking-widest">
+            {timeLeft.seconds ?? "00"}
+          </span>
+          <br />
+          <p className="text-xs text-BgFont uppercase font-serif tracking-wider mt-1">
+            Seconds
+          </p>
         </div>
       </div>
     </div>

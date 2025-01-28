@@ -27,7 +27,7 @@ const Dashboard = () => {
       toast.warn("You must sign in to access this page.");
       setTimeout(() => {
         navigate("/signin");
-      }, 3000);
+      }, 2000);
     }
   }, [isAuthenticated, navigate]);
 
@@ -42,7 +42,6 @@ const Dashboard = () => {
           return;
         }
         const response = await axios.get(
-         // `http://localhost:3001/userinfoes/check/${userId}`
           `${import.meta.env.VITE_API_URL}/userinfoes/check/${userId}`
         );
 
@@ -65,7 +64,7 @@ const Dashboard = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="grid grid-cols-1 gap-4 p-4 bg-neutral-200">
+    <div className="grid grid-cols-1 gap-4 px-2 bg-neutral-200">
       <ToastContainer />
       {/* User Information as Header */}
       <div className="flex justify-center items-center p-4 bg-[#e8dfcf] shadow-2xl rounded-lg">
@@ -74,40 +73,50 @@ const Dashboard = () => {
 
       {/* Countdown and Todolist in one row */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="flex justify-center items-center p-4 rounded-full shadow-2xl bg-e8dfcf h-[400px]">
+        <div className="flex justify-center items-center p-4 rounded-full shadow-2xl bg-[#e8dfcf] h-[300px]">
           <Countdown weddingDate={weddingDate} />
         </div>
-        <div className="flex justify-center items-center p-4 rounded-3xl shadow-2xl bg-[#e8dfcf] h-[400px]">
+        <div className="flex justify-center items-center p-4 rounded-3xl shadow-2xl bg-[#e8dfcf] h-[300px]">
           <Todolist userId={userId} />
         </div>
       </div>
 
       {/* Header */}
-      <h2 className="text-4xl font-bold text-BgFont text-center mt-6 mb-4 bg-[#e8dfcf] p-6 font-serif rounded-lg shadow-md">Dashboard Overview</h2>
+      <h2 className="text-3xl font-bold text-BgFont text-center my-2 bg-[#e8dfcf] p-4 font-serif rounded-lg shadow-md">
+        Dashboard Overview
+      </h2>
 
       {/* Rest of the components in one row */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-2">
         <div className="flex flex-col items-center">
-          <h2 className="text-3xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">Music</h2>
-          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#f5d0cb] w-[350px] h-[600px]">
+          <h2 className="text-2xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
+            Music
+          </h2>
+          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#f5d0cb] w-[350px] h-[500px]">
             <Music userId={userId} />
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <h2 className="text-3xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">Catering</h2>
-          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#e8dfcf] bg-gradient-to-br w-[350px] h-[600px]">
+          <h2 className="text-2xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
+            Catering
+          </h2>
+          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#e8dfcf] bg-gradient-to-br w-[350px] h-[500px]">
             <Catering userId={userId} />
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <h2 className="text-3xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">Makeup</h2>
-          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#fff2f4] w-[350px] h-[600px]">
+          <h2 className="text-2xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
+            Makeup
+          </h2>
+          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#fff2f4] w-[350px] h-[500px]">
             <MakeupUser userId={userId} />
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <h2 className="text-3xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">Photography</h2>
-          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#d5c0b5] w-[370px] h-[600px]">
+          <h2 className="text-2xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
+            Photography
+          </h2>
+          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#d5c0b5] w-[350px] h-[500px]">
             <PhotographyUserSelection userId={userId} />
           </div>
         </div>
@@ -127,39 +136,12 @@ const Dashboard = () => {
         </div>
       </div>
 
-  
-  
-      <AI/>
-   
-
+      <AI />
     </div>
   );
 };
 
 export default Dashboard;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import { useEffect, useState } from "react";
 // import axios from "axios";
@@ -232,7 +214,6 @@ export default Dashboard;
 //           <UserInformation userId={userId} setWeddingDate={setWeddingDate} />
 //         </div>
 
-
 //         {/* Music */}
 //         <div className="flex justify-center items-center p-4 rounded shadow w-full"
 //           style={{
@@ -251,17 +232,10 @@ export default Dashboard;
 
 //         </div>
 
-
-
-
-
-
-
 //       </div>
 
 //       {/* Right Column */}
 //       <div className="flex flex-col gap-4">
-
 
 //         {/* Countdown */}
 //         <div
@@ -275,8 +249,6 @@ export default Dashboard;
 //           <Countdown weddingDate={weddingDate} />
 //         </div>
 
-
-
 //         {/* Makeup  */}
 //         <div className="flex justify-center items-center p-4 rounded shadow h-[300px] md:h-[400px]"
 //           style={{
@@ -286,7 +258,6 @@ export default Dashboard;
 //           }}>
 //           <MakeupUser userId={userId} />
 //         </div>
-
 
 //       </div>
 //       <div className="flex justify-center items-center p-4 rounded shadow h-[300px] md:h-[400px]"
@@ -300,7 +271,6 @@ export default Dashboard;
 //         <Catering userId={userId} />
 //     </div>
 //   );
-
 
 // };
 

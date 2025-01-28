@@ -374,7 +374,7 @@ const CateringPage = () => {
 
       {/* Category Filter */}
       <div>
-        <div className="m-4 lg:mb-10 font-bold text-center lg:mt-20 text-BgFont">
+        <div className="m-4 lg:my-6 font-bold text-center text-BgFont">
           <label htmlFor="category" className="mr-2 text-lg lg:text-xl">
             Filter by Category:
           </label>
@@ -402,7 +402,6 @@ const CateringPage = () => {
             <div
               key={item._id}
               className="border-4 border-BgPinkDark rounded-lg cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-primary transition-all duration-300 ease-out"
-              onClick={() => navigate(`/cateringPage/${item._id}`)}
             >
               <img
                 src={item.imagePath}
@@ -420,14 +419,14 @@ const CateringPage = () => {
                 onClick={() => handleAddToCart(item)}
                 className="m-2 p-2 inline-block text-m font-semibold bg-BgPinkMiddle hover:bg-BgPinkDark rounded"
               >
-                Add to Cart
+                Add to List
               </button>
-              {/*<button
+              <button
                 onClick={() => navigate(`/cateringPage/${item._id}`)}
                 className="m-2 p-2 inline-block text-m font-semibold bg-BgPinkMiddle hover:bg-BgPinkDark rounded"
               >
                 See Details
-              </button> */}
+              </button>
             </div>
           ))}
         </div>
