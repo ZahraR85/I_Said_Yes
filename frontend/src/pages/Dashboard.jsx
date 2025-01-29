@@ -72,11 +72,11 @@ const Dashboard = () => {
       </div>
 
       {/* Countdown and Todolist in one row */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex justify-center items-center p-4 rounded-full shadow-2xl bg-[#e8dfcf] h-[300px]">
+      <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-4 gap-2">
+        <div className="flex justify-center items-center p-4 rounded-full shadow-2xl bg-[#e8dfcf] h-[200px] lg:h-[300px]">
           <Countdown weddingDate={weddingDate} />
         </div>
-        <div className="flex justify-center items-center p-4 rounded-3xl shadow-2xl bg-[#e8dfcf] h-[300px]">
+        <div className="flex justify-center items-center p-4 rounded-3xl shadow-2xl bg-[#e8dfcf] h-[200px] lg:h-[300px]">
           <Todolist userId={userId} />
         </div>
       </div>

@@ -1,8 +1,6 @@
-
-
 import Guest from '../models/guest.js';
 import Makeup from '../models/makeup.js';
-import Reception from '../models/reception.js';
+import Catering from '../models/cateringSelection.js';
 import Music from '../models/music.js';
 import Photography from '../models/photography.js';
 import Userinfo from '../models/userinfo.js';
@@ -11,7 +9,7 @@ import Venue from '../models/venueSelection.js';
 const models = [
     { model: Guest, name: "Guest" },
     { model: Makeup, name: "Makeup" },
-    { model: Reception, name: "Catering" },
+    { model: Catering, name: "Catering" },
     { model: Music, name: "Music" },
     { model: Photography, name: "Photography" },
     { model: Userinfo, name: "Detail Information" },
@@ -27,8 +25,8 @@ export async function getUserProgress(userID) {
     for (const { model, name } of models) {
         try {
             let exists;
-            if (name === "Venue") {
-                // Query using 'userId' for Venue model
+            if (name === "Venue" || name === "Catering") {
+                // Query using 'userId' for Venue and Catering models
                 exists = await model.exists({ userId: userID });
             } else {
                 // Query using 'userID' for other models
@@ -50,8 +48,6 @@ export async function getUserProgress(userID) {
 
     const percentageDone = Math.round((completedCount / models.length) * 100);
 
-
-
     return {
         completedCount,
         totalModels: models.length,
@@ -59,4 +55,3 @@ export async function getUserProgress(userID) {
         progressData,
     };
 }
-

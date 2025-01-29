@@ -73,10 +73,10 @@ const Todolist = ({ userId }) => {
             <tbody>
               {Object.entries(modelProgress).map(([key, value], index) => (
                 <tr key={index}>
-                  <td style={{ padding: "4px", textAlign: "center" }}>
+                  <td className="lg:p-2 p-1/3 text-center">
                     {value ? "✔️" : "❌"}
                   </td>
-                  <td style={{ padding: "4px" }}>{key}</td>
+                  <td className="p-1 lg:p-2 lg:text-lg text-xs">{key}</td>
                 </tr>
               ))}
             </tbody>
@@ -84,20 +84,16 @@ const Todolist = ({ userId }) => {
         </div>
 
         {/* Pie Chart */}
-        <div style={{ width: "250px", height: "250px" }}>
+        <div className="lg:w-[250px] w-[180px] lg:h-[250px] h-[180px]">
           <Pie
             data={pieData}
             options={{
               maintainAspectRatio: false,
             }}
           />
-          <p
-            style={{
-              textAlign: "center",
-              marginTop: "4px",
-              marginBottom: "2px",
-            }}
-          >
+        </div>
+        <div>
+          <p className="text-center text-m lg:text-lg m-1">
             {percentageDone}% DONE
           </p>
         </div>
