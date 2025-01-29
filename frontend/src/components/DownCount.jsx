@@ -38,44 +38,44 @@ const DownCount = ({ weddingDate }) => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-BgFont text-center font-serif mb-6">
+      <h1 className="text-xl lg:text-2xl font-bold text-BgFont text-center font-serif mb-6">
         The Countdown to Us
       </h1>
       <div className="flex justify-center gap-4">
-        <div className="relative p-4 rounded-lg w-20 h-20 bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
-          <span className="text-4xl font-bold font-serif text-BgFont drop-shadow-md tracking-widest">
+        <div className="relative p-2 lg:p-4 rounded-lg w-14 h-14 lg:w-20 lg:h-20 bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
+          <span className="text-xl lg:text-4xl font-bold font-serif text-BgFont drop-shadow-md tracking-widest">
             {timeLeft.days ?? "00"}
           </span>
           <br />
-          <p className="text-xs text-BgFont font-serif uppercase tracking-wider mt-1">
+          <p className="text-xxs lg:text-xs text-BgFont font-serif uppercase tracking-wider mt-1">
             Days
           </p>
         </div>
 
-        <div className="relative p-4 rounded-lg w-20 h-20 bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
-          <span className="text-4xl font-bold text-BgFont font-serif drop-shadow-md tracking-widest">
+        <div className="relative p-2 lg:p-4 rounded-lg w-14 h-14 lg:w-20 lg:h-20  bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
+          <span className="text-xl lg:text-4xl font-bold text-BgFont font-serif drop-shadow-md tracking-widest">
             {timeLeft.hours ?? "00"}
           </span>
           <br />
-          <p className="text-xs text-BgFont uppercase font-serif tracking-wider mt-1">
+          <p className="text-xxs lg:text-xs text-BgFont uppercase font-serif tracking-wider mt-1">
             Hours
           </p>
         </div>
-        <div className="relative p-4 rounded-lg w-20 h-20 bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
-          <span className="text-4xl font-bold text-BgFont font-serif drop-shadow-md tracking-widest">
+        <div className="relative p-2 lg:p-4 rounded-lg w-14 h-14 lg:w-20 lg:h-20  bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
+          <span className="text-xl lg:text-4xl font-bold text-BgFont font-serif drop-shadow-md tracking-widest">
             {timeLeft.minutes ?? "00"}
           </span>
           <br />
-          <p className="text-xs text-BgFont uppercase font-serif tracking-wider mt-1">
+          <p className="text-xxs lg:text-xs text-BgFont uppercase font-serif tracking-wider mt-1">
             Minutes
           </p>
         </div>
-        <div className="relative p-4 rounded-lg w-20 h-20 bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
-          <span className="text-4xl font-bold text-BgFont font-serif drop-shadow-md tracking-widest">
+        <div className="relative p-2 lg:p-4 rounded-lg w-14 h-14 lg:w-20 lg:h-20  bg-gradient-to-b from-gray-100 to-gray-200 shadow-md text-center">
+          <span className="text-xl lg:text-4xl font-bold text-BgFont font-serif drop-shadow-md tracking-widest">
             {timeLeft.seconds ?? "00"}
           </span>
           <br />
-          <p className="text-xs text-BgFont uppercase font-serif tracking-wider mt-1">
+          <p className="text-xxs lg:text-xs text-BgFont uppercase font-serif tracking-wider mt-1">
             Seconds
           </p>
         </div>

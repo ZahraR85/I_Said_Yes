@@ -25,6 +25,9 @@ export default {
       bgfooter: "#b39b81",
       bgbackground:"#e6e4df"
     },
+    fontSize: {
+      'xxs': '0.625rem', // or any value smaller than xs
+    },
     backgroundImage: {
       'custom-gradient': 'linear-gradient(90deg, rgba(118,154,110) 0%, rgba(31,66,32) 100%)',
     },},
