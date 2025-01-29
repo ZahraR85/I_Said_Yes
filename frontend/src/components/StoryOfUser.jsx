@@ -1,6 +1,5 @@
-
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const StoryOfUser = ({ userId, setWeddingDate }) => {
   const [userInfo, setUserInfo] = useState(null);
@@ -12,7 +11,9 @@ const StoryOfUser = ({ userId, setWeddingDate }) => {
       try {
         if (!userId) throw new Error("User ID is not provided.");
 
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/userinfoes/${userId}`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/userinfoes/${userId}`
+        );
         const data = response.data;
 
         if (data && data.weddingDate) {
@@ -39,23 +40,12 @@ const StoryOfUser = ({ userId, setWeddingDate }) => {
     <div className="user-info">
       {/* <h2 className="text-2xl font-bold mb-4">your Information</h2> */}
 
-
-      <div className="mx-auto  max-w-[calc((6)0%-130px)] text-BgFont font-serif  text-xl space-y-4 p-4  ">
-
-   
-        <p><strong>Our Story:</strong> {userInfo.story || "No story provided."}</p>
-
-
-
+      <div className="mx-auto max-w-[calc((6)0%-130px)] text-BgFont font-serif text-xs lg:text-xl space-y-4 p-4">
+        <p>
+          <strong>Our Story:</strong> {userInfo.story || "No story provided."}
+        </p>
       </div>
-
     </div>
-
-
-
-
-
-
   );
 };
 

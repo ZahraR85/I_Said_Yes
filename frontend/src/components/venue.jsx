@@ -68,17 +68,7 @@ const UserSelections = ({ userId }) => {
                 height: "100%",
               }}
             >
-              <div
-                style={{
-                  width: "380px",
-                  height: "380px",
-                  borderRadius: "50%", // Makes the container circular
-                  overflow: "hidden", // Ensures the image does not overflow the circular container
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
+              <div className="w-[180px] h-[180px] lg:w-[380px] lg:h-[380px] rounded-full overflow-hidden flex justify-center items-center">
                 {selection.venueId?.images?.[0] ? (
                   <img
                     src={selection.venueId.images[0]}
