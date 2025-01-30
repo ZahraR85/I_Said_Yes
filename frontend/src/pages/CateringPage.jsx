@@ -89,38 +89,30 @@ const CateringPage = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
-
   // Pagination Controls
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
-
   const nextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
   };
-
   const prevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
-
+  // Delete row from the List Table
   const handleDeleteRow = async (index) => {
     const itemToDelete = cart[index];
-
     if (!itemToDelete || !itemToDelete.cateringItemId) {
       toast.error("Invalid item.");
       return;
     }
-
     // Check if cateringItemId is an object, and if so, access its _id property
     const cateringItemId = itemToDelete.cateringItemId._id
       ? itemToDelete.cateringItemId._id.toString() // Extract _id and convert to string
       : itemToDelete.cateringItemId.toString(); // If it's already a string, convert it
-
-    // Log the final converted cateringItemId
-    console.log("Converted cateringItemId:", cateringItemId);
-
+    //console.log("Converted cateringItemId:", cateringItemId);
     const updatedCart = [...cart];
     updatedCart.splice(index, 1); // Remove item locally
 
