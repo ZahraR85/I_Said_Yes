@@ -104,20 +104,23 @@ const CateringPage = () => {
   // Delete row from the List Table
   const handleDeleteRow = async (index) => {
     const itemToDelete = cart[index];
+    console.log("Item to delete:", itemToDelete);
+
     if (!itemToDelete || !itemToDelete.cateringItemId) {
-      toast.error("Invalid item.");
+      toast.error("Invalid item. No cateringItemId found.");
       return;
     }
-    // Check if cateringItemId is an object, and if so, access its _id property
+
     const cateringItemId = itemToDelete.cateringItemId._id
-      ? itemToDelete.cateringItemId._id.toString() // Extract _id and convert to string
-      : itemToDelete.cateringItemId.toString(); // If it's already a string, convert it
+      ? itemToDelete.cateringItemId._id.toString()
+      : itemToDelete.cateringItemId.toString();
+
     console.log("Converted cateringItemId:", cateringItemId);
+
     const updatedCart = [...cart];
-    updatedCart.splice(index, 1); // Remove item locally
+    updatedCart.splice(index, 1);
 
     try {
-      // Make the delete request to the backend
       const response = await fetch(
         `${
           import.meta.env.VITE_API_URL
@@ -128,7 +131,7 @@ const CateringPage = () => {
       );
 
       if (response.ok) {
-        setCart(updatedCart); // Update frontend state if backend deletion succeeds
+        setCart(updatedCart);
         toast.success("Item removed successfully.");
 
         // If the cart is empty after deletion, delete the whole catering selection
@@ -147,12 +150,10 @@ const CateringPage = () => {
           }
         }
       } else {
-        console.error("Failed to delete item from backend.");
         toast.error("Failed to delete item.");
       }
     } catch (error) {
-      console.error("Error deleting item:", error);
-      toast.error("Failed to delete item.");
+      toast.error("Error deleting item.");
     }
   };
 
