@@ -52,7 +52,7 @@ const UserSelections = ({ userId }) => {
 
   return (
     <div className="user-selections">
-      <div className=" text-BgFont space-y-1 lg:space-y-2 p-1 lg:p-2">
+      <div className=" text-BgFont space-y-1 lg:space-y-4 p-1 lg:p-2">
         {userSelections.selections.map((item, idx) => (
           <div
             key={idx}
@@ -92,7 +92,7 @@ const UserSelections = ({ userId }) => {
           </p>
         )}
       </div>
-      <p className="text-xs lg:text-lg font-bold mb-2 lg:mb-4 text-BgFont">
+      <p className="text-sm lg:text-lg font-bold mb-2 lg:mb-4 text-BgFont">
         Total Cost: ${userSelections.totalCost}
       </p>
       <p className="text-xxs lg:text-xs text-BgFont">

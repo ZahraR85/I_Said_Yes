@@ -68,10 +68,10 @@ const UserSelections = () => {
   }
 
   return (
-    <div className="user-selections mx-auto max-w-xl text-BgFont space-y-2 lg:space-y-4 p-1 lg:p-4">
-      <div className="space-y-1 lg:space-y-4">
+    <div className="user-selections mx-auto max-w-xl text-BgFont space-y-2 p-1">
+      <div className="space-y-1 lg:space-y-2">
         {items.map((item, index) => (
-          <div key={index} className="text-xs lg:text-base font-bold">
+          <div key={index} className="text-xs font-bold">
             {item.quantity > 0 ? (
               <>
                 ✔ {item.name} ({item.category}):{" "}
@@ -90,8 +90,7 @@ const UserSelections = () => {
         ))}
       </div>
       <br />
-      <br />
-      <p className="text-xs lg:text-lg text-BgFont font-bold">
+      <p className="text-sm lg:text-lg text-BgFont font-bold">
         Total Cost: ${userSelections.grandTotal || 0}
       </p>
       <p className="text-xxs lg:text-xs text-BgFont">

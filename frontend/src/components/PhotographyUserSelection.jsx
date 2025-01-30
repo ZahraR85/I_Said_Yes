@@ -97,8 +97,7 @@ const UserSelections = ({ userId }) => {
         ))}
       </div>
       <br />
-      <br />
-      <p className="text-xs lg:text-lg text-BgFont font-bold">
+      <p className="text-sm lg:text-lg text-BgFont font-bold">
         Total Cost: ${userSelections.total || 0}
       </p>
       <p className="text-xxs lg:text-xs text-BgFont">
