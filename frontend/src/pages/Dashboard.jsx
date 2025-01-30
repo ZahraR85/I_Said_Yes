@@ -82,25 +82,25 @@ const Dashboard = () => {
       </div>
 
       {/* Header */}
-      <h2 className="text-3xl font-bold text-BgFont text-center my-2 bg-[#e8dfcf] p-4 font-serif rounded-lg shadow-md">
+      <h2 className="text-2xl lg:text-3xl font-bold text-BgFont text-center my-2 bg-[#e8dfcf] p-4 font-serif rounded-lg shadow-md">
         Dashboard Overview
       </h2>
 
       {/* Rest of the components in one row */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
         <div className="flex flex-col items-center">
-          <h2 className="text-xl lg:text-2xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
+          <h2 className="text-lg lg:text-2xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-1 lg:p-2 rounded-full font-serif shadow">
             Music
           </h2>
-          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#f5d0cb] w-[350px] h-[500px]">
+          <div className="flex justify-center items-center p-1 lg:p-4 rounded-3xl shadow bg-[#f5d0cb] w-[230px] h-[350px] lg:w-[350px] lg:h-[500px]">
             <Music userId={userId} />
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <h2 className="text-xl lg:text-2xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
+          <h2 className="text-lg lg:text-2xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
             Catering
           </h2>
-          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#e8dfcf] bg-gradient-to-br w-[350px] h-[500px]">
+          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#e8dfcf] bg-gradient-to-br w-[230px] h-[350px] lg:w-[350px] lg:h-[500px]">
             <Catering userId={userId} />
           </div>
         </div>

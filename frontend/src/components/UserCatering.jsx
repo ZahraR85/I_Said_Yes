@@ -68,10 +68,10 @@ const UserSelections = () => {
   }
 
   return (
-    <div className="user-selections mx-auto max-w-xl text-xl text-BgFont space-y-4 p-4">
-      <div className="space-y-2">
+    <div className="user-selections mx-auto max-w-xl text-BgFont space-y-2 lg:space-y-4 p-1 lg:p-4">
+      <div className="space-y-1 lg:space-y-4">
         {items.map((item, index) => (
-          <div key={index} className="text-sm font-semibold">
+          <div key={index} className="text-xs lg:text-m font-bold">
             {item.quantity > 0 ? (
               <>
                 ✔ {item.name} ({item.category}):{" "}
@@ -91,10 +91,10 @@ const UserSelections = () => {
       </div>
       <br />
       <br />
-      <p style={{ fontSize: "16px", color: "#555", fontWeight: "bold" }}>
+      <p className="text-xs lg:text-lg text-BgFont font-bold">
         Total Cost: ${userSelections.grandTotal || 0}
       </p>
-      <p style={{ fontSize: "0.8rem", color: "#555" }}>
+      <p className="text-xxs lg:text-m text-BgFont">
         Last Updated:{" "}
         {userSelections.updatedAt
           ? new Date(userSelections.updatedAt).toLocaleString()
