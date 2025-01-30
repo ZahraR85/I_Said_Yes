@@ -64,10 +64,10 @@ const Dashboard = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="grid grid-cols-1 gap-4 px-2 bg-neutral-200 h-max-auto">
+    <div className="grid grid-cols-1 gap-4 px-2 bg-neutral-200">
       <ToastContainer />
       {/* User Information as Header */}
-      <div className="flex justify-center items-center p-4 bg-[#e8dfcf] shadow-2xl rounded-lg">
+      <div className="flex justify-center items-center p-4 bg-[#e8dfcf] shadow-2xl rounded-lg ">
         <InformationUser userId={userId} setWeddingDate={setWeddingDate} />
       </div>
 
