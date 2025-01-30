@@ -123,18 +123,19 @@ const CateringPage = () => {
         `${
           import.meta.env.VITE_API_URL
         }/cateringselections/${userId}/${cateringItemId}`,
-        {
-          method: "DELETE",
-        }
+        { method: "DELETE" }
       );
-
       if (response.ok) {
         setCart(updatedCart);
         toast.success("Item removed successfully.");
       } else {
-        toast.error("Failed to delete item.");
+        const errorData = await response.json(); // Capture any error details from the response
+        toast.error(
+          `Failed to delete item: ${errorData.message || "Unknown error"}`
+        );
       }
     } catch (error) {
+      console.error("Error deleting item:", error);
       toast.error("Error deleting item.");
     }
   };
