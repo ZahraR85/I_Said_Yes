@@ -113,25 +113,47 @@ const CateringPage = () => {
       return;
     }
 
+    // Log the original cateringItemId
+    console.log("Original cateringItemId:", itemToDelete.cateringItemId);
+
+    // Convert cateringItemId to a string
+    const cateringItemId = itemToDelete.cateringItemId.toString();
+
+    // Log the converted cateringItemId
+    console.log("Converted cateringItemId:", cateringItemId);
+
     const updatedCart = [...cart];
     updatedCart.splice(index, 1); // Remove item locally
 
     try {
+      // Make the delete request to the backend
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/cateringselections/${userId}/${
-          itemToDelete.cateringItemId
-        }`,
+        `${
+          import.meta.env.VITE_API_URL
+        }/cateringselections/${userId}/${cateringItemId}`,
         {
           method: "DELETE",
         }
       );
 
       if (response.ok) {
-        setCart(updatedCart); // Update frontend state only if backend deletion succeeds
+        setCart(updatedCart); // Update frontend state if backend deletion succeeds
         toast.success("Item removed successfully.");
 
+        // If the cart is empty after deletion, delete the whole catering selection
         if (updatedCart.length === 0) {
-          toast.success("All items removed. Catering selection deleted.");
+          const deleteAllResponse = await fetch(
+            `${import.meta.env.VITE_API_URL}/cateringselections/${userId}`,
+            {
+              method: "DELETE",
+            }
+          );
+
+          if (deleteAllResponse.ok) {
+            toast.success("All items removed. Catering selection deleted.");
+          } else {
+            toast.error("Failed to delete catering selection.");
+          }
         }
       } else {
         console.error("Failed to delete item from backend.");

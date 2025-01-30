@@ -61,26 +61,26 @@ export const deleteCateringItem = async (req, res) => {
     }
 
     // Find the catering selection for the user
-    const cateringSelection = await cateringSelection.findOne({ userId });
+    const cateringSelectionRecord = await cateringSelection.findOne({ userId });
 
-    if (!cateringSelection) {
+    if (!cateringSelectionRecord) {
       return res.status(404).json({ message: "Catering selection not found." });
     }
 
     // Iterate through selectedItems to remove the specific catering item
-    cateringSelection.selectedItems.forEach((category) => {
+    cateringSelectionRecord.selectedItems.forEach((category) => {
       category.items = category.items.filter(
         (item) => item.cateringItemId.toString() !== cateringItemId
       );
     });
 
     // Remove empty categories
-    cateringSelection.selectedItems = cateringSelection.selectedItems.filter(
+    cateringSelectionRecord.selectedItems = cateringSelectionRecord.selectedItems.filter(
       (category) => category.items.length > 0
     );
 
     // Recalculate grandTotal
-    cateringSelection.grandTotal = cateringSelection.selectedItems.reduce(
+    cateringSelectionRecord.grandTotal = cateringSelectionRecord.selectedItems.reduce(
       (total, category) =>
         total +
         category.items.reduce(
@@ -91,17 +91,16 @@ export const deleteCateringItem = async (req, res) => {
     );
 
     // If no items remain, delete the whole catering selection
-    if (cateringSelection.selectedItems.length === 0) {
+    if (cateringSelectionRecord.selectedItems.length === 0) {
       await cateringSelection.findOneAndDelete({ userId });
       return res.status(200).json({ message: "Catering selection deleted." });
     }
 
     // Save updated selection
-    await cateringSelection.save();
-    res.status(200).json({ message: "Item removed successfully.", cateringSelection });
+    await cateringSelectionRecord.save();
+    res.status(200).json({ message: "Item removed successfully.", cateringSelection: cateringSelectionRecord });
   } catch (error) {
     console.error("Error deleting catering item:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
