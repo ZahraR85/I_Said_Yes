@@ -152,7 +152,7 @@ const CateringPage = () => {
       // Make sure the cateringItemId is included in the cart item
       return [
         ...prevCart,
-        { ...item, cateringItemId: item._id, quantity: 1, description: "" }, // Add cateringItemId to the item
+        { ...item, cateringItemId: item._id, quantity: 0, description: "" }, // Add cateringItemId to the item
       ];
     });
   };
