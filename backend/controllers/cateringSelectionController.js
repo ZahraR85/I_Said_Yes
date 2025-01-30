@@ -51,42 +51,57 @@ export const saveCateringSelection = async (req, res) => {
   }
 };
 
-// Delete a catering selection for a user (optional)
+// Delete a catering item from the selection
 export const deleteCateringItem = async (req, res) => {
-  const { userId } = req.params;
-  const { cateringItemId } = req.body;
-
   try {
+    const { userId, cateringItemId } = req.params;
+
+    if (!userId || !cateringItemId) {
+      return res.status(400).json({ message: "Invalid request parameters." });
+    }
+
+    // Find the catering selection for the user
     const cateringSelection = await cateringSelection.findOne({ userId });
 
     if (!cateringSelection) {
-      return res.status(404).json({ error: "No catering selection found." });
+      return res.status(404).json({ message: "Catering selection not found." });
     }
 
-    // Remove the specific item from the selected items
-    cateringSelection.selectedItems = cateringSelection.selectedItems.map((category) => {
+    // Iterate through selectedItems to remove the specific catering item
+    cateringSelection.selectedItems.forEach((category) => {
       category.items = category.items.filter(
         (item) => item.cateringItemId.toString() !== cateringItemId
       );
-      return category;
-    }).filter(category => category.items.length > 0); // Remove empty categories
+    });
 
+    // Remove empty categories
+    cateringSelection.selectedItems = cateringSelection.selectedItems.filter(
+      (category) => category.items.length > 0
+    );
+
+    // Recalculate grandTotal
     cateringSelection.grandTotal = cateringSelection.selectedItems.reduce(
       (total, category) =>
-        total + category.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+        total +
+        category.items.reduce(
+          (catTotal, item) => catTotal + item.quantity * item.price,
+          0
+        ),
       0
     );
 
+    // If no items remain, delete the whole catering selection
     if (cateringSelection.selectedItems.length === 0) {
-      await cateringSelection.deleteOne(); // If no items remain, delete the entire document
-    } else {
-      await cateringSelection.save();
+      await cateringSelection.findOneAndDelete({ userId });
+      return res.status(200).json({ message: "Catering selection deleted." });
     }
 
-    res.status(200).json({ message: "Item removed successfully." });
+    // Save updated selection
+    await cateringSelection.save();
+    res.status(200).json({ message: "Item removed successfully.", cateringSelection });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to remove catering item." });
+    console.error("Error deleting catering item:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

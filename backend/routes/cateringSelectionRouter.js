@@ -14,6 +14,6 @@ router.get("/:userId", getCateringSelection);
 router.put("/:userId", saveCateringSelection);
 
 // Delete catering selection for a user (optional)
-router.delete("/:userId", deleteCateringItem);
+router.delete("/:userId/:cateringItemId", deleteCateringItem);
 
 export default router;
