@@ -111,9 +111,7 @@ const CateringPage = () => {
       return;
     }
 
-    const cateringItemId = itemToDelete.cateringItemId._id
-      ? itemToDelete.cateringItemId._id.toString()
-      : itemToDelete.cateringItemId.toString();
+    const cateringItemId = itemToDelete.cateringItemId; // Use the cateringItemId here
 
     console.log("Converted cateringItemId:", cateringItemId);
 
@@ -133,22 +131,6 @@ const CateringPage = () => {
       if (response.ok) {
         setCart(updatedCart);
         toast.success("Item removed successfully.");
-
-        // If the cart is empty after deletion, delete the whole catering selection
-        if (updatedCart.length === 0) {
-          const deleteAllResponse = await fetch(
-            `${import.meta.env.VITE_API_URL}/cateringselections/${userId}`,
-            {
-              method: "DELETE",
-            }
-          );
-
-          if (deleteAllResponse.ok) {
-            toast.success("All items removed. Catering selection deleted.");
-          } else {
-            toast.error("Failed to delete catering selection.");
-          }
-        }
       } else {
         toast.error("Failed to delete item.");
       }
@@ -160,13 +142,18 @@ const CateringPage = () => {
   const handleAddToCart = (item) => {
     setCart((prevCart) => {
       const existingItemIndex = prevCart.findIndex(
-        (cartItem) => cartItem._id === item._id
+        (cartItem) => cartItem._id === item._id // Ensure you compare with `_id`
       );
 
       if (existingItemIndex !== -1) {
         return prevCart; // Prevent duplicates
       }
-      return [...prevCart, { ...item, quantity: 1, description: "" }];
+
+      // Make sure the cateringItemId is included in the cart item
+      return [
+        ...prevCart,
+        { ...item, cateringItemId: item._id, quantity: 1, description: "" }, // Add cateringItemId to the item
+      ];
     });
   };
 
