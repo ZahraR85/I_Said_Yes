@@ -64,7 +64,7 @@ const Dashboard = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="grid grid-cols-1 gap-4 px-2 bg-neutral-200">
+    <div className="grid grid-cols-1 gap-4 px-2 bg-neutral-200 h-max-auto">
       <ToastContainer />
       {/* User Information as Header */}
       <div className="flex justify-center items-center p-4 bg-[#e8dfcf] shadow-2xl rounded-lg">
@@ -89,7 +89,7 @@ const Dashboard = () => {
       {/* Rest of the components in one row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
         <div className="flex flex-col items-center">
-          <h2 className="text-lg lg:text-2xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-1 lg:p-2 rounded-full font-serif shadow">
+          <h2 className="text-lg lg:text-2xl font-bold text-BgFont text-center mb-2 lg:mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
             Music
           </h2>
           <div className="flex justify-center items-center p-1 lg:p-4 rounded-3xl shadow bg-[#f5d0cb] w-[230px] h-[350px] lg:w-[350px] lg:h-[500px]">
@@ -97,7 +97,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <h2 className="text-lg lg:text-2xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
+          <h2 className="text-xl lg:text-2xl font-bold text-BgFont text-center mb-2 lg:mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
             Catering
           </h2>
           <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#e8dfcf] bg-gradient-to-br w-[230px] h-[350px] lg:w-[350px] lg:h-[500px]">
@@ -105,26 +105,28 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <h2 className="text-xl lg:text-2xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
+          <h2 className="text-xl lg:text-2xl font-bold text-BgFont text-center mb-2 lg:mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
             Makeup
           </h2>
-          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#fff2f4] w-[350px] h-[500px]">
+          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#fff2f4] w-[230px] h-[350px] lg:w-[350px] lg:h-[500px]">
             <MakeupUser userId={userId} />
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <h2 className="text-xl lg:text-2xl font-bold text-BgFont text-center mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
+          <h2 className="text-xl lg:text-2xl font-bold text-BgFont text-center mb-2 lg:mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
             Photography
           </h2>
-          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#d5c0b5] w-[350px] h-[500px]">
+          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#d5c0b5] w-[230px] h-[350px] lg:w-[350px] lg:h-[500px]">
             <PhotographyUserSelection userId={userId} />
           </div>
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="flex flex-col items-center">
-          {/* <h2 className="text-3xl font-bold text-center mb-4 bg-[#e8dfcf] p-2 rounded-full shadow">Venue</h2> */}
-          <div className="flex justify-center items-center p-4 rounded-full shadow-2xl bg-[#fff2f4] h-[200px] w-[20px] lg:h-[400px] lg:w-[400px]">
+          <h2 className="text-xl lg:text-2xl font-bold text-BgFont text-center mb-2 lg:mb-4 bg-[#e8dfcf] p-2 rounded-full shadow">
+            Venue
+          </h2>
+          <div className="flex justify-center items-center p-4 rounded-full shadow-2xl bg-[#fff2f4] h-[250px] w-[250px] lg:h-[400px] lg:w-[400px]">
             <Venue userId={userId} />
           </div>
         </div>

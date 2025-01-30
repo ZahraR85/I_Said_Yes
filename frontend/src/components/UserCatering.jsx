@@ -71,7 +71,7 @@ const UserSelections = () => {
     <div className="user-selections mx-auto max-w-xl text-BgFont space-y-2 lg:space-y-4 p-1 lg:p-4">
       <div className="space-y-1 lg:space-y-4">
         {items.map((item, index) => (
-          <div key={index} className="text-xs lg:text-m font-bold">
+          <div key={index} className="text-xs lg:text-base font-bold">
             {item.quantity > 0 ? (
               <>
                 ✔ {item.name} ({item.category}):{" "}
@@ -94,7 +94,7 @@ const UserSelections = () => {
       <p className="text-xs lg:text-lg text-BgFont font-bold">
         Total Cost: ${userSelections.grandTotal || 0}
       </p>
-      <p className="text-xxs lg:text-m text-BgFont">
+      <p className="text-xxs lg:text-xs text-BgFont">
         Last Updated:{" "}
         {userSelections.updatedAt
           ? new Date(userSelections.updatedAt).toLocaleString()

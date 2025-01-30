@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const UserSelections = ({ userId }) => {
   const [userSelections, setUserSelections] = useState(null);
@@ -10,14 +10,20 @@ const UserSelections = ({ userId }) => {
     const fetchUserSelections = async () => {
       try {
         const x = userId;
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/makeups?userID=${x}`);
-        
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/makeups?userID=${x}`
+        );
+
         setUserSelections(response.data);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching data:", err);
         if (err.response && err.response.status === 404) {
-          setError({ message: "It seems no Makeup features were selected. Please feel free to choose your preferences!", isCustom: true });
+          setError({
+            message:
+              "It seems no Makeup features were selected. Please feel free to choose your preferences!",
+            isCustom: true,
+          });
         } else {
           setError({ message: err.message, isCustom: false });
         }
@@ -28,21 +34,18 @@ const UserSelections = ({ userId }) => {
     if (userId) fetchUserSelections();
   }, [userId]);
 
- 
-    if (error) {
-      return <p>{error.isCustom ? error.message : `Error: ${error.message}`}</p>;
-    }
-  
+  if (error) {
+    return <p>{error.isCustom ? error.message : `Error: ${error.message}`}</p>;
+  }
+
   if (loading) {
     return <p>Loading...</p>;
   }
 
- 
   if (error) {
     return <p>Error: {error.message}</p>;
   }
 
-  
   if (!userSelections) {
     return <p>No data found for this user.</p>;
   }
@@ -50,40 +53,68 @@ const UserSelections = ({ userId }) => {
   // Render user selections
   return (
     <div className="user-selections">
-
-      <div className="mx-auto  max-w-[calc((6)0%-130px)] text-xl text-BgFont bg-opacity-80   space-y-4 p-4  ">
-        <ul className="pl-5 space-y-2">
+      <div className="mx-auto text-BgFont space-y-2 lg:space-y-4 p-1 lg:p-4">
+        <ul className="space-y-1 lg:space-y-4">
           <li>
             {userSelections.makeup?.selected ? "✔️" : "❌"}
-            Makeup    <span style={{ fontSize: "0.8rem", color: "#555" }}> (${userSelections.makeup?.price || 0})</span>
+            Makeup{" "}
+            <span className="text-xs text-BgFont font-semibold">
+              {" "}
+              (${userSelections.makeup?.price || 0})
+            </span>
           </li>
           <li>
             {userSelections.dress?.selected ? "✔️" : "❌"}
-            Dress   <span style={{ fontSize: "0.8rem", color: "#555" }}> (${userSelections.dress?.price || 0})</span>
+            Dress{" "}
+            <span className="text-xs text-BgFont font-semibold">
+              {" "}
+              (${userSelections.dress?.price || 0})
+            </span>
           </li>
           <li>
             {userSelections.nail?.selected ? "✔️" : "❌"}
-            Nail  <span style={{ fontSize: "0.8rem", color: "#555" }}> (${userSelections.nail?.price || 0})</span>
+            Nail{" "}
+            <span className="text-xs text-BgFont font-semibold">
+              {" "}
+              (${userSelections.nail?.price || 0})
+            </span>
           </li>
           <li>
             {userSelections.hairstyle?.selected ? "✔️" : "❌"}
-            Hairstyle  <span style={{ fontSize: "0.8rem", color: "#555" }}> (${userSelections.hairstyle?.price || 0})</span>
+            Hairstyle{" "}
+            <span className="text-xs text-BgFont font-semibold">
+              {" "}
+              (${userSelections.hairstyle?.price || 0})
+            </span>
           </li>
           <li>
             {userSelections.shoes?.selected ? "✔️" : "❌"}
-            Shoes   <span style={{ fontSize: "0.8rem", color: "#555" }}> (${userSelections.shoes?.price || 0})</span>
+            Shoes{" "}
+            <span className="text-xs text-BgFont font-semibold">
+              {" "}
+              (${userSelections.shoes?.price || 0})
+            </span>
           </li>
           <li>
             {userSelections.special?.selected ? "✔️" : "❌"}
-            Special  <span style={{ fontSize: "0.8rem", color: "#555" }}> (${userSelections.special?.price || 0})</span>
+            Special{" "}
+            <span className="text-xs text-BgFont font-semibold">
+              {" "}
+              (${userSelections.special?.price || 0})
+            </span>
           </li>
         </ul>
         <br />
         <br />
 
-        <p style={{ fontSize: "16px", color: "#555" , fontWeight: "bold" }}>Total Cost: ${userSelections.total || 0}</p>
-        <p style={{ fontSize: "0.8rem", color: "#555" }} className="mt-4">
-          Last Updated: {userSelections.updatedAt ? new Date(userSelections.updatedAt).toLocaleString() : "No Update Info"}
+        <p className="text-xs lg:text-lg text-BgFont font-bold">
+          Total Cost: ${userSelections.total || 0}
+        </p>
+        <p className="mt-4 text-xxs lg:text-xs text-BgFont">
+          Last Updated:{" "}
+          {userSelections.updatedAt
+            ? new Date(userSelections.updatedAt).toLocaleString()
+            : "No Update Info"}
         </p>
       </div>
     </div>

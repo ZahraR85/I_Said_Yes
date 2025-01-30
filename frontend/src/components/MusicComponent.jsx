@@ -59,7 +59,7 @@ const UserSelections = ({ userId }) => {
             className="mb-1 lg:mb-4 p-1 lg:p-2 bg-white rounded shadow"
           >
             <div className="flex items-center space-x-4">
-              <p className="text-xs lg:text-m font-bold">
+              <p className="text-xs lg:text-base font-bold">
                 {item.optionID?.name || "N/A"}
               </p>
               <p className="text-xxs lg:text-xs text-{#555}">
@@ -78,8 +78,8 @@ const UserSelections = ({ userId }) => {
           Custom Requests:
         </h6>
         {userSelections.customRequests?.map((request, idx) => (
-          <div key={idx} className="mb-1 lg:mb-2">
-            <p className="text-xs lg:text-m text-BgFont">
+          <div key={idx} className="mb-2">
+            <p className="text-xs lg:text-m mb-2 lg:mb-4 text-BgFont">
               {request.description || "No description"}
             </p>
             {/* <p className="text-xxs lg:text-xs text-{#555}">
@@ -92,10 +92,10 @@ const UserSelections = ({ userId }) => {
           </p>
         )}
       </div>
-      <p className="text-xs lg:text-lg font-bold text-BgFont">
+      <p className="text-xs lg:text-lg font-bold mb-2 lg:mb-4 text-BgFont">
         Total Cost: ${userSelections.totalCost}
       </p>
-      <p className="text-xxs lg:text-m text-BgFont">
+      <p className="text-xxs lg:text-xs text-BgFont">
         Last Updated:{" "}
         {userSelections.updatedAt
           ? new Date(userSelections.updatedAt).toLocaleString()
