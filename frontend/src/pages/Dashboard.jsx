@@ -46,11 +46,11 @@ const Dashboard = () => {
         );
 
         if (response.data.exists === false) {
-          console.warn("User info does not exist. Redirecting...");
+          toast.warn("User info does not exist. Redirecting...");
           navigate("/userinfo");
         }
       } catch (err) {
-        console.error("Error checking user info:", err.message);
+        toast.error("Error checking user info:", err.message);
         setError("Something went wrong. Please try again.");
       } finally {
         setIsLoading(false);
