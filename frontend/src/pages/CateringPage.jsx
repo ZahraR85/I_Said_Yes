@@ -113,13 +113,12 @@ const CateringPage = () => {
       return;
     }
 
-    // Log the original cateringItemId
-    console.log("Original cateringItemId:", itemToDelete.cateringItemId);
+    // Check if cateringItemId is an object, and if so, access its _id property
+    const cateringItemId = itemToDelete.cateringItemId._id
+      ? itemToDelete.cateringItemId._id.toString() // Extract _id and convert to string
+      : itemToDelete.cateringItemId.toString(); // If it's already a string, convert it
 
-    // Convert cateringItemId to a string
-    const cateringItemId = itemToDelete.cateringItemId.toString();
-
-    // Log the converted cateringItemId
+    // Log the final converted cateringItemId
     console.log("Converted cateringItemId:", cateringItemId);
 
     const updatedCart = [...cart];
