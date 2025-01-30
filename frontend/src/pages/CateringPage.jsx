@@ -112,7 +112,7 @@ const CateringPage = () => {
     const cateringItemId = itemToDelete.cateringItemId._id
       ? itemToDelete.cateringItemId._id.toString() // Extract _id and convert to string
       : itemToDelete.cateringItemId.toString(); // If it's already a string, convert it
-    //console.log("Converted cateringItemId:", cateringItemId);
+    console.log("Converted cateringItemId:", cateringItemId);
     const updatedCart = [...cart];
     updatedCart.splice(index, 1); // Remove item locally
 
@@ -159,8 +159,9 @@ const CateringPage = () => {
   const handleAddToCart = (item) => {
     setCart((prevCart) => {
       const existingItemIndex = prevCart.findIndex(
-        (cartItem) => cartItem.ItemName === item.ItemName
+        (cartItem) => cartItem._id === item._id
       );
+
       if (existingItemIndex !== -1) {
         return prevCart; // Prevent duplicates
       }
@@ -190,10 +191,12 @@ const CateringPage = () => {
       toast.error("Unable to save: User not identified.");
       return;
     }
+
     const updatedCart = [...cart];
     setCart(updatedCart);
 
     const selectedItems = updatedCart.map((item) => ({
+      userId: item.userId,
       category: item.category,
       items: [
         {
@@ -212,7 +215,21 @@ const CateringPage = () => {
       0
     );
 
+    // Add the shopping cart data and send it to the backend
+    const shoppingCartUrl = `${import.meta.env.VITE_API_URL}/shoppingcards`;
+    const shoppingCartData = {
+      userID: userId,
+      serviceName: "Catering",
+      price: grandTotal,
+    };
+
     try {
+      // Sending cart data to the backend (Shopping Cart Update)
+      await axios.post(shoppingCartUrl, shoppingCartData, {
+        headers: { "Content-Type": "application/json" },
+      });
+      addToShoppingCard(shoppingCartData);
+      // Send catering selection data to the backend
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/cateringselections/${userId}`,
         {
@@ -226,14 +243,19 @@ const CateringPage = () => {
 
       if (response.ok) {
         console.log("Catering details saved successfully.");
+        toast.success("Catering details saved successfully.");
       } else {
         console.error("Failed to save catering details.");
+        toast.error("Failed to save catering details.");
       }
     } catch (error) {
       console.error("Error saving catering details:", error);
+      toast.error("Error saving catering details.");
     }
+
     setEditMode(null);
   };
+
   const handleShoppingCard = async () => {
     try {
       const shoppingCartUrl = `${import.meta.env.VITE_API_URL}/shoppingcards`;
@@ -387,7 +409,7 @@ const CateringPage = () => {
             onChange={handleCategoryChange}
             className="w-1/5 text-center lg:mb-4 mb-2 lg:p-2 p-1 text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark "
           >
-            <option value="all">All</option>
+            <option value="All">All</option>
             <option value="starter">Starter</option>
             <option value="maincourse">Main Course</option>
             <option value="dessert">Dessert</option>
@@ -449,7 +471,7 @@ const CateringPage = () => {
         <button
           onClick={nextPage}
           disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-BgPinkMiddle text-BgFont rounded-r hover:bg-BgPinkDark"
+          className="px-4 py-2 disabled:opacity-50 bg-BgPinkMiddle text-BgFont rounded-r hover:bg-BgPinkDark"
         >
           Next
         </button>
