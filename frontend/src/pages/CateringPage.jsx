@@ -107,48 +107,64 @@ const CateringPage = () => {
 
   const handleDeleteRow = async (index) => {
     const updatedCart = [...cart];
-    const [removedItem] = updatedCart.splice(index, 1); // Remove the item locally
-
+    const removedItem = updatedCart.splice(index, 1); // Remove the item locally
     setCart(updatedCart);
 
     try {
-      // Send the updated cart to the backend
-      const selectedItems = updatedCart.map((item) => ({
-        category: item.category,
-        items: [
+      if (updatedCart.length === 0) {
+        // If no items remain, delete the entire catering selection from the DB
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/cateringselections/${userId}`,
           {
-            cateringItemId: item.cateringItemId,
-            ItemName: item.ItemName,
-            quantity: item.quantity,
-            price: item.price,
-            description: item.description,
-          },
-        ],
-        categoryTotalPrice: item.quantity * item.price,
-      }));
-      const grandTotal = updatedCart.reduce(
-        (total, item) => total + item.quantity * item.price,
-        0
-      );
+            method: "DELETE",
+          }
+        );
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/cateringselections/${userId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ selectedItems, grandTotal }),
+        if (response.ok) {
+          toast.success("Catering selection deleted successfully.");
+        } else {
+          console.error("Failed to delete catering selection from backend.");
         }
-      );
-
-      if (!response.ok) {
-        console.error("Failed to delete row in the backend.");
       } else {
-        toast.success("Item deleted successfully.");
+        // Otherwise, update the selection with remaining items
+        const selectedItems = updatedCart.map((item) => ({
+          category: item.category,
+          items: [
+            {
+              cateringItemId: item.cateringItemId,
+              ItemName: item.ItemName,
+              quantity: item.quantity,
+              price: item.price,
+              description: item.description,
+            },
+          ],
+          categoryTotalPrice: item.quantity * item.price,
+        }));
+
+        const grandTotal = updatedCart.reduce(
+          (total, item) => total + item.quantity * item.price,
+          0
+        );
+
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/cateringselections/${userId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ selectedItems, grandTotal }),
+          }
+        );
+
+        if (response.ok) {
+          toast.success("Item removed successfully.");
+        } else {
+          console.error("Failed to delete item in the backend.");
+        }
       }
     } catch (error) {
-      console.error("Error deleting row in the backend:", error);
+      console.error("Error deleting item:", error);
       toast.error("Failed to delete item.");
     }
   };
