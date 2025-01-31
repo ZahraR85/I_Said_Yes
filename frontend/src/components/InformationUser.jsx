@@ -41,14 +41,7 @@ const InformationUser = ({ userId, setWeddingDate }) => {
       {/* <h2 className="text-2xl font-bold mb-4">your Information</h2> */}
 
       <div className="mx-auto  max-w-[calc((6)0%-130px)] text-BgFont font-serif  space-y-4 p-4  ">
-        <p
-          style={{
-            fontSize: "2rem",
-            fontWeight: "bold",
-            textAlign: "center",
-            textTransform: "uppercase",
-          }}
-        >
+        <p className="text-2xl lg:text-4xl font-bold text-center">
           {userInfo.brideName || "N/A"} <span>&</span>{" "}
           {userInfo.groomName || "N/A"}
         </p>

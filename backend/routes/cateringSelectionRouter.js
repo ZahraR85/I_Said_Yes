@@ -2,7 +2,7 @@ import express from "express";
 import {
   getCateringSelection,
   saveCateringSelection,
-  deleteCateringSelection,
+  deleteCateringItem,
 } from "../controllers/cateringSelectionController.js";
 
 const router = express.Router();
@@ -14,6 +14,6 @@ router.get("/:userId", getCateringSelection);
 router.put("/:userId", saveCateringSelection);
 
 // Delete catering selection for a user (optional)
-router.delete("/:userId", deleteCateringSelection);
+router.delete("/:userId/:cateringItemId", deleteCateringItem);
 
 export default router;

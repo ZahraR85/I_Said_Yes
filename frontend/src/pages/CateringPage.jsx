@@ -89,79 +89,71 @@ const CateringPage = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
-
   // Pagination Controls
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
-
   const nextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
   };
-
   const prevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
-
+  // Delete row from the List Table
   const handleDeleteRow = async (index) => {
-    const updatedCart = [...cart];
-    const [removedItem] = updatedCart.splice(index, 1); // Remove the item locally
+    const itemToDelete = cart[index];
+    console.log("Item to delete:", itemToDelete);
 
-    setCart(updatedCart);
+    if (!itemToDelete || !itemToDelete._id) {
+      toast.error("Invalid item. No _id found.");
+      return;
+    }
+
+    const cateringItemId = itemToDelete._id;
+    console.log("Converted cateringItemId:", cateringItemId);
+
+    const updatedCart = [...cart];
+    updatedCart.splice(index, 1);
 
     try {
-      // Send the updated cart to the backend
-      const selectedItems = updatedCart.map((item) => ({
-        category: item.category,
-        items: [
-          {
-            cateringItemId: item.cateringItemId,
-            ItemName: item.ItemName,
-            quantity: item.quantity,
-            price: item.price,
-            description: item.description,
-          },
-        ],
-        categoryTotalPrice: item.quantity * item.price,
-      }));
-      const grandTotal = updatedCart.reduce(
-        (total, item) => total + item.quantity * item.price,
-        0
-      );
-
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/cateringselections/${userId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ selectedItems, grandTotal }),
-        }
+        `${
+          import.meta.env.VITE_API_URL
+        }/cateringselections/${userId}/${cateringItemId}`,
+        { method: "DELETE" }
       );
-
-      if (!response.ok) {
-        console.error("Failed to delete row in the backend.");
+      if (response.ok) {
+        setCart(updatedCart);
+        toast.success("Item removed successfully.");
       } else {
-        toast.success("Item deleted successfully.");
+        const errorData = await response.json();
+        toast.error(
+          `Failed to delete item: ${errorData.message || "Unknown error"}`
+        );
       }
     } catch (error) {
-      console.error("Error deleting row in the backend:", error);
-      toast.error("Failed to delete item.");
+      console.error("Error deleting item:", error);
+      toast.error("Error deleting item.");
     }
   };
 
   const handleAddToCart = (item) => {
     setCart((prevCart) => {
       const existingItemIndex = prevCart.findIndex(
-        (cartItem) => cartItem.ItemName === item.ItemName
+        (cartItem) => cartItem._id === item._id // Ensure you compare with `_id`
       );
+
       if (existingItemIndex !== -1) {
         return prevCart; // Prevent duplicates
       }
-      return [...prevCart, { ...item, quantity: 1, description: "" }];
+
+      // Make sure the cateringItemId is included in the cart item
+      return [
+        ...prevCart,
+        { ...item, cateringItemId: item._id, quantity: 0, description: "" }, // Add cateringItemId to the item
+      ];
     });
   };
 
@@ -187,10 +179,12 @@ const CateringPage = () => {
       toast.error("Unable to save: User not identified.");
       return;
     }
+
     const updatedCart = [...cart];
     setCart(updatedCart);
 
     const selectedItems = updatedCart.map((item) => ({
+      userId: item.userId,
       category: item.category,
       items: [
         {
@@ -209,7 +203,21 @@ const CateringPage = () => {
       0
     );
 
+    // Add the shopping cart data and send it to the backend
+    const shoppingCartUrl = `${import.meta.env.VITE_API_URL}/shoppingcards`;
+    const shoppingCartData = {
+      userID: userId,
+      serviceName: "Catering",
+      price: grandTotal,
+    };
+
     try {
+      // Sending cart data to the backend (Shopping Cart Update)
+      await axios.post(shoppingCartUrl, shoppingCartData, {
+        headers: { "Content-Type": "application/json" },
+      });
+      addToShoppingCard(shoppingCartData);
+      // Send catering selection data to the backend
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/cateringselections/${userId}`,
         {
@@ -223,14 +231,19 @@ const CateringPage = () => {
 
       if (response.ok) {
         console.log("Catering details saved successfully.");
+        toast.success("Catering details saved successfully.");
       } else {
         console.error("Failed to save catering details.");
+        toast.error("Failed to save catering details.");
       }
     } catch (error) {
       console.error("Error saving catering details:", error);
+      toast.error("Error saving catering details.");
     }
+
     setEditMode(null);
   };
+
   const handleShoppingCard = async () => {
     try {
       const shoppingCartUrl = `${import.meta.env.VITE_API_URL}/shoppingcards`;
@@ -384,7 +397,7 @@ const CateringPage = () => {
             onChange={handleCategoryChange}
             className="w-1/5 text-center lg:mb-4 mb-2 lg:p-2 p-1 text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark "
           >
-            <option value="all">All</option>
+            <option value="All">All</option>
             <option value="starter">Starter</option>
             <option value="maincourse">Main Course</option>
             <option value="dessert">Dessert</option>
@@ -446,7 +459,7 @@ const CateringPage = () => {
         <button
           onClick={nextPage}
           disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-BgPinkMiddle text-BgFont rounded-r hover:bg-BgPinkDark"
+          className="px-4 py-2 disabled:opacity-50 bg-BgPinkMiddle text-BgFont rounded-r hover:bg-BgPinkDark"
         >
           Next
         </button>
