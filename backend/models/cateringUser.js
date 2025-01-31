@@ -1,6 +1,6 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
+import Catering from "./catering.js"; // Import Catering model
 
-// CateringUser Schema definition
 const CateringUserSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
@@ -25,25 +25,48 @@ const CateringUserSchema = new Schema({
     totalPrice: {
       type: Number,
       required: true,
+      default: 0, // Ensure it's never undefined
     },
   }],
   grandTotal: { 
     type: Number, 
     required: true, 
-    default: 0 
+    default: 0,
   },
 }, { timestamps: true });
 
-// Pre-save hook to calculate grandTotal
-CateringUserSchema.pre('save', function(next) {
-  // Calculate total price for all items
-  const totalPrice = this.items.reduce((acc, item) => acc + (item.totalPrice * item.quantity), 0);
-  
-  // Set grandTotal based on calculated total price
-  this.grandTotal = isNaN(totalPrice) ? 0 : totalPrice;
+// Pre-validation middleware to calculate totalPrice and grandTotal
+CateringUserSchema.pre('validate', async function(next) {
+  try {
+    if (!this.items || !Array.isArray(this.items) || this.items.length === 0) {
+      this.grandTotal = 0;
+      return next();
+    }
 
-  next(); // Continue with the save process
+    let total = 0;
+
+    // Process each item and fetch price
+    for (const item of this.items) {
+      if (!mongoose.Types.ObjectId.isValid(item.cateringItemId)) {
+        return next(new Error(`Invalid cateringItemId: ${item.cateringItemId}`));
+      }
+
+      const cateringItem = await Catering.findById(item.cateringItemId);
+      if (!cateringItem) {
+        return next(new Error(`Catering item not found for ID: ${item.cateringItemId}`));
+      }
+
+      const price = cateringItem.price || 0;
+      item.totalPrice = price * (item.quantity || 1);
+      total += item.totalPrice;
+    }
+
+    this.grandTotal = total > 0 ? total : 0;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
-// Export the model
 export default model("CateringUser", CateringUserSchema);

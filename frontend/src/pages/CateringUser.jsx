@@ -52,6 +52,30 @@ const CateringUser = () => {
   }, [userId]); // Dependency array contains userId
 
   useEffect(() => {
+    if (userId) {
+      const fetchUserCateringItems = async () => {
+        try {
+          const response = await axios.get(
+            `${import.meta.env.VITE_API_URL}/cateringusers/${userId}`
+          );
+
+          if (Array.isArray(response.data.items)) {
+            setSelectedItems(response.data.items);
+          } else {
+            console.error("Unexpected API response format:", response.data);
+            setSelectedItems([]);
+          }
+        } catch (err) {
+          console.error("Error fetching user's catering items:", err);
+          setSelectedItems([]);
+        }
+      };
+
+      fetchUserCateringItems();
+    }
+  }, [userId]); // Fetch when userId is available
+
+  useEffect(() => {
     setTotalPrice(
       selectedItems.reduce(
         (total, item) => total + item.price * item.quantity,
@@ -129,11 +153,12 @@ const CateringUser = () => {
   };
 
   const handleQuantityChange = async (index, newQuantity) => {
+    if (newQuantity < 1) return; // Prevent negative or zero quantity
+
     const updatedItems = [...selectedItems];
     updatedItems[index].quantity = newQuantity;
     setSelectedItems(updatedItems);
 
-    // Update the item in the backend
     try {
       await axios.put(
         `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
@@ -141,7 +166,7 @@ const CateringUser = () => {
         }`,
         {
           quantity: newQuantity,
-          description: updatedItems[index].description,
+          description: updatedItems[index].description, // Keep description unchanged
         }
       );
     } catch (err) {
@@ -157,14 +182,13 @@ const CateringUser = () => {
     updatedItems[index].description = newDescription;
     setSelectedItems(updatedItems);
 
-    // Update the item in the backend
     try {
       await axios.put(
         `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
           updatedItems[index].cateringItemId
         }`,
         {
-          quantity: updatedItems[index].quantity,
+          quantity: updatedItems[index].quantity, // Keep quantity unchanged
           description: newDescription,
         }
       );
