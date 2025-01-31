@@ -106,13 +106,12 @@ const CateringPage = () => {
     const itemToDelete = cart[index];
     console.log("Item to delete:", itemToDelete);
 
-    if (!itemToDelete || !itemToDelete.cateringItemId) {
-      toast.error("Invalid item. No cateringItemId found.");
+    if (!itemToDelete || !itemToDelete._id) {
+      toast.error("Invalid item. No _id found.");
       return;
     }
 
-    const cateringItemId = itemToDelete.cateringItemId; // Use the cateringItemId here
-
+    const cateringItemId = itemToDelete._id;
     console.log("Converted cateringItemId:", cateringItemId);
 
     const updatedCart = [...cart];
@@ -129,7 +128,7 @@ const CateringPage = () => {
         setCart(updatedCart);
         toast.success("Item removed successfully.");
       } else {
-        const errorData = await response.json(); // Capture any error details from the response
+        const errorData = await response.json();
         toast.error(
           `Failed to delete item: ${errorData.message || "Unknown error"}`
         );
