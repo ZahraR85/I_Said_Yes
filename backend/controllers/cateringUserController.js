@@ -18,53 +18,62 @@ export const getCateringUser = async (req, res) => {
 };
 
 // Add or update catering items in CateringUser
-// Add item to the user's catering order
 export const addCateringItemToCateringUser = async (req, res) => {
-  const { userId, items } = req.body;
+  const { userId, items } = req.body; // items is an array of catering items
 
   try {
+    // Find the catering order for the user
     let cateringUser = await CateringUser.findOne({ userId });
 
     if (!cateringUser) {
-      // Create a new catering order if the user doesn't have one
+      // If no order exists for the user, create a new order with the items
       cateringUser = new CateringUser({
         userId,
         items,
-        grandTotal: items.reduce((total, item) => total + item.price * item.quantity, 0),
+        grandTotal: items.reduce((total, item) => total + item.price * item.quantity, 0), // Calculate grandTotal
       });
     } else {
-      // Add new items or update existing ones
+      // Update existing items or add new items to the existing order
       items.forEach(item => {
         const existingItem = cateringUser.items.find(
           (existingItem) => existingItem.cateringItemId.toString() === item.cateringItemId.toString()
         );
 
         if (existingItem) {
+          // If the item exists, update its quantity and description
           existingItem.quantity += item.quantity;
           existingItem.description = item.description;
         } else {
+          // If the item doesn't exist, add it to the items array
           cateringUser.items.push(item);
         }
       });
 
-      cateringUser.grandTotal = cateringUser.items.reduce((total, item) => total + item.price * item.quantity, 0);
+      // Recalculate the grandTotal
+      cateringUser.grandTotal = cateringUser.items.reduce(
+        (total, item) => total + item.price * item.quantity, 0
+      );
     }
 
+    // Save the updated catering user order
     await cateringUser.save();
-    res.status(200).json({ message: "Item added successfully", cateringUser });
+
+    // Return success message and updated order
+    res.status(200).json({ message: "Item added/updated successfully", cateringUser });
   } catch (error) {
+    // Handle errors
     res.status(500).json({ message: error.message });
   }
 };
 
 
-// Delete item from the user's catering order
+
+// Delete an item from the user's catering order
 export const deleteCateringItemFromUser = async (req, res) => {
   const { userId, cateringItemId } = req.params;
 
   try {
     const cateringUser = await CateringUser.findOne({ userId });
-
     if (!cateringUser) {
       return res.status(404).json({ message: "Catering order not found" });
     }
@@ -73,48 +82,53 @@ export const deleteCateringItemFromUser = async (req, res) => {
       (item) => item.cateringItemId.toString() !== cateringItemId
     );
 
+    // Recalculate the grandTotal after deletion
     cateringUser.grandTotal = cateringUser.items.reduce(
-      (acc, item) => acc + item.price * item.quantity,
-      0
+      (acc, item) => acc + item.totalPrice, 0
     );
 
     await cateringUser.save();
     res.status(200).json({ message: "Item removed successfully", cateringUser });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-// Update item in the user's catering order
-export const updateCateringItemInUser = async (req, res) => {
-  const { userId, cateringItemId } = req.params;
+
+
+// Update an existing item
+export const updateCateringUserItem = async (req, res) => {
+  const { userId, itemId } = req.params;
   const { quantity, description } = req.body;
 
   try {
     const cateringUser = await CateringUser.findOne({ userId });
-
     if (!cateringUser) {
-      return res.status(404).json({ message: "Catering order not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const item = cateringUser.items.find(
-      (item) => item.cateringItemId.toString() === cateringItemId
+    const itemIndex = cateringUser.items.findIndex(
+      (item) => item.cateringItemId.toString() === itemId
+    );
+    if (itemIndex === -1) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    // Update item
+    cateringUser.items[itemIndex].quantity = quantity;
+    cateringUser.items[itemIndex].description = description;
+
+    // Recalculate the total price for the updated item
+    cateringUser.items[itemIndex].totalPrice = quantity * cateringUser.items[itemIndex].price;
+
+    // Recalculate the grandTotal
+    cateringUser.grandTotal = cateringUser.items.reduce(
+      (acc, item) => acc + item.totalPrice, 0
     );
 
-    if (item) {
-      item.quantity = quantity;
-      item.description = description;
-      cateringUser.grandTotal = cateringUser.items.reduce(
-        (acc, item) => acc + item.price * item.quantity,
-        0
-      );
-
-      await cateringUser.save();
-      res.status(200).json({ message: "Item updated successfully", cateringUser });
-    } else {
-      res.status(404).json({ message: "Item not found" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    await cateringUser.save();
+    res.status(200).json(cateringUser);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
   }
 };

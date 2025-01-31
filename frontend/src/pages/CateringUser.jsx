@@ -73,12 +73,23 @@ const CateringUser = () => {
 
       // Update item on the server
       try {
+        const totalPrice = updatedItems[existingIndex].quantity * item.price;
+        // Ensure totalPrice is a valid number
+        if (isNaN(totalPrice) || totalPrice < 0) {
+          throw new Error("Invalid total price");
+        }
+
         await axios.put(
-          `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${item._id}`,
+          `${import.meta.env.VITE_API_URL}/cateringusers/${userId}`,
           {
-            quantity: updatedItems[existingIndex].quantity,
-            description: updatedItems[existingIndex].description,
-            totalPrice: updatedItems[existingIndex].quantity * item.price, // Add totalPrice
+            items: [
+              {
+                cateringItemId: item._id,
+                quantity: updatedItems[existingIndex].quantity,
+                description: updatedItems[existingIndex].description,
+                price: item.price,
+              },
+            ],
           }
         );
       } catch (err) {
@@ -89,13 +100,20 @@ const CateringUser = () => {
       }
     } else {
       // Add new item to the selected list
+      const totalPrice = item.price; // New item starts with 1 quantity
+      if (isNaN(totalPrice) || totalPrice < 0) {
+        console.error("Invalid total price for new item");
+        return; // Exit if the price is invalid
+      }
+
       const newItem = {
         ...item,
         cateringItemId: item._id,
         quantity: 1,
         description: "",
-        totalPrice: item.price, // Add totalPrice
+        totalPrice: totalPrice, // Set totalPrice
       };
+
       setSelectedItems((prevItems) => [...prevItems, newItem]);
 
       // Send new item to the server
