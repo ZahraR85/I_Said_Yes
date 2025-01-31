@@ -7,7 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const CateringUser = () => {
-  const { userId, isAuthenticated, addToShoppingCard } = useAppContext();
+  const { userId, isAuthenticated } = useAppContext();
   const [cateringItems, setCateringItems] = useState([]);
   const [cateringUser, setCateringUser] = useState([]); // Default as an empty array
   const [totalPrice, setTotalPrice] = useState(0);
@@ -16,7 +16,6 @@ const CateringUser = () => {
 
   const navigate = useNavigate();
 
-  // Redirect to sign-in page if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
       toast.warn("You must sign in to access this page.");
@@ -44,7 +43,7 @@ const CateringUser = () => {
 
   // Fetch user's catering order using userId from AppContext
   useEffect(() => {
-    if (!userId) return; // Only fetch if userId exists
+    if (!userId) return;
 
     const saveCateringOrder = async () => {
       try {
@@ -60,8 +59,6 @@ const CateringUser = () => {
             })),
           }
         );
-
-        // Handle successful response here (optional)
         console.log("Catering order saved:", response.data);
         toast.success("Catering order saved successfully!");
       } catch (error) {
@@ -71,11 +68,9 @@ const CateringUser = () => {
     };
 
     saveCateringOrder();
-  }, [userId, cateringUser]); // Re-run if userId or cateringUser changes
+  }, [userId, cateringUser]);
 
-  // Add an item to the catering user's order
   const handleAddToCateringUser = (item) => {
-    // Check if the item already exists in the cateringUser state
     const itemExists = cateringUser.some(
       (existingItem) => existingItem.CateringItemID === item._id
     );
@@ -85,15 +80,13 @@ const CateringUser = () => {
       return;
     }
 
-    // Add the item if it doesn't exist
     setCateringUser((prevUserItems) => [
       ...prevUserItems,
-      { ...item, quantity: 1, description: "" },
+      { ...item, quantity: 0, description: "" },
     ]);
     updateTotalPrice();
   };
 
-  // Update an item in the catering order
   const handleUpdateItem = (index, newQuantity, newDescription) => {
     const updatedUserItems = [...cateringUser];
     updatedUserItems[index].quantity = newQuantity;
@@ -102,7 +95,13 @@ const CateringUser = () => {
     updateTotalPrice();
   };
 
-  // Update the total price whenever the user's order changes
+  const handleDeleteItem = (index) => {
+    const updatedUserItems = [...cateringUser];
+    updatedUserItems.splice(index, 1);
+    setCateringUser(updatedUserItems);
+    updateTotalPrice();
+  };
+
   const updateTotalPrice = () => {
     const total = cateringUser.reduce(
       (acc, item) => acc + item.price * item.quantity,
@@ -111,11 +110,9 @@ const CateringUser = () => {
     setTotalPrice(total);
   };
 
-  // Save the catering user's order
   const handleSaveCateringUser = async () => {
-    if (!userId || savingOrder) return; // Prevent if already saving
+    if (!userId || savingOrder) return;
 
-    // Prepare the data to be sent
     const orderData = {
       userId,
       items: cateringUser.map((item) => ({
@@ -127,33 +124,23 @@ const CateringUser = () => {
     };
 
     try {
-      setSavingOrder(true); // Set saving state to true
-      console.log("Saving Catering Order:", orderData);
-
-      // Perform the POST request
+      setSavingOrder(true);
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/cateringusers`,
         orderData
       );
-
-      // Handle successful response
-      console.log("Catering order saved:", response.data);
       toast.success("Catering order saved successfully!");
     } catch (error) {
-      // Handle errors
-      console.error("Error saving catering order:", error);
       toast.error("Error saving catering order.");
     } finally {
-      setSavingOrder(false); // Reset saving state after request
+      setSavingOrder(false);
     }
   };
 
-  // Handle category filter change
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
   };
 
-  // Filter catering items by selected category
   const filteredItems =
     selectedCategory === "All"
       ? cateringItems
@@ -166,7 +153,6 @@ const CateringUser = () => {
         Catering Menu
       </h1>
 
-      {/* Category Filter */}
       <div className="mb-6 text-center">
         <label
           htmlFor="category"
@@ -192,7 +178,6 @@ const CateringUser = () => {
         </select>
       </div>
 
-      {/* Catering Items Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mb-6">
         {filteredItems.map((item) => (
           <div
@@ -217,7 +202,6 @@ const CateringUser = () => {
         ))}
       </div>
 
-      {/* Catering Order Table */}
       <div>
         <h2 className="text-2xl font-bold text-BgFont mb-4">
           Your Catering Order
@@ -229,6 +213,7 @@ const CateringUser = () => {
               <th className="border-b p-4">Quantity</th>
               <th className="border-b p-4">Description</th>
               <th className="border-b p-4">Total</th>
+              <th className="border-b p-4">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -263,32 +248,40 @@ const CateringUser = () => {
                   <td className="border-b p-4">
                     {(item.price * item.quantity).toFixed(2)} €
                   </td>
+                  <td className="border-b p-4 flex justify-around">
+                    <button
+                      onClick={() => handleDeleteItem(index)}
+                      className="text-red-600"
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="text-center p-4">
-                  No items in your catering order
+                <td colSpan="5" className="text-center p-4">
+                  No items in the order yet.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
 
-        {/* Total Price */}
-        <p className="text-xl font-bold text-BgFont mb-6">
-          Total Price: {totalPrice.toFixed(2)} €
-        </p>
-
-        {/* Save Order Button */}
-        <div className="text-center">
-          <button
-            onClick={handleSaveCateringUser}
-            className="px-6 py-3 bg-BgPinkMiddle text-BgFont font-bold rounded-lg hover:bg-BgPinkDark"
-          >
-            Save Catering Order
-          </button>
-        </div>
+        {cateringUser.length > 0 && (
+          <div className="text-right mb-6">
+            <p className="font-bold text-lg text-BgFont">
+              Total Price: {totalPrice.toFixed(2)} €
+            </p>
+            <button
+              onClick={handleSaveCateringUser}
+              className="px-6 py-3 bg-BgPinkMiddle text-white font-bold rounded-lg"
+              disabled={savingOrder}
+            >
+              {savingOrder ? "Saving..." : "Save Order"}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

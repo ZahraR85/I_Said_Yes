@@ -1,19 +1,31 @@
 import { Schema, model } from "mongoose";
 
-const SelectionCateringSchema = new Schema({
-  CateringItemID: { type: Schema.Types.ObjectId, ref: "Catering", required: true },
-  quantity: { type: Number, required: true },
-  totalPrice: { type: Number, required: true },
-  description: { type: String, required: true },
-});
-
-const cateringUserSchema = new Schema(
-  {
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    selectedItems: [SelectionCateringSchema],
-    grandTotal: { type: Number, required: true, default: 0 },
+const CateringUserSchema = new Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',  // Reference to the User model
+    required: true,
   },
-  { timestamps: true }
-);
+  items: [{
+    CateringItemID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CateringItem',  // Reference to the CateringItem model
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    description: {
+      type: String,
+      default: '',
+    },
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
+  }],
+}, { timestamps: true });
 
-export default model("CateringUser", cateringUserSchema);
+export default model("CateringUser", CateringUserSchema);

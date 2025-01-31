@@ -1,7 +1,7 @@
 import express from "express";
 import {
   getCateringUser,
-  addCateringItemToCateringUser,
+  saveCateringUser ,
   updateCateringItemInCateringUser,
 } from "../controllers/cateringUserController.js";
 
@@ -11,7 +11,7 @@ const router = express.Router();
 router.get("/:userId", getCateringUser);
 
 // Add catering item to cateringUser order
-router.post("/", addCateringItemToCateringUser);
+router.post("/", saveCateringUser );
 
 // Update catering item in cateringUser order
 router.put("/update", updateCateringItemInCateringUser);
