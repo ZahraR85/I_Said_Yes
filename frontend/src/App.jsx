@@ -29,6 +29,7 @@ import ShoppingCard from "./pages/ShoppingCard.jsx";
 import SearchVenue from "./components/SearchVenue.jsx";
 import VenueDetail from "./components/VenueDetail.jsx";
 import CateringPage from "./pages/CateringPage.jsx";
+import CateringUser from "./pages/CateringUser.jsx";
 import ItemDetailPage from "./pages/ItemDetailPage.jsx";
 import AboutUs from "./pages/AboutUs.jsx";
 import FAQ from "./pages/FAQ.jsx";
@@ -62,6 +63,7 @@ function App() {
             <Route path="/Guests" element={<Guests />} />
             <Route path="/Musics" element={<Musics />} />
             <Route path="/cateringPage" element={<CateringPage />} />
+            <Route path="/cateringUser" element={<CateringUser />} />
             <Route path="/cateringPage/:id" element={<ItemDetailPage />} />
             <Route path="/searchvenues" element={<SearchVenue />} />
             {/* Admin Routes */}
