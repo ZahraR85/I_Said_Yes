@@ -3,19 +3,19 @@ import { Schema, model } from "mongoose";
 const CateringUserSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',  // Reference to the User model
+    ref: 'User',
     required: true,
   },
   items: [{
-    CateringItemID: {
+    cateringItemId: {
       type: Schema.Types.ObjectId,
-      ref: 'Catering',  // Reference to the CateringItem model
+      ref: 'Catering',
       required: true,
     },
     quantity: {
       type: Number,
       required: true,
-      default: 0,
+      default: 1,
     },
     description: {
       type: String,
@@ -26,6 +26,11 @@ const CateringUserSchema = new Schema({
       required: true,
     },
   }],
+  grandTotal: { 
+    type: Number, 
+    required: true, 
+    default: 0 
+  },
 }, { timestamps: true });
 
 export default model("CateringUser", CateringUserSchema);

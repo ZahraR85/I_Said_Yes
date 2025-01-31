@@ -1,19 +1,10 @@
 import express from "express";
-import {
-  getCateringUser,
-  saveCateringUser ,
-  updateCateringItemInCateringUser,
-} from "../controllers/cateringUserController.js";
+import { getCateringUser, addCateringItemToCateringUser, deleteCateringItemFromUser } from "../controllers/cateringUserController.js";
 
 const router = express.Router();
 
-// Get catering user order
 router.get("/:userId", getCateringUser);
-
-// Add catering item to cateringUser order
-router.post("/", saveCateringUser );
-
-// Update catering item in cateringUser order
-router.put("/update", updateCateringItemInCateringUser);
+router.post("/", addCateringItemToCateringUser);
+router.delete("/:userId/:cateringItemId", deleteCateringItemFromUser);
 
 export default router;
