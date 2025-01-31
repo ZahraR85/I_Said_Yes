@@ -2,14 +2,14 @@ import { Schema, model } from "mongoose";
 
 const CateringUserSchema = new Schema({
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'User',  // Reference to the User model
     required: true,
   },
   items: [{
     CateringItemID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'CateringItem',  // Reference to the CateringItem model
+      type: Schema.Types.ObjectId,
+      ref: 'Catering',  // Reference to the CateringItem model
       required: true,
     },
     quantity: {
