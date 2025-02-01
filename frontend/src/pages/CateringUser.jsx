@@ -169,11 +169,15 @@ const CateringUser = () => {
     const updatedItems = [...selectedItems];
     updatedItems[index].quantity = newQuantity;
     setSelectedItems(updatedItems);
-
+    console.log(
+      "updatedItems[index].cateringItemId",
+      updatedItems[index].cateringItemId
+    );
+    console.log("newQuantity", newQuantity);
     try {
       await axios.put(
         `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
-          updatedItems[index].cateringItemId
+          updatedItems[index].cateringItemId._id
         }`,
         {
           quantity: newQuantity,
@@ -196,7 +200,7 @@ const CateringUser = () => {
     try {
       await axios.put(
         `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
-          updatedItems[index].cateringItemId
+          updatedItems[index].cateringItemId._id
         }`,
         {
           quantity: updatedItems[index].quantity, // Keep quantity unchanged
