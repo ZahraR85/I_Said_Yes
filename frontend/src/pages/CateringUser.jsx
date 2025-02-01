@@ -97,7 +97,7 @@ const CateringUser = () => {
 
   const handleAddItem = async (item) => {
     const existingIndex = selectedItems.findIndex(
-      (i) => i.cateringItemId === item._id
+      (i) => i.cateringItemId._id === item._id
     );
 
     if (existingIndex !== -1) {
@@ -223,7 +223,7 @@ const CateringUser = () => {
       // Send DELETE request with userId and cateringItemId
       await axios.delete(
         `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
-          item.cateringItemId
+          item.cateringItemId._id
         }`
       );
 
@@ -272,7 +272,7 @@ const CateringUser = () => {
 
   // Calculate the grand total dynamically
   const grandTotal = selectedItems.reduce((total, item) => {
-    return total + (item.totalPrice || 0); // Add totalPrice for each item, default to 0 if not available
+    return total + (item.cateringItemId?.price * item.quantity || 0);
   }, 0);
 
   return (
@@ -300,10 +300,10 @@ const CateringUser = () => {
               {selectedItems.map((item, index) => (
                 <tr key={index} className="bg-gray-50">
                   <td className="border-b p-2">
-                    {item.cateringItemId?.category || "N/A"}
+                    {item.cateringItemId?.category || item.category || "N/A"}
                   </td>
                   <td className="border-b p-2">
-                    {item.cateringItemId?.ItemName || "N/A"}
+                    {item.cateringItemId?.ItemName || item.ItemName || "N/A"}
                   </td>
                   <td className="border-b p-2">
                     <input
@@ -327,9 +327,13 @@ const CateringUser = () => {
                     />
                   </td>
                   <td className="border-b p-2">
-                    {item.cateringItemId?.price || "N/A"}
+                    {item.cateringItemId?.price || item.price || "N/A"} €
                   </td>
-                  <td className="border-b p-2">{item.totalPrice} €</td>
+                  <td className="border-b p-2">
+                    {item.cateringItemId?.price * item.quantity ||
+                      item.totalPrice}
+                    €
+                  </td>
                   <td className="border-b p-2">
                     <button onClick={() => handleRemoveItem(index, item)}>
                       <FaTrash className="text-red-400 text-lg cursor-pointer hover:text-red-600" />
