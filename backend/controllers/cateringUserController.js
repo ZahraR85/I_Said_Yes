@@ -106,7 +106,7 @@ export const deleteCateringItemFromUser = async (req, res) => {
 
 // Update an existing item
 export const updateCateringUserItem = async (req, res) => {
-  const { userId, itemId } = req.params;
+  const { userId, cateringItemId } = req.params;  // Change itemId to cateringItemId
   const { quantity, description } = req.body;
 
   try {
@@ -115,8 +115,9 @@ export const updateCateringUserItem = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Find the index of the item with the matching cateringItemId
     const itemIndex = cateringUser.items.findIndex(
-      (item) => item.cateringItemId.toString() === itemId
+      (item) => item.cateringItemId.toString() === cateringItemId // Match by cateringItemId
     );
     if (itemIndex === -1) {
       return res.status(404).json({ message: "Item not found" });

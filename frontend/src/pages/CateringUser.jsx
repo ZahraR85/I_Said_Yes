@@ -171,10 +171,26 @@ const CateringUser = () => {
     setSelectedItems(updatedItems);
 
     try {
+      const totalPrice =
+        updatedItems[index].quantity * updatedItems[index].price;
+
+      if (isNaN(totalPrice) || totalPrice < 0) {
+        throw new Error("Invalid total price");
+      }
+      // Debugging step: Check if cateringItemId is set properly
+      console.log("cateringItemId:", updatedItems[index].cateringItemId);
+
+      const cateringItemId = updatedItems[index].cateringItemId;
+
+      // Proceed if cateringItemId is valid
+      if (!cateringItemId) {
+        throw new Error("cateringItemId is undefined or missing");
+      }
+
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
-          updatedItems[index].cateringItemId
-        }`,
+        `${
+          import.meta.env.VITE_API_URL
+        }/cateringusers/${userId}/${cateringItemId}`, // Using _id from cateringItemId
         {
           quantity: newQuantity,
           description: updatedItems[index].description, // Keep description unchanged
@@ -194,10 +210,13 @@ const CateringUser = () => {
     setSelectedItems(updatedItems);
 
     try {
+      // Ensure cateringItemId._id is used correctly to identify the item
+      const cateringItemId = updatedItems[index].cateringItemId;
+
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
-          updatedItems[index].cateringItemId
-        }`,
+        `${
+          import.meta.env.VITE_API_URL
+        }/cateringusers/${userId}/${cateringItemId}`, // Using _id from cateringItemId
         {
           quantity: updatedItems[index].quantity, // Keep quantity unchanged
           description: newDescription,
