@@ -169,17 +169,23 @@ const CateringUser = () => {
     const updatedItems = [...selectedItems];
     updatedItems[index].quantity = newQuantity;
     setSelectedItems(updatedItems);
-    console.log(
-      "updatedItems[index].cateringItemId",
-      updatedItems[index].cateringItemId
-    );
-    console.log("newQuantity", newQuantity);
+
     try {
+      const totalPrice =
+        updatedItems[index].quantity * updatedItems[index].price;
+
+      // Ensure totalPrice is a valid number
+      if (isNaN(totalPrice) || totalPrice < 0) {
+        throw new Error("Invalid total price");
+      }
+
+      // Send the updated quantity and description (if any) to the backend
       await axios.put(
         `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
           updatedItems[index].cateringItemId._id
-        }`,
+        }`, // cateringItemId._id will be used to find the correct item to update
         {
+          //cateringItemId: updatedItems[index].item._id,
           quantity: newQuantity,
           description: updatedItems[index].description, // Keep description unchanged
         }
@@ -191,18 +197,19 @@ const CateringUser = () => {
       );
     }
   };
-
   const handleDescriptionChange = async (index, newDescription) => {
     const updatedItems = [...selectedItems];
     updatedItems[index].description = newDescription;
     setSelectedItems(updatedItems);
 
     try {
+      // Send the updated description and quantity (unchanged) to the backend
       await axios.put(
         `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
           updatedItems[index].cateringItemId._id
-        }`,
+        }`, // cateringItemId._id will be used to find the correct item to update
         {
+          //cateringItemId: updatedItems[index].item._id,
           quantity: updatedItems[index].quantity, // Keep quantity unchanged
           description: newDescription,
         }
