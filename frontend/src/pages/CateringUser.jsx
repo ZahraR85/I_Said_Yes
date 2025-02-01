@@ -52,6 +52,41 @@ const CateringUser = () => {
   }, [userId]); // Dependency array contains userId
 
   useEffect(() => {
+    if (userId) {
+      const fetchUserCateringItems = async () => {
+        try {
+          const response = await axios.get(
+            `${import.meta.env.VITE_API_URL}/cateringusers/${userId}`
+          );
+
+          if (response.data && Array.isArray(response.data.items)) {
+            // Map over the items and include the populated details (ItemName, category, price)
+            const itemsWithDetails = response.data.items.map((item) => {
+              const { cateringItemId } = item; // Destructure to access populated catering item
+              return {
+                ...item, // Contains the user's selected item details
+                cateringItemId: {
+                  ...cateringItemId, // Includes populated details like ItemName, category, and price
+                },
+              };
+            });
+
+            setSelectedItems(itemsWithDetails); // Update the state with the populated item data
+          } else {
+            console.error("Unexpected API response format:", response.data);
+            setSelectedItems([]);
+          }
+        } catch (err) {
+          console.error("Error fetching user's catering items:", err);
+          setSelectedItems([]);
+        }
+      };
+
+      fetchUserCateringItems();
+    }
+  }, [userId]);
+
+  useEffect(() => {
     setTotalPrice(
       selectedItems.reduce(
         (total, item) => total + item.price * item.quantity,
@@ -129,11 +164,12 @@ const CateringUser = () => {
   };
 
   const handleQuantityChange = async (index, newQuantity) => {
+    if (newQuantity < 1) return; // Prevent negative or zero quantity
+
     const updatedItems = [...selectedItems];
     updatedItems[index].quantity = newQuantity;
     setSelectedItems(updatedItems);
 
-    // Update the item in the backend
     try {
       await axios.put(
         `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
@@ -141,7 +177,7 @@ const CateringUser = () => {
         }`,
         {
           quantity: newQuantity,
-          description: updatedItems[index].description,
+          description: updatedItems[index].description, // Keep description unchanged
         }
       );
     } catch (err) {
@@ -157,14 +193,13 @@ const CateringUser = () => {
     updatedItems[index].description = newDescription;
     setSelectedItems(updatedItems);
 
-    // Update the item in the backend
     try {
       await axios.put(
         `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
           updatedItems[index].cateringItemId
         }`,
         {
-          quantity: updatedItems[index].quantity,
+          quantity: updatedItems[index].quantity, // Keep quantity unchanged
           description: newDescription,
         }
       );
@@ -235,6 +270,11 @@ const CateringUser = () => {
         )
     : [];
 
+  // Calculate the grand total dynamically
+  const grandTotal = selectedItems.reduce((total, item) => {
+    return total + (item.totalPrice || 0); // Add totalPrice for each item, default to 0 if not available
+  }, 0);
+
   return (
     <div className="p-6">
       <ToastContainer />
@@ -251,6 +291,7 @@ const CateringUser = () => {
                 <th className="border-b p-2">Name</th>
                 <th className="border-b p-2">Quantity</th>
                 <th className="border-b p-2">Description</th>
+                <th className="border-b p-2">Price</th>
                 <th className="border-b p-2">Total Price</th>
                 <th className="border-b p-2">Actions</th>
               </tr>
@@ -258,8 +299,12 @@ const CateringUser = () => {
             <tbody>
               {selectedItems.map((item, index) => (
                 <tr key={index} className="bg-gray-50">
-                  <td className="border-b p-2">{item.category}</td>
-                  <td className="border-b p-2">{item.ItemName}</td>
+                  <td className="border-b p-2">
+                    {item.cateringItemId?.category || "N/A"}
+                  </td>
+                  <td className="border-b p-2">
+                    {item.cateringItemId?.ItemName || "N/A"}
+                  </td>
                   <td className="border-b p-2">
                     <input
                       type="number"
@@ -282,8 +327,9 @@ const CateringUser = () => {
                     />
                   </td>
                   <td className="border-b p-2">
-                    {(item.quantity * item.price).toFixed(2)} €
+                    {item.cateringItemId?.price || "N/A"}
                   </td>
+                  <td className="border-b p-2">{item.totalPrice} €</td>
                   <td className="border-b p-2">
                     <button onClick={() => handleRemoveItem(index, item)}>
                       <FaTrash className="text-red-400 text-lg cursor-pointer hover:text-red-600" />
@@ -296,7 +342,7 @@ const CateringUser = () => {
                   Grand Total:
                 </td>
                 <td className="font-bold text-red-500">
-                  {totalPrice.toFixed(2)} €
+                  {grandTotal.toFixed(2)} €
                 </td>
               </tr>
             </tbody>
