@@ -174,18 +174,24 @@ const CateringUser = () => {
       const totalPrice =
         updatedItems[index].quantity * updatedItems[index].price;
 
-      // Ensure totalPrice is a valid number
       if (isNaN(totalPrice) || totalPrice < 0) {
         throw new Error("Invalid total price");
       }
+      // Debugging step: Check if cateringItemId is set properly
+      console.log("cateringItemId:", updatedItems[index].cateringItemId);
 
-      // Send the updated quantity and description (if any) to the backend
+      const cateringItemId = updatedItems[index].cateringItemId;
+
+      // Proceed if cateringItemId is valid
+      if (!cateringItemId) {
+        throw new Error("cateringItemId is undefined or missing");
+      }
+
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
-          updatedItems[index].cateringItemId._id
-        }`, // cateringItemId._id will be used to find the correct item to update
+        `${
+          import.meta.env.VITE_API_URL
+        }/cateringusers/${userId}/${cateringItemId}`, // Using _id from cateringItemId
         {
-          //cateringItemId: updatedItems[index].item._id,
           quantity: newQuantity,
           description: updatedItems[index].description, // Keep description unchanged
         }
@@ -197,19 +203,21 @@ const CateringUser = () => {
       );
     }
   };
+
   const handleDescriptionChange = async (index, newDescription) => {
     const updatedItems = [...selectedItems];
     updatedItems[index].description = newDescription;
     setSelectedItems(updatedItems);
 
     try {
-      // Send the updated description and quantity (unchanged) to the backend
+      // Ensure cateringItemId._id is used correctly to identify the item
+      const cateringItemId = updatedItems[index].cateringItemId;
+
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
-          updatedItems[index].cateringItemId._id
-        }`, // cateringItemId._id will be used to find the correct item to update
+        `${
+          import.meta.env.VITE_API_URL
+        }/cateringusers/${userId}/${cateringItemId}`, // Using _id from cateringItemId
         {
-          //cateringItemId: updatedItems[index].item._id,
           quantity: updatedItems[index].quantity, // Keep quantity unchanged
           description: newDescription,
         }
