@@ -1,21 +1,29 @@
 import CateringUser from "../models/cateringUser.js";
 import Catering from "../models/catering.js";
 
-// Get a user's catering items
+// Get a user's catering items with price, category, and ItemName from Catering table
 export const getCateringUser = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const cateringUser = await CateringUser.findOne({ userId }).populate("items.cateringItemId");
+    // Fetch the catering user and populate the cateringItemId field with data from the Catering table
+    const cateringUser = await CateringUser.findOne({ userId })
+      .populate({
+        path: "items.cateringItemId",  // Populate the cateringItemId field
+        select: "ItemName category price"  // Only select these fields from the Catering table
+      });
+
     if (!cateringUser) {
       return res.status(404).json({ message: "Catering order not found for this user" });
     }
 
+    // Send the populated user catering data with detailed items
     res.status(200).json(cateringUser);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Add or update catering items in CateringUser
 export const addCateringItemToCateringUser = async (req, res) => {
