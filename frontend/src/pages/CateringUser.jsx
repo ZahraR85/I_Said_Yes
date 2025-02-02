@@ -418,36 +418,39 @@ const CateringUser = () => {
     }
   };
   return (
-    <div className="p-6">
+    <div className="lg:p-6 p-2">
       <ToastContainer />
-      <h1 className="text-2xl font-bold text-BgFont text-center m-6">
+      <h1 className="text-lg lg:text-2xl font-bold text-BgFont text-center lg:m-6 m-2">
         Select your favorite Menu from here
       </h1>
 
       {selectedItems.length > 0 && (
-        <div className="mb-6">
+        <div className="lg:mb-6 mb-2">
           <table className="min-w-full table-auto border border-gray-300 text-center text-BgFont">
             <thead>
-              <tr className="bg-BgKhaki text-BgFont">
-                <th className="border-b p-2">Category</th>
-                <th className="border-b p-2">Name</th>
-                <th className="border-b p-2">Quantity</th>
-                <th className="border-b p-2">Description</th>
-                <th className="border-b p-2">Price</th>
-                <th className="border-b p-2">Total Price</th>
-                <th className="border-b p-2">Actions</th>
+              <tr className="bg-BgKhaki text-custom lg:text-m text-BgFont">
+                <th className="border-b lg:p-2 p-1">Category</th>
+                <th className="border-b lg:p-2 p-1">Name</th>
+                <th className="border-b lg:p-2 p-1">Quantity</th>
+                <th className="border-b lg:p-2 p-1">Description</th>
+                <th className="border-b lg:p-2 p-1">Price</th>
+                <th className="border-b lg:p-2 p-1">Total Price</th>
+                <th className="border-b lg:p-2 p-1">Actions</th>
               </tr>
             </thead>
             <tbody>
               {selectedItems.map((item, index) => (
-                <tr key={index} className="bg-gray-50">
-                  <td className="border-b p-2">
+                <tr
+                  key={index}
+                  className="bg-gray-50 text-custom lg:text-m text-BgFont"
+                >
+                  <td className="border-b lg:p-2 p-1">
                     {item.cateringItemId?.category || item.category || "N/A"}
                   </td>
-                  <td className="border-b p-2">
+                  <td className="border-b lg:p-2 p-1">
                     {item.cateringItemId?.ItemName || item.ItemName || "N/A"}
                   </td>
-                  <td className="border-b p-2">
+                  <td className="border-b lg:p-2 p-1">
                     <input
                       type="number"
                       value={item.quantity}
@@ -458,7 +461,7 @@ const CateringUser = () => {
                       className="border rounded px-2 py-1 w-16"
                     />
                   </td>
-                  <td className="border-b p-2">
+                  <td className="border-b lg:p-2 p-1">
                     <input
                       type="text"
                       value={item.description}
@@ -468,16 +471,16 @@ const CateringUser = () => {
                       className="border rounded px-2 py-1 w-full"
                     />
                   </td>
-                  <td className="border-b p-2">
+                  <td className="border-b lg:p-2 p-1">
                     {item.cateringItemId?.price || item.price || "N/A"} €
                   </td>
-                  <td className="border-b p-2">
+                  <td className="border-b lg:p-2 p-1">
                     {item.cateringItemId?.price * item.quantity ||
                       item.price * item.quantity ||
                       item.totalPrice}
                     €
                   </td>
-                  <td className="border-b p-2">
+                  <td className="border-b lg:p-2 p-1">
                     <button onClick={() => handleRemoveItem(index, item)}>
                       <FaTrash className="text-red-400 text-lg cursor-pointer hover:text-red-600" />
                     </button>
@@ -485,10 +488,13 @@ const CateringUser = () => {
                 </tr>
               ))}
               <tr>
-                <td colSpan="4" className="text-right font-bold p-4">
+                <td
+                  colSpan="4"
+                  className="text-right font-bold lg:p-4 p-2 text-sm lg:text-lg"
+                >
                   Grand Total:
                 </td>
-                <td className="font-bold text-red-500">
+                <td className="font-bold text-red-500 lg:p-4 p-2 text-sm lg:text-lg">
                   {grandTotal.toFixed(2)} €
                 </td>
               </tr>
@@ -498,14 +504,14 @@ const CateringUser = () => {
       )}
 
       <div className="m-4 font-bold text-center text-BgFont">
-        <label htmlFor="category" className="mr-2 text-lg">
+        <label htmlFor="category" className="mr-2 text-sm lg:text-lg">
           Filter by Category:
         </label>
         <select
           id="category"
           value={selectedCategory}
           onChange={handleCategoryChange}
-          className="w-1/5 text-center p-2 text-m border border-BgPinkDark rounded"
+          className="w-1/5 text-center p-2 text-sm lg:text-lg border border-BgPinkDark rounded"
         >
           <option value="All">All</option>
           <option value="starter">Starter</option>
@@ -531,12 +537,12 @@ const CateringUser = () => {
                 alt={item.ItemName}
                 className="h-40 w-full object-cover rounded"
               />
-              <h2 className="text-lg font-bold">{item.ItemName}</h2>
-              <p>{item.category}</p>
-              <p className="font-bold">{item.price} €</p>
+              <h2 className="text-sm lg:text-lg font-bold">{item.ItemName}</h2>
+              <p className="text-sm lg:text-lg">{item.category}</p>
+              <p className="text-sm lg:text-lg font-bold ">{item.price} €</p>
               <button
                 onClick={() => handleAddItem(item)}
-                className="m-2 p-2 bg-BgPinkMiddle hover:bg-BgPinkDark rounded"
+                className="lg:m-2 lg:p-2 m-1 py-1 px-2 text-sm lg:text-lg lg:font-bold font-semibold bg-BgPinkMiddle hover:bg-BgPinkDark rounded"
               >
                 Add to List
               </button>
@@ -551,17 +557,17 @@ const CateringUser = () => {
         <button
           onClick={prevPage}
           disabled={currentPage === 1}
-          className="px-4 py-2 bg-BgPinkMiddle text-BgFont rounded-l hover:bg-BgPinkDark"
+          className="lg:px-4 lg:py-2 px-2 py-1 lg:font-bold font-semibold text-sm lg:text-m bg-BgPinkMiddle text-BgFont rounded-l hover:bg-BgPinkDark"
         >
           Previous
         </button>
-        <span className="px-4 py-2 text-BgFont">
+        <span className="lg:px-4 lg:py-2 px-2 py-1 text-sm lg:text-m text-BgFont">
           Page {currentPage} of {totalPages}
         </span>
         <button
           onClick={nextPage}
           disabled={currentPage === totalPages}
-          className="px-4 py-2 disabled:opacity-50 bg-BgPinkMiddle text-BgFont rounded-r hover:bg-BgPinkDark"
+          className="lg:px-4 lg:py-2 px-2 py-1 lg:font-bold font-semibold text-sm lg:text-m disabled:opacity-50 bg-BgPinkMiddle text-BgFont rounded-r hover:bg-BgPinkDark"
         >
           Next
         </button>

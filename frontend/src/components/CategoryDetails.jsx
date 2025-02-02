@@ -87,17 +87,17 @@ const CategoryDetails = () => {
             <button
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(currentPage - 1)}
-              className="px-4 py-2 bg-BgPinkMiddle font-bold rounded hover:bg-BgPinkDark "
+              className="lg:px-4 lg:py-2 px-2 py-1 lg:font-bold font-semibold text-sm lg:text-m text-BgFont bg-BgPinkMiddle rounded hover:bg-BgPinkDark "
             >
               Previous
             </button>
-            <span className="mx-2">
+            <span className="lg:px-4 lg:py-2 px-2 py-1 text-sm lg:text-m mx-2 text-BgFont">
               Page {currentPage} of {totalPages}
             </span>
             <button
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage(currentPage + 1)}
-              className="px-4 py-2 bg-BgPinkMiddle font-bold rounded hover:bg-BgPinkDark "
+              className="lg:px-4 lg:py-2 px-2 py-1 lg:font-bold font-semibold text-sm lg:text-m text-BgFont bg-BgPinkMiddle rounded hover:bg-BgPinkDark "
             >
               Next
             </button>

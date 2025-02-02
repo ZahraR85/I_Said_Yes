@@ -27,6 +27,7 @@ export default {
     },
     fontSize: {
       'xxs': '0.625rem', // or any value smaller than xs
+      'custom': '0.8rem',
     },
     backgroundImage: {
       'custom-gradient': 'linear-gradient(90deg, rgba(118,154,110) 0%, rgba(31,66,32) 100%)',
