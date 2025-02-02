@@ -173,24 +173,22 @@ const CateringUser = () => {
     try {
       const totalPrice =
         updatedItems[index].quantity * updatedItems[index].price;
-
       if (isNaN(totalPrice) || totalPrice < 0) {
         throw new Error("Invalid total price");
       }
-      // Debugging step: Check if cateringItemId is set properly
-      console.log("cateringItemId:", updatedItems[index].cateringItemId);
 
-      const cateringItemId = updatedItems[index].cateringItemId;
+      // Ensure cateringItemId is a string
+      const cateringItemId =
+        updatedItems[index].cateringItemId?._id || updatedItems[index]._id;
 
-      // Proceed if cateringItemId is valid
-      if (!cateringItemId) {
-        throw new Error("cateringItemId is undefined or missing");
+      if (!cateringItemId || typeof cateringItemId !== "string") {
+        throw new Error("cateringItemId is missing or not a valid string");
       }
 
       await axios.put(
         `${
           import.meta.env.VITE_API_URL
-        }/cateringusers/${userId}/${cateringItemId}`, // Using _id from cateringItemId
+        }/cateringusers/${userId}/${cateringItemId}`,
         {
           quantity: newQuantity,
           description: updatedItems[index].description, // Keep description unchanged
@@ -210,13 +208,18 @@ const CateringUser = () => {
     setSelectedItems(updatedItems);
 
     try {
-      // Ensure cateringItemId._id is used correctly to identify the item
-      const cateringItemId = updatedItems[index].cateringItemId;
+      // Ensure cateringItemId is a string
+      const cateringItemId =
+        updatedItems[index].cateringItemId?._id || updatedItems[index]._id;
+
+      if (!cateringItemId || typeof cateringItemId !== "string") {
+        throw new Error("cateringItemId is missing or not a valid string");
+      }
 
       await axios.put(
         `${
           import.meta.env.VITE_API_URL
-        }/cateringusers/${userId}/${cateringItemId}`, // Using _id from cateringItemId
+        }/cateringusers/${userId}/${cateringItemId}`,
         {
           quantity: updatedItems[index].quantity, // Keep quantity unchanged
           description: newDescription,
