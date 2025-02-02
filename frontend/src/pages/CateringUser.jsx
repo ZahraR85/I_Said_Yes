@@ -12,7 +12,7 @@ const CateringUser = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   //const [editMode, setEditMode] = useState(null);
-  const [loading, setLoading] = useState(false);
+  //const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
@@ -380,6 +380,7 @@ const CateringUser = () => {
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
+    setCurrentPage(1); // Reset to the first page when category changes
   };
 
   const filteredItems = Array.isArray(items)
@@ -400,7 +401,22 @@ const CateringUser = () => {
         0)
     );
   }, 0);
-
+  // Get the items for the current page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+  // Pagination Controls
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
   return (
     <div className="p-6">
       <ToastContainer />
@@ -502,10 +518,10 @@ const CateringUser = () => {
           <option value="waiter">Waiter</option>
         </select>
       </div>
-
+      {/* Catering Items Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-BgFont text-center">
-        {Array.isArray(filteredItems) && filteredItems.length > 0 ? (
-          filteredItems.map((item) => (
+        {Array.isArray(currentItems) && currentItems.length > 0 ? (
+          currentItems.map((item) => (
             <div
               key={item._id}
               className="border-4 border-BgPinkDark rounded-lg"
@@ -529,6 +545,26 @@ const CateringUser = () => {
         ) : (
           <p className="text-center text-gray-500">No items available</p>
         )}
+      </div>
+      {/* Pagination */}
+      <div className="flex justify-center mt-6 lg:mt-10">
+        <button
+          onClick={prevPage}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-BgPinkMiddle text-BgFont rounded-l hover:bg-BgPinkDark"
+        >
+          Previous
+        </button>
+        <span className="px-4 py-2 text-BgFont">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={nextPage}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 disabled:opacity-50 bg-BgPinkMiddle text-BgFont rounded-r hover:bg-BgPinkDark"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
