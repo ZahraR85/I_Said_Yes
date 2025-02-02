@@ -146,6 +146,7 @@ const CateringUser = () => {
         cateringItemId: item._id,
         quantity: 1,
         description: "",
+        price: item.price,
         totalPrice: totalPrice, // Set totalPrice
       };
 
@@ -164,7 +165,7 @@ const CateringUser = () => {
   };
 
   const handleQuantityChange = async (index, newQuantity) => {
-    if (newQuantity < 1) return; // Prevent negative or zero quantity
+    if (newQuantity < 1) return; // Prevent negative quantity
 
     const updatedItems = [...selectedItems];
     updatedItems[index].quantity = newQuantity;
@@ -191,7 +192,8 @@ const CateringUser = () => {
         }/cateringusers/${userId}/${cateringItemId}`,
         {
           quantity: newQuantity,
-          description: updatedItems[index].description, // Keep description unchanged
+          description: updatedItems[index].description,
+          totalPrice, // Ensure totalPrice is sent
         }
       );
     } catch (err) {
@@ -294,7 +296,12 @@ const CateringUser = () => {
 
   // Calculate the grand total dynamically
   const grandTotal = selectedItems.reduce((total, item) => {
-    return total + (item.cateringItemId?.price * item.quantity || 0);
+    return (
+      total +
+      (item.cateringItemId?.price * item.quantity ||
+        item.price * item.quantity ||
+        0)
+    );
   }, 0);
 
   return (
@@ -353,6 +360,7 @@ const CateringUser = () => {
                   </td>
                   <td className="border-b p-2">
                     {item.cateringItemId?.price * item.quantity ||
+                      item.price * item.quantity ||
                       item.totalPrice}
                     €
                   </td>
