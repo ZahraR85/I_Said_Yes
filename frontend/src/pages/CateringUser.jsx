@@ -11,10 +11,13 @@ const CateringUser = () => {
   const [items, setItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [editMode, setEditMode] = useState(null);
+  //const [editMode, setEditMode] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Number of items per page (can be changed)
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -100,6 +103,12 @@ const CateringUser = () => {
       (i) => i.cateringItemId._id === item._id
     );
 
+    const grandTotal = selectedItems.reduce(
+      (total, selectedItem) =>
+        total + selectedItem.quantity * selectedItem.price,
+      0
+    );
+
     if (existingIndex !== -1) {
       // Update item quantity and description
       const updatedItems = [...selectedItems];
@@ -109,11 +118,11 @@ const CateringUser = () => {
       // Update item on the server
       try {
         const totalPrice = updatedItems[existingIndex].quantity * item.price;
-        // Ensure totalPrice is a valid number
         if (isNaN(totalPrice) || totalPrice < 0) {
           throw new Error("Invalid total price");
         }
 
+        // Update catering order on the server
         await axios.put(
           `${import.meta.env.VITE_API_URL}/cateringusers/${userId}`,
           {
@@ -127,11 +136,34 @@ const CateringUser = () => {
             ],
           }
         );
+
+        // Add the updated catering data to the shopping cart
+        const shoppingCartData = {
+          userID: userId,
+          serviceName: "Catering",
+          price: grandTotal,
+        };
+
+        await axios.post(
+          `${import.meta.env.VITE_API_URL}/shoppingcards`,
+          shoppingCartData,
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        // Optional: Add to frontend shopping cart state
+        addToShoppingCard(shoppingCartData);
+
+        toast.success(
+          "Catering service added to your shopping cart successfully!"
+        );
       } catch (err) {
         console.error(
           "Error updating item:",
           err.response?.data || err.message
         );
+        toast.error("Failed to update catering item.");
       }
     } else {
       // Add new item to the selected list
@@ -158,8 +190,31 @@ const CateringUser = () => {
           userId,
           items: [newItem], // Add new item to user's catering order
         });
+
+        // Add the new catering data to the shopping cart
+        const shoppingCartData = {
+          userID: userId,
+          serviceName: "Catering",
+          price: grandTotal,
+        };
+
+        await axios.post(
+          `${import.meta.env.VITE_API_URL}/shoppingcards`,
+          shoppingCartData,
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        // Optional: Add to frontend shopping cart state
+        addToShoppingCard(shoppingCartData);
+
+        toast.success(
+          "Catering service added to your shopping cart successfully!"
+        );
       } catch (err) {
         console.error("Error adding item:", err.response?.data || err.message);
+        toast.error("Failed to add item to catering order.");
       }
     }
   };
@@ -186,6 +241,7 @@ const CateringUser = () => {
         throw new Error("cateringItemId is missing or not a valid string");
       }
 
+      // Update the catering item quantity on the server
       await axios.put(
         `${
           import.meta.env.VITE_API_URL
@@ -196,11 +252,41 @@ const CateringUser = () => {
           totalPrice, // Ensure totalPrice is sent
         }
       );
+
+      // Update shopping cart with the new total price
+      const grandTotal = selectedItems.reduce((total, item) => {
+        return (
+          total +
+          (item.cateringItemId?.price * item.quantity ||
+            item.price * item.quantity ||
+            0)
+        );
+      }, 0);
+
+      const shoppingCartData = {
+        userID: userId,
+        serviceName: "Catering",
+        price: grandTotal,
+      };
+
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/shoppingcards`,
+        shoppingCartData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      // Optional: Add to frontend shopping cart state
+      addToShoppingCard(shoppingCartData);
+
+      toast.success("Catering item quantity updated successfully!");
     } catch (err) {
       console.error(
         "Error updating item quantity:",
         err.response?.data || err.message
       );
+      toast.error("Failed to update catering item.");
     }
   };
 
@@ -254,30 +340,41 @@ const CateringUser = () => {
       // Remove the item from the selected items list in the frontend
       setSelectedItems((prevItems) => prevItems.filter((_, i) => i !== index));
 
-      console.log("Item deleted successfully!");
-    } catch (err) {
-      console.error("Error deleting item:", err.response?.data || err.message);
-    }
-  };
+      // Remove the item from the selected items list in the frontend
+      const updatedItems = [...selectedItems];
+      updatedItems.splice(index, 1); // Remove the item from the list
+      setSelectedItems(updatedItems);
+      // Recalculate grand total after item removal
+      const grandTotal = updatedItems.reduce((total, item) => {
+        return (
+          total +
+          (item.cateringItemId?.price * item.quantity ||
+            item.price * item.quantity ||
+            0)
+        );
+      }, 0);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+      const shoppingCartData = {
+        userID: userId,
+        serviceName: "Catering",
+        price: grandTotal,
+      };
 
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/cateringusers`,
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/shoppingcards`,
+        shoppingCartData,
         {
-          userId,
-          items: selectedItems,
+          headers: { "Content-Type": "application/json" },
         }
       );
-      alert(response.data.message);
+
+      // Optional: Add to frontend shopping cart state
+      addToShoppingCard(shoppingCartData);
+
+      toast.success("Catering item removed successfully and cart updated!");
     } catch (err) {
-      setError("Error saving the catering order.");
-    } finally {
-      setLoading(false);
+      console.error("Error deleting item:", err.response?.data || err.message);
+      toast.error("Failed to remove catering item or update shopping cart.");
     }
   };
 
