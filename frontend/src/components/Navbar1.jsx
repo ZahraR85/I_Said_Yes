@@ -170,12 +170,12 @@ const Navbar1 = () => {
             >
               Reception
             </Link>
-          </li> */}
-          <li className="hover:underline">
-            <Link to="/cateringPage">Catering</Link>
           </li>
           <li className="hover:underline">
-            <Link to="/cateringUser">CateringUser</Link>
+            <Link to="/cateringPage">Catering</Link>
+          </li>*/}
+          <li className="hover:underline">
+            <Link to="/cateringUser">Catering</Link>
           </li>
           <li className="hover:underline">
             <Link to="/photography">Photography</Link>

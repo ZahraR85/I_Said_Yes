@@ -106,38 +106,48 @@ export const deleteCateringItemFromUser = async (req, res) => {
 
 // Update an existing item
 export const updateCateringUserItem = async (req, res) => {
-  const { userId, cateringItemId } = req.params;  // Change itemId to cateringItemId
+  const { userId, cateringItemId } = req.params;
   const { quantity, description } = req.body;
 
   try {
     const cateringUser = await CateringUser.findOne({ userId });
+
     if (!cateringUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Catering order not found" });
     }
 
-    // Find the index of the item with the matching cateringItemId
+    // Find the item within the user's catering items
     const itemIndex = cateringUser.items.findIndex(
-      (item) => item.cateringItemId.toString() === cateringItemId // Match by cateringItemId
+      (item) => item.cateringItemId.toString() === cateringItemId
     );
+
     if (itemIndex === -1) {
       return res.status(404).json({ message: "Item not found" });
     }
 
-    // Update item
+    // Fetch the price from the Catering table
+    const cateringItem = await Catering.findById(cateringItemId);
+    if (!cateringItem || !cateringItem.price) {
+      return res.status(404).json({ message: "Catering item not found or price missing" });
+    }
+
+    const itemPrice = cateringItem.price; // Ensure we have a valid price
+
+    // Update quantity and description
     cateringUser.items[itemIndex].quantity = quantity;
     cateringUser.items[itemIndex].description = description;
-
-    // Recalculate the total price for the updated item
-    cateringUser.items[itemIndex].totalPrice = quantity * cateringUser.items[itemIndex].price;
+    cateringUser.items[itemIndex].totalPrice = quantity * itemPrice;
 
     // Recalculate the grandTotal
     cateringUser.grandTotal = cateringUser.items.reduce(
-      (acc, item) => acc + item.totalPrice, 0
+      (total, item) => total + item.totalPrice,
+      0
     );
 
     await cateringUser.save();
-    res.status(200).json(cateringUser);
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
+
+    res.json({ message: "Item updated successfully", cateringUser });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
