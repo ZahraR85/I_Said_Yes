@@ -81,7 +81,7 @@ const Navbar1 = () => {
               <span className="text-sm md:text-base whitespace-nowrap">
                 Shopping Card
               </span>
-              {shoppingCardCount > 0 && (
+              {isAuthenticated && shoppingCardCount > 0 && (
                 <span className="ml-2 mb-4 text-lg text-red-600">
                   {shoppingCardCount}
                 </span>
