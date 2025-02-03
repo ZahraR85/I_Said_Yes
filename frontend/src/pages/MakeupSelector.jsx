@@ -135,31 +135,33 @@ const MakeupSelector = () => {
 
   const descriptions = {
     makeup:
-      "Choose a makeup type that suits your style and budget. Budget, luxury, or VIP options available.",
+      "Luxury Makeup: Offers a sophisticated, long-lasting finish with premium products designed to enhance natural beauty and provide a flawless appearance. VIP Makeup: Delivers a glamorous, red-carpet-ready look using exclusive, high-end products for special occasions or photo shoots.",
     hairstyle:
-      "Select a hairstyle that matches your look. From simple styles to extravagant options.",
+      "Simple Shenyun: A sleek and elegant hairstyle that offers a polished, refined look suitable for everyday events. Complex Shenyun: A more intricate and sophisticated hairstyle with elegant twists and volume, perfect for formal occasions. Babylis: A stylish and bouncy look achieved with a professional curling iron, ideal for a vibrant and lively appearance. Extra Hair Extension: Adds length and volume to your hair using high-quality extensions, giving you a fuller, more glamorous look.",
     dyeHair:
       "Pick your preferred hair color or highlights for the perfect finishing touch.",
     nail: "Add nail services to complement your look with manicures and nail art.",
     eyelashExtensions:
-      "Enhance your lashes for a bold, dramatic effect with our eyelash extension services.",
+      "Enhance your lashes with Semi-permanent synthetic lashes applied individually to your natural lashes to create a fuller, longer, and more dramatic look.",
     special:
-      "Opt for additional special services to complete your beauty transformation with a touch of luxury.",
+      "Includes a personalized skincare routine to prep the bride's skin for flawless makeup and a tanning session to give a natural sun-kissed glow.",
   };
 
   return (
     <div className="relative min-h-screen bg-cover bg-center bg-[url('https://i.postimg.cc/TwNqd9Bm/makeup2.jpg')]">
       <div className="absolute inset-0 bg-white/60"></div>
       <ToastContainer />
-      <div className="relative mx-auto w-full max-w-[calc(85%-170px)] lg:max-w-[calc(60%-200px)] bg-opacity-80 shadow-md rounded-lg p-4 sm:p-8 space-y-5">
-        {/* Display description text */}
-        <div className="text-center mb-4 text-lg font-semibold text-BgFont">
-          {description}
-        </div>
-
-        <h2 className="text-lg lg:text-2xl font-bold text-center text-BgFont my-1 lg:my-16">
+      <div className="relative mx-auto w-full max-w-[calc(85%-170px)] lg:max-w-[calc(60%-200px)] bg-opacity-80 shadow-md rounded-lg p-2 lg:p-8 space-y-5">
+        <h2 className="text-lg lg:text-2xl font-bold text-center text-BgFont my-2 lg:mt-6">
           Select your Makeup services that you need:
         </h2>
+        {/* Hover Description */}
+        <div className="mt-2 bg-BgPink p-2 lg:p-4 text-BgFont rounded min-h-[120px] lg:min-h-[150px] overflow-y-auto">
+          <h2 className="text-sm lg:text-lg font-bold">Description:</h2>
+          <p className="text-xs lg:text-sm">
+            {description || "Hover over an option to see details."}
+          </p>
+        </div>
         <div
           onMouseEnter={() => setDescription(descriptions.makeup)}
           onMouseLeave={() => setDescription("")}
@@ -271,9 +273,9 @@ const MakeupSelector = () => {
                 setNail(e.target.checked);
                 updateTotalPrice();
               }}
-              className="mr-2"
+              className="mr-2  text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center w-5 h-5"
             />
-            Add Nails 70 €
+            Nails 70 €
           </label>
         </div>
 
@@ -289,9 +291,9 @@ const MakeupSelector = () => {
                 setEyelashExtensions(e.target.checked);
                 updateTotalPrice();
               }}
-              className="mr-2"
+              className="mr-2  text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center w-5 h-5"
             />
-            Add Eyelash Extensions 100 €
+            Eyelash Extensions 100 €
           </label>
         </div>
 
@@ -307,16 +309,20 @@ const MakeupSelector = () => {
                 setSpecial(e.target.checked);
                 updateTotalPrice();
               }}
-              className="mr-2"
+              className="mr-2  text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center w-5 h-5"
             />
-            Add Special Services 300 €
+            Special Services 300 €
           </label>
         </div>
-
+        <div>
+          <h2 className="text-m lg:text-xl font-bold text-BgFont text-center lg:py-4">
+            Total Price: {total} €
+          </h2>
+        </div>
         <div className="flex justify-center text-center mt-8">
           <button
             onClick={handleSubmit}
-            className="bg-BgBtnHover hover:bg-BgHoverFocus px-6 py-3 rounded-lg shadow-md text-white text-lg font-semibold"
+            className="bg-BgPinkMiddle text-BgFont text-lg font-bold hover:bg-BgPinkDark w-full px-2 lg:px-4 py-1 lg:py-2 rounded"
           >
             Submit
           </button>

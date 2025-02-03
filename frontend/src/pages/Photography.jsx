@@ -216,13 +216,13 @@ const Photography = () => {
       <div className="absolute inset-0 bg-white/60"></div>
       <ToastContainer />
       <div className="relative mx-auto w-full max-w-[calc(80%-200px)] lg:max-w-[calc(60%-180px)] bg-opacity-80 shadow-md rounded-lg p-4 sm:p-8 space-y-5">
-        <h2 className="text-lg lg:text-2xl font-bold text-center text-BgFont my-10 lg:my-16">
+        <h2 className="text-lg lg:text-2xl font-bold text-center text-BgFont mt-2 lg:mt-14">
           Select your Photography Services here!
         </h2>
         {/* Hover Description */}
-        <div className="mt-2 lg:mt-4 text-BgFont bg-BgPink p-2 rounded">
+        <div className="mt-2 bg-BgPink p-2 lg:p-4 text-BgFont rounded min-h-[80px] lg:min-h-[120px] overflow-y-auto">
           <h2 className="text-sm lg:text-lg font-bold">Description:</h2>
-          <p className="text-sm lg:text-lg">
+          <p className="text-xs lg:text-sm">
             {currentDescription || "Hover over an option to see details."}
           </p>
         </div>
