@@ -11,7 +11,6 @@ const makeupSchema = new Schema(
       type: String,
       enum: ["Budget Makeup", "Luxury Makeup", "VIP Makeup"],
       default: "Budget Makeup",
-      price: { type: Number, default: 150 },
     },
     hairstyle: {
       type: String,
@@ -22,7 +21,6 @@ const makeupSchema = new Schema(
         "Extra Hair Extension",
       ],
       default: "Simple Shenyun",
-      price: { type: Number, default: 100 },
     },
     dyeHair: {
       type: String,
@@ -41,7 +39,6 @@ const makeupSchema = new Schema(
         "Full Hair Color - Very Long Hair",
       ],
       default: "Full Hair Color - Short Hair",
-      price: { type: Number, default: 50 },
     },
     nail: {
       selected: { type: Boolean, default: false },
@@ -64,59 +61,47 @@ const makeupSchema = new Schema(
 );
 
 makeupSchema.pre("save", function (next) {
-  try {
-    const makeupPrices = {
-      "Budget Makeup": 150,
-      "Luxury Makeup": 300,
-      "VIP Makeup": 500,
-    };
+  const makeupPrices = {
+    "Budget Makeup": 150,
+    "Luxury Makeup": 300,
+    "VIP Makeup": 500,
+  };
 
-    const hairstylePrices = {
-      "Simple Shenyun": 100,
-      "Complex Shenyun": 150,
-      "Babylis": 100,
-      "Extra Hair Extension": 150,
-    };
+  const hairstylePrices = {
+    "Simple Shenyun": 100,
+    "Complex Shenyun": 150,
+    "Babylis": 100,
+    "Extra Hair Extension": 150,
+  };
 
-    const dyeHairPrices = {
-      "Highlights - Short Hair": 80,
-      "Highlights - Medium Hair": 120,
-      "Highlights - Long Hair": 170,
-      "Highlights - Very Long Hair": 170,
-      "Balayage - Short Hair": 100,
-      "Balayage - Medium Hair": 200,
-      "Balayage - Long Hair": 300,
-      "Balayage - Very Long Hair": 400,
-      "Full Hair Color - Short Hair": 50,
-      "Full Hair Color - Medium Hair": 80,
-      "Full Hair Color - Long Hair": 120,
-      "Full Hair Color - Very Long Hair": 150,
-    };
+  const dyeHairPrices = {
+    "Highlights - Short Hair": 80,
+    "Highlights - Medium Hair": 120,
+    "Highlights - Long Hair": 170,
+    "Highlights - Very Long Hair": 170,
+    "Balayage - Short Hair": 100,
+    "Balayage - Medium Hair": 200,
+    "Balayage - Long Hair": 300,
+    "Balayage - Very Long Hair": 400,
+    "Full Hair Color - Short Hair": 50,
+    "Full Hair Color - Medium Hair": 80,
+    "Full Hair Color - Long Hair": 120,
+    "Full Hair Color - Very Long Hair": 150,
+  };
 
-    const makeupPrice = makeupPrices[this.makeup] || 0;
-    const hairstylePrice = hairstylePrices[this.hairstyle] || 0;
-    const dyeHairPrice = dyeHairPrices[this.dyeHair] || 0;
+  const makeupPrice = makeupPrices[this.makeup] || 0;
+  const hairstylePrice = hairstylePrices[this.hairstyle] || 0;
+  const dyeHairPrice = dyeHairPrices[this.dyeHair] || 0;
 
-    // Debugging log to check if the total calculation is correct
-    console.log('Makeup Price:', makeupPrice);
-    console.log('Hairstyle Price:', hairstylePrice);
-    console.log('DyeHair Price:', dyeHairPrice);
+  this.total =
+    makeupPrice +
+    hairstylePrice +
+    dyeHairPrice +
+    (this.nail.selected ? this.nail.price : 0) +
+    (this.eyelashExtensions.selected ? this.eyelashExtensions.price : 0) +
+    (this.special.selected ? this.special.price : 0);
 
-    this.total =
-      makeupPrice +
-      hairstylePrice +
-      dyeHairPrice +
-      (this.nail.selected ? this.nail.price : 0) +
-      (this.eyelashExtensions.selected ? this.eyelashExtensions.price : 0) +
-      (this.special.selected ? this.special.price : 0);
-
-    console.log('Calculated Total:', this.total);  // Add logging to check total
-
-    next();
-  } catch (error) {
-    console.error('Error in pre-save hook:', error);
-    next(error);  // Pass the error to next middleware
-  }
+  next();
 });
 
 export default model("Makeup", makeupSchema);

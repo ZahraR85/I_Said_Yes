@@ -3,59 +3,30 @@ import mongoose from "mongoose";
 
 export const createOrUpdateMakeup = async (req, res) => {
   try {
-    const { userID, makeup, dyeHair, nail, hairstyle, EyelashExtensions, special } = req.body;
+    const { userID, makeup, hairstyle, dyeHair, nail, eyelashExtensions, special } = req.body;
+    let makeupData = await Makeup.findOne({ userID });
 
-    // Ensure userID is provided
-    if (!userID) {
-      return res.status(400).json({ message: "UserID is required." });
+    if (makeupData) {
+      // Update existing data
+      makeupData.makeup = makeup;
+      makeupData.hairstyle = hairstyle;
+      makeupData.dyeHair = dyeHair;
+      makeupData.nail.selected = nail;
+      makeupData.eyelashExtensions.selected = eyelashExtensions;
+      makeupData.special.selected = special;
+      await makeupData.save();
+    } else {
+      // Create new data
+      makeupData = new Makeup(req.body);
+      await makeupData.save();
     }
 
-    // Default values for makeup options
-    const makeupPrices = { Budget: 150, Luxury: 300, VIP: 500 };
-    const hairstylePrices = { "Simple Shenyun": 100, "Complex Shenyun": 150, Babyliss: 100, "Extra Hair Extension": 150 };
-    const dyeHairPrices = {
-      "Highlights Short": 80, "Highlights Medium": 120, "Highlights Long": 170, "Highlights Very Long": 170,
-      "Balayage Short": 100, "Balayage Medium": 200, "Balayage Long": 300, "Balayage Very Long": 400,
-      "Full Color Short": 50, "Full Color Medium": 80, "Full Color Long": 120, "Full Color Very Long": 150,
-    };
-
-    // Calculate total makeup price
-    const total =
-      (makeup && makeupPrices[makeup] ? makeupPrices[makeup] : 0) +
-      (dyeHair && dyeHairPrices[dyeHair] ? dyeHairPrices[dyeHair] : 0) +
-      (nail ? 70 : 0) +
-      (hairstyle && hairstylePrices[hairstyle] ? hairstylePrices[hairstyle] : 0) +
-      (EyelashExtensions ? 100 : 0) +
-      (special ? 300 : 0);
-
-    // Create the makeup data object
-    const updateData = {
-      makeup,
-      makeupPrice: makeupPrices[makeup] || 150,
-      dyeHair,
-      dyeHairPrice: dyeHairPrices[dyeHair] || 50,
-      nail: { selected: nail || false, price: 70 },
-      hairstyle,
-      hairstylePrice: hairstylePrices[hairstyle] || 100,
-      EyelashExtensions: { selected: EyelashExtensions || false, price: 100 },
-      special: { selected: special || false, price: 300 },
-      total,
-    };
-
-    // Use mongoose's findOneAndUpdate to update or create the makeup entry
-    const feature = await Makeup.findOneAndUpdate(
-      { userID: new mongoose.Types.ObjectId(userID) },
-      { $set: updateData },
-      { new: true, upsert: true, setDefaultsOnInsert: true }
-    );
-
-    res.status(200).json({ message: "Makeup updated successfully", feature });
+    res.status(200).json({ message: "Makeup data saved successfully.", data: makeupData });
   } catch (error) {
-    console.error("Error in createOrUpdateMakeup:", error);
-    res.status(500).json({ message: "Error saving makeup data", error });
+    console.error("Error saving makeup data", error);
+    res.status(500).json({ message: "Failed to save makeup data" });
   }
 };
-
 
 export const getMakeups = async (req, res) => {
   try {
@@ -97,6 +68,7 @@ export const updateMakeup = async (req, res) => {
     const { id } = req.params;
     const updatedData = req.body;
 
+    // Update data without touching the `total` field, since it's calculated automatically
     const makeup = await Makeup.findByIdAndUpdate(id, updatedData, { new: true });
 
     if (!makeup) {

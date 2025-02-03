@@ -60,10 +60,9 @@ const MakeupForm = () => {
     eyelashExtensions: { selected: false, price: 100 },
     special: { selected: false, price: 300 },
   });
-  const [makeupData, setMakeupData] = useState(null);
   const [makeup, setMakeup] = useState("Budget Makeup");
-  const [hairstyle, setHairstyle] = useState("Simple Shenyun");
-  const [dyeHair, setDyeHair] = useState("Full Hair Color - Short Hair");
+  const [hairstyle, setHairstyle] = useState("Simple Shenyun"); // Set to a valid string from options
+  const [dyeHair, setDyeHair] = useState("Full Hair Color - Short Hair"); // Set to a valid string from options    const [nail, setNail] = useState(false);
   const [nail, setNail] = useState(false);
   const [eyelashExtensions, setEyelashExtensions] = useState(false);
   const [special, setSpecial] = useState(false);
@@ -71,6 +70,7 @@ const MakeupForm = () => {
   const [currentDescription, setCurrentDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+
   useEffect(() => {
     if (!isAuthenticated) {
       toast.warn("You must sign in to access this page.");
@@ -79,21 +79,21 @@ const MakeupForm = () => {
       }, 3000);
     }
   }, [isAuthenticated, navigate]);
+
   useEffect(() => {
     const fetchMakeupData = async () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/makeups?userID=${userId}`
         );
-        setMakeupData(response.data);
-        // You can directly set the state from the response, like:
-        setMakeup(response.data.makeup);
-        setHairstyle(response.data.hairstyle);
-        setDyeHair(response.data.dyeHair);
-        setNail(response.data.nail.selected);
-        setEyelashExtensions(response.data.eyelashExtensions.selected);
-        setSpecial(response.data.special.selected);
-        setTotal(response.data.total);
+        const data = response.data;
+        setMakeup(data.makeup);
+        setHairstyle(data.hairstyle);
+        setDyeHair(data.dyeHair);
+        setNail(data.nail.selected);
+        setEyelashExtensions(data.eyelashExtensions.selected);
+        setSpecial(data.special.selected);
+        setTotal(data.total); // Set the total price from the backend
       } catch (error) {
         console.error("Error fetching makeup data", error);
         toast.error("Failed to fetch data. Please try again later.");
@@ -104,6 +104,7 @@ const MakeupForm = () => {
       fetchMakeupData();
     }
   }, [userId]);
+
   // Calculate the total dynamically
   useEffect(() => {
     const calculatedTotal = Object.keys(selectedFeatures).reduce((sum, key) => {
@@ -114,15 +115,17 @@ const MakeupForm = () => {
   }, [selectedFeatures]);
 
   const handleCheckboxChange = (id) => {
-    setSelectedFeatures((prev) => ({
-      ...prev,
-      [id]: { ...prev[id], selected: !prev[id]?.selected },
-    }));
+    setSelectedFeatures((prev) => {
+      const updated = { ...prev };
+      updated[id].selected = !updated[id].selected;
+      return updated;
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validTotal = isNaN(total) ? 0 : total;
+    const validTotal = isNaN(total) ? 0 : total; // Validate total
+    // Handle form submission (ensure these values are valid when posting to backend)
     const data = {
       userID: userId,
       makeup,
@@ -131,36 +134,27 @@ const MakeupForm = () => {
       nail,
       eyelashExtensions,
       special,
-      total: validTotal, // Use valid total here
+      total: validTotal,
     };
 
     try {
       const makeupUrl = `${import.meta.env.VITE_API_URL}/makeups`;
-      const shoppingCartUrl = `${import.meta.env.VITE_API_URL}/shoppingcards`;
-      const requestData = {
-        userID: userId,
-        makeup: selectedFeatures.makeup?.selected || false,
-        dyeHair: selectedFeatures.dyeHair?.selected || false,
-        nail: selectedFeatures.nail?.selected || false,
-        hairstyle: selectedFeatures.hairstyle?.selected || false,
-        eyelashExtensions:
-          selectedFeatures.eyelashExtensions?.selected || false,
-        special: selectedFeatures.special?.selected || false,
-      };
-      await axios.post(makeupUrl, requestData, {
+      await axios.post(makeupUrl, data, {
         headers: { "Content-Type": "application/json" },
       });
+
       // Save shopping cart data
+      const shoppingCartUrl = `${import.meta.env.VITE_API_URL}/shoppingcards`;
       const shoppingCartData = {
         userID: userId,
         serviceName: "Makeup",
         price: total,
       };
-      console.log(shoppingCartData);
       await axios.post(shoppingCartUrl, shoppingCartData, {
         headers: { "Content-Type": "application/json" },
       });
-      // Frontend-only addition (optional if the backend handles the cart data)
+
+      // Frontend-only addition (optional)
       addToShoppingCard(shoppingCartData);
 
       toast.success(
@@ -171,12 +165,10 @@ const MakeupForm = () => {
       }, 3000);
     } catch (error) {
       console.error(
-        "Failed to save makeup data or add to shopping cart.",
+        "Error saving makeup data or adding to shopping cart.",
         error
       );
       toast.error("Error saving data or adding to shopping cart.");
-    } finally {
-      setLoading(false);
     }
   };
 
