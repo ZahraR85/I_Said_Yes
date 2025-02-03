@@ -173,105 +173,144 @@ const MakeupForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div className="relative min-h-screen bg-cover bg-center bg-[url('https://i.postimg.cc/TwNqd9Bm/makeup2.jpg')]">
+      <div className="absolute inset-0 bg-white/60"></div>
       <ToastContainer />
-      <h2>Select your Makeup services that you need:</h2>
-      <div>
-        <label>Makeup Type:</label>
-        <select value={makeup} onChange={(e) => setMakeup(e.target.value)}>
-          <option value="Budget Makeup">Budget Makeup</option>
-          <option value="Luxury Makeup">Luxury Makeup</option>
-          <option value="VIP Makeup">VIP Makeup</option>
-        </select>
-      </div>
+      <div className="relative mx-auto w-full max-w-[calc(85%-170px)] lg:max-w-[calc(60%-200px)] bg-opacity-80 shadow-md rounded-lg p-4 sm:p-8 space-y-5">
+        <h2 className="text-lg lg:text-2xl font-bold text-center text-BgFont my-1 lg:my-16">
+          Select your Makeup services that you need:
+        </h2>
+        <div>
+          <label className="mr-2 text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center">
+            Makeup Type:
+          </label>
+          <select
+            value={makeup}
+            onChange={(e) => setMakeup(e.target.value)}
+            className="p-1 lg:p-2 w-[350px] border border-BgKhaki focus:outline-none focus:ring focus:ring-BgKhaki rounded-md bg-transparent"
+          >
+            <option value="Budget Makeup">Budget Makeup 150 €</option>
+            <option value="Luxury Makeup">Luxury Makeup 300 €</option>
+            <option value="VIP Makeup">VIP Makeup 500 €</option>
+          </select>
+        </div>
 
-      <div>
-        <label>Hairstyle:</label>
-        <select
-          value={hairstyle}
-          onChange={(e) => setHairstyle(e.target.value)}
+        <div>
+          <label className="mr-2 text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center">
+            Hairstyle:
+          </label>
+          <select
+            value={hairstyle}
+            onChange={(e) => setHairstyle(e.target.value)}
+            className="p-1 lg:p-2 w-[350px] border border-BgKhaki focus:outline-none focus:ring focus:ring-BgKhaki rounded-md bg-transparent"
+          >
+            <option value="Simple Shenyun">Simple Shenyun 100 €</option>
+            <option value="Complex Shenyun">Complex Shenyun 150 €</option>
+            <option value="Babylis">Babylis 100 €</option>
+            <option value="Extra Hair Extension">
+              Extra Hair Extension 150 €
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label className="mr-2 text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center">
+            Dye Hair:
+          </label>
+          <select
+            value={dyeHair}
+            onChange={(e) => setDyeHair(e.target.value)}
+            className="p-1 lg:p-2 w-[350px] border border-BgKhaki focus:outline-none focus:ring focus:ring-BgKhaki rounded-md bg-transparent"
+          >
+            {/* List of hair colors */}
+            <option value="Full Hair Color - Short Hair">
+              Full Hair Color (Short Hair) 50 €
+            </option>
+            <option value="Full Hair Color - Medium Hair">
+              Full Hair Color (Medium Hair) 80 €
+            </option>
+            <option value="Full Hair Color - Long Hair">
+              Full Hair Color (Long Hair) 120 €
+            </option>
+            <option value="Full Hair Color - Very Long Hair">
+              Full Hair Color (Very Long Hair) 150 €
+            </option>
+            <option value="Highlights - Short Hair">
+              Highlights (Short Hair) 80 €
+            </option>
+            <option value="Highlights - Medium Hair">
+              Highlights (Medium Hair) 120 €
+            </option>
+            <option value="Highlights - Long Hair">
+              Highlights (Long Hair) 160 €
+            </option>
+            <option value="Highlights - Very Long Hair">
+              Highlights (Very Long Hair) 200 €
+            </option>
+            <option value="Balayage - Short Hair">
+              Balayage (Short Hair) 100 €
+            </option>
+            <option value="Balayage - Medium Hair">
+              Balayage (Medium Hair) 200 €
+            </option>
+            <option value="Balayage - Long Hair">
+              Balayage (Long Hair) 300 €
+            </option>
+            <option value="Balayage - Very Long Hair">
+              Balayage (Very Long Hair) 400 €
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label className="text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center">
+            <input
+              type="checkbox"
+              checked={nail}
+              onChange={(e) => setNail(e.target.checked)}
+              className="mr-2  text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center w-5 h-5"
+            />
+            Nail 70 €
+          </label>
+        </div>
+
+        <div>
+          <label className="text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center">
+            <input
+              type="checkbox"
+              checked={eyelashExtensions}
+              onChange={(e) => setEyelashExtensions(e.target.checked)}
+              className="mr-2 text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center w-5 h-5"
+            />
+            Eyelash Extensions 100 €
+          </label>
+        </div>
+
+        <div>
+          <label className="text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center">
+            <input
+              type="checkbox"
+              checked={special}
+              onChange={(e) => setSpecial(e.target.checked)}
+              className="mr-2 text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center w-5 h-5"
+            />
+            Special 300 €
+          </label>
+        </div>
+
+        <h2 className="text-m lg:text-xl font-bold text-BgFont text-center lg:py-4">
+          Total Price: {total} €
+        </h2>
+        <button
+          onClick={handleSubmit}
+          type="submit"
+          className="bg-BgPinkMiddle text-BgFont text-lg font-bold hover:bg-BgPinkDark w-full px-2 lg:px-4 py-1 lg:py-2 rounded"
+          disabled={loading}
         >
-          <option value="Simple Shenyun">Simple Shenyun</option>
-          <option value="Complex Shenyun">Complex Shenyun</option>
-          <option value="Babylis">Babylis</option>
-          <option value="Extra Hair Extension">Extra Hair Extension</option>
-        </select>
+          Save
+        </button>
       </div>
-
-      <div>
-        <label>Dye Hair:</label>
-        <select value={dyeHair} onChange={(e) => setDyeHair(e.target.value)}>
-          {/* List of hair colors */}
-          <option value="Full Hair Color - Short Hair">
-            Full Hair Color (Short Hair)
-          </option>
-          <option value="Full Hair Color - Medium Hair">
-            Full Hair Color (Medium Hair)
-          </option>
-          <option value="Full Hair Color - Long Hair">
-            Full Hair Color (Long Hair)
-          </option>
-          <option value="Full Hair Color - Very Long Hair">
-            Full Hair Color (Very Long Hair)
-          </option>
-          <option value="Highlights - Short Hair">
-            Highlights (Short Hair)
-          </option>
-          <option value="Highlights - Medium Hair">
-            Highlights (Medium Hair)
-          </option>
-          <option value="Highlights - Long Hair">Highlights (Long Hair)</option>
-          <option value="Highlights - Very Long Hair">
-            Highlights (Very Long Hair)
-          </option>
-          <option value="Balayage - Short Hair">Balayage (Short Hair)</option>
-          <option value="Balayage - Medium Hair">Balayage (Medium Hair)</option>
-          <option value="Balayage - Long Hair">Balayage (Long Hair)</option>
-          <option value="Balayage - Very Long Hair">
-            Balayage (Very Long Hair)
-          </option>
-        </select>
-      </div>
-
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={nail}
-            onChange={(e) => setNail(e.target.checked)}
-          />
-          Nail
-        </label>
-      </div>
-
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={eyelashExtensions}
-            onChange={(e) => setEyelashExtensions(e.target.checked)}
-          />
-          Eyelash Extensions
-        </label>
-      </div>
-
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={special}
-            onChange={(e) => setSpecial(e.target.checked)}
-          />
-          Special
-        </label>
-      </div>
-
-      <div>
-        <h3>Total: ${total}</h3>
-      </div>
-
-      <button type="submit">Save</button>
-    </form>
+    </div>
   );
 };
 
