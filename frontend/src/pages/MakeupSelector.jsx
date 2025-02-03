@@ -5,71 +5,18 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../App.css";
-const features = [
-  {
-    id: "makeup",
-    label: "Makeup",
-    price: 300,
-    description:
-      "Professional makeup for the bride and groom, including high-definition airbrush techniques, contouring, and personalized palettes tailored to skin tone and style. Includes trials and touch-ups throughout the day.",
-  },
-  {
-    id: "eyelashExtensions",
-    label: "eyelashExtensions",
-    price: 100,
-    description:
-      "Elegant shoes for the perfect look, available in custom designs and a variety of styles including stilettos, flats, and classic formal shoes. Comfort and style ensured for all-day wear. Set by your dress and style!",
-  },
-  {
-    id: "dyeHair",
-    label: "dyeHair ",
-    price: 500,
-    description:
-      "Designer dress for the big day for 24 hours with options for traditional gowns, modern silhouettes, and custom-made designs. Includes fitting sessions and fabric customization for a flawless fit.",
-  },
-  {
-    id: "nail",
-    label: "Nail",
-    price: 70,
-    description:
-      "Beautiful nail art for the bride, offering services like gel extensions, intricate designs, and a wide range of colors to complement the wedding theme. Includes a consultation for unique styling.",
-  },
-  {
-    id: "hairstyle",
-    label: "Hairstyle",
-    price: 200,
-    description:
-      "Stunning hairstyles for the bride and groom, including updos, curls, and sleek styles. Each style is customized based on face shape, outfit, and personal preference. Includes pre-event trials.",
-  },
-  {
-    id: "special",
-    label: "Special",
-    price: 300,
-    description:
-      "Special package with unique add-ons like skincare treatments, personalized gift boxes, or additional beauty services for family members. Perfect for an all-inclusive wedding experience.",
-  },
-];
-const MakeupForm = () => {
+
+const MakeupSelector = () => {
   const { userId, isAuthenticated, addToShoppingCard } = useAppContext();
   const navigate = useNavigate();
-  const [selectedFeatures, setSelectedFeatures] = useState({
-    makeup: { selected: false, price: 300 },
-    dyeHair: { selected: false, price: 500 },
-    nail: { selected: false, price: 70 },
-    hairstyle: { selected: false, price: 200 },
-    eyelashExtensions: { selected: false, price: 100 },
-    special: { selected: false, price: 300 },
-  });
   const [makeup, setMakeup] = useState("Budget Makeup");
-  const [hairstyle, setHairstyle] = useState("Simple Shenyun"); // Set to a valid string from options
-  const [dyeHair, setDyeHair] = useState("Full Hair Color - Short Hair"); // Set to a valid string from options    const [nail, setNail] = useState(false);
+  const [hairstyle, setHairstyle] = useState("Simple Shenyun");
+  const [dyeHair, setDyeHair] = useState("Full Hair Color - Short Hair");
   const [nail, setNail] = useState(false);
   const [eyelashExtensions, setEyelashExtensions] = useState(false);
   const [special, setSpecial] = useState(false);
   const [total, setTotal] = useState(0);
-  const [currentDescription, setCurrentDescription] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [description, setDescription] = useState(""); // State for description
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -105,21 +52,31 @@ const MakeupForm = () => {
     }
   }, [userId]);
 
-  // Calculate the total dynamically
-  useEffect(() => {
-    const calculatedTotal = Object.keys(selectedFeatures).reduce((sum, key) => {
-      const feature = selectedFeatures[key];
-      return feature?.selected ? sum + feature.price : sum;
-    }, 0);
-    setTotal(calculatedTotal);
-  }, [selectedFeatures]);
-
-  const handleCheckboxChange = (id) => {
-    setSelectedFeatures((prev) => {
-      const updated = { ...prev };
-      updated[id].selected = !updated[id].selected;
-      return updated;
-    });
+  const updateTotalPrice = () => {
+    let total = 0;
+    if (makeup === "Budget Makeup") total += 150;
+    if (makeup === "Luxury Makeup") total += 300;
+    if (makeup === "VIP Makeup") total += 500;
+    if (hairstyle === "Simple Shenyun") total += 100;
+    if (hairstyle === "Complex Shenyun") total += 150;
+    if (hairstyle === "Babylis") total += 100;
+    if (hairstyle === "Extra Hair Extension") total += 150;
+    if (dyeHair === "Full Hair Color - Short Hair") total += 50;
+    if (dyeHair === "Full Hair Color - Medium Hair") total += 80;
+    if (dyeHair === "Full Hair Color - Long Hair") total += 120;
+    if (dyeHair === "Full Hair Color - Very Long Hair") total += 150;
+    if (dyeHair === "Highlights - Short Hair") total += 80;
+    if (dyeHair === "Highlights - Medium Hair") total += 120;
+    if (dyeHair === "Highlights - Long Hair") total += 160;
+    if (dyeHair === "Highlights - Very Long Hair") total += 200;
+    if (dyeHair === "Balayage - Short Hair") total += 100;
+    if (dyeHair === "Balayage - Medium Hair") total += 200;
+    if (dyeHair === "Balayage - Long Hair") total += 300;
+    if (dyeHair === "Balayage - Very Long Hair") total += 400;
+    if (nail) total += 70;
+    if (eyelashExtensions) total += 100;
+    if (special) total += 300;
+    setTotal(total);
   };
 
   const handleSubmit = async (e) => {
@@ -172,21 +129,50 @@ const MakeupForm = () => {
     }
   };
 
+  useEffect(() => {
+    updateTotalPrice();
+  }, [makeup, hairstyle, dyeHair, nail, eyelashExtensions, special]);
+
+  const descriptions = {
+    makeup:
+      "Choose a makeup type that suits your style and budget. Budget, luxury, or VIP options available.",
+    hairstyle:
+      "Select a hairstyle that matches your look. From simple styles to extravagant options.",
+    dyeHair:
+      "Pick your preferred hair color or highlights for the perfect finishing touch.",
+    nail: "Add nail services to complement your look with manicures and nail art.",
+    eyelashExtensions:
+      "Enhance your lashes for a bold, dramatic effect with our eyelash extension services.",
+    special:
+      "Opt for additional special services to complete your beauty transformation with a touch of luxury.",
+  };
+
   return (
     <div className="relative min-h-screen bg-cover bg-center bg-[url('https://i.postimg.cc/TwNqd9Bm/makeup2.jpg')]">
       <div className="absolute inset-0 bg-white/60"></div>
       <ToastContainer />
       <div className="relative mx-auto w-full max-w-[calc(85%-170px)] lg:max-w-[calc(60%-200px)] bg-opacity-80 shadow-md rounded-lg p-4 sm:p-8 space-y-5">
+        {/* Display description text */}
+        <div className="text-center mb-4 text-lg font-semibold text-BgFont">
+          {description}
+        </div>
+
         <h2 className="text-lg lg:text-2xl font-bold text-center text-BgFont my-1 lg:my-16">
           Select your Makeup services that you need:
         </h2>
-        <div>
+        <div
+          onMouseEnter={() => setDescription(descriptions.makeup)}
+          onMouseLeave={() => setDescription("")}
+        >
           <label className="mr-2 text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center">
             Makeup Type:
           </label>
           <select
             value={makeup}
-            onChange={(e) => setMakeup(e.target.value)}
+            onChange={(e) => {
+              setMakeup(e.target.value);
+              updateTotalPrice();
+            }}
             className="p-1 lg:p-2 w-[350px] border border-BgKhaki focus:outline-none focus:ring focus:ring-BgKhaki rounded-md bg-transparent"
           >
             <option value="Budget Makeup">Budget Makeup 150 €</option>
@@ -195,13 +181,19 @@ const MakeupForm = () => {
           </select>
         </div>
 
-        <div>
+        <div
+          onMouseEnter={() => setDescription(descriptions.hairstyle)}
+          onMouseLeave={() => setDescription("")}
+        >
           <label className="mr-2 text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center">
             Hairstyle:
           </label>
           <select
             value={hairstyle}
-            onChange={(e) => setHairstyle(e.target.value)}
+            onChange={(e) => {
+              setHairstyle(e.target.value);
+              updateTotalPrice();
+            }}
             className="p-1 lg:p-2 w-[350px] border border-BgKhaki focus:outline-none focus:ring focus:ring-BgKhaki rounded-md bg-transparent"
           >
             <option value="Simple Shenyun">Simple Shenyun 100 €</option>
@@ -213,16 +205,21 @@ const MakeupForm = () => {
           </select>
         </div>
 
-        <div>
+        <div
+          onMouseEnter={() => setDescription(descriptions.dyeHair)}
+          onMouseLeave={() => setDescription("")}
+        >
           <label className="mr-2 text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center">
             Dye Hair:
           </label>
           <select
             value={dyeHair}
-            onChange={(e) => setDyeHair(e.target.value)}
+            onChange={(e) => {
+              setDyeHair(e.target.value);
+              updateTotalPrice();
+            }}
             className="p-1 lg:p-2 w-[350px] border border-BgKhaki focus:outline-none focus:ring focus:ring-BgKhaki rounded-md bg-transparent"
           >
-            {/* List of hair colors */}
             <option value="Full Hair Color - Short Hair">
               Full Hair Color (Short Hair) 50 €
             </option>
@@ -262,56 +259,71 @@ const MakeupForm = () => {
           </select>
         </div>
 
-        <div>
+        <div
+          onMouseEnter={() => setDescription(descriptions.nail)}
+          onMouseLeave={() => setDescription("")}
+        >
           <label className="text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center">
             <input
               type="checkbox"
               checked={nail}
-              onChange={(e) => setNail(e.target.checked)}
-              className="mr-2  text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center w-5 h-5"
+              onChange={(e) => {
+                setNail(e.target.checked);
+                updateTotalPrice();
+              }}
+              className="mr-2"
             />
-            Nail 70 €
+            Add Nails 70 €
           </label>
         </div>
 
-        <div>
+        <div
+          onMouseEnter={() => setDescription(descriptions.eyelashExtensions)}
+          onMouseLeave={() => setDescription("")}
+        >
           <label className="text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center">
             <input
               type="checkbox"
               checked={eyelashExtensions}
-              onChange={(e) => setEyelashExtensions(e.target.checked)}
-              className="mr-2 text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center w-5 h-5"
+              onChange={(e) => {
+                setEyelashExtensions(e.target.checked);
+                updateTotalPrice();
+              }}
+              className="mr-2"
             />
-            Eyelash Extensions 100 €
+            Add Eyelash Extensions 100 €
           </label>
         </div>
 
-        <div>
+        <div
+          onMouseEnter={() => setDescription(descriptions.special)}
+          onMouseLeave={() => setDescription("")}
+        >
           <label className="text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center">
             <input
               type="checkbox"
               checked={special}
-              onChange={(e) => setSpecial(e.target.checked)}
-              className="mr-2 text-sm lg:text-lg font-semibold lg:font-bold text-BgFont text-center w-5 h-5"
+              onChange={(e) => {
+                setSpecial(e.target.checked);
+                updateTotalPrice();
+              }}
+              className="mr-2"
             />
-            Special 300 €
+            Add Special Services 300 €
           </label>
         </div>
 
-        <h2 className="text-m lg:text-xl font-bold text-BgFont text-center lg:py-4">
-          Total Price: {total} €
-        </h2>
-        <button
-          onClick={handleSubmit}
-          type="submit"
-          className="bg-BgPinkMiddle text-BgFont text-lg font-bold hover:bg-BgPinkDark w-full px-2 lg:px-4 py-1 lg:py-2 rounded"
-          disabled={loading}
-        >
-          Save
-        </button>
+        <div className="flex justify-center text-center mt-8">
+          <button
+            onClick={handleSubmit}
+            className="bg-BgBtnHover hover:bg-BgHoverFocus px-6 py-3 rounded-lg shadow-md text-white text-lg font-semibold"
+          >
+            Submit
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default MakeupForm;
+export default MakeupSelector;
