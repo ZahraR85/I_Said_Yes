@@ -77,8 +77,8 @@ makeupSchema.pre("save", function (next) {
   const dyeHairPrices = {
     "Highlights - Short Hair": 80,
     "Highlights - Medium Hair": 120,
-    "Highlights - Long Hair": 170,
-    "Highlights - Very Long Hair": 170,
+    "Highlights - Long Hair": 160,
+    "Highlights - Very Long Hair": 200,
     "Balayage - Short Hair": 100,
     "Balayage - Medium Hair": 200,
     "Balayage - Long Hair": 300,
