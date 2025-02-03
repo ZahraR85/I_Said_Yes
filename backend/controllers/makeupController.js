@@ -3,85 +3,51 @@ import mongoose from "mongoose";
 
 export const createOrUpdateMakeup = async (req, res) => {
   try {
-    const { userID, makeup, dress, nail, hairstyle, shoes, special } = req.body;
+    const { userID, makeup, hairstyle, dyeHair, nail, eyelashExtensions, special } = req.body;
+    let makeupData = await Makeup.findOne({ userID });
 
- 
-
-    if (!userID) {
-      return res.status(400).json({ message: "UserID is required." });
+    if (makeupData) {
+      // Update existing data
+      makeupData.makeup = makeup;
+      makeupData.hairstyle = hairstyle;
+      makeupData.dyeHair = dyeHair;
+      makeupData.nail.selected = nail;
+      makeupData.eyelashExtensions.selected = eyelashExtensions;
+      makeupData.special.selected = special;
+      await makeupData.save();
+    } else {
+      // Create new data
+      makeupData = new Makeup(req.body);
+      await makeupData.save();
     }
 
-    // Calculate the total price
-    const total =
-      (makeup ? 300 : 0) +
-      (dress ? 500 : 0) +
-      (nail ? 70 : 0) +
-      (hairstyle ? 200 : 0) +
-      (shoes ? 100 : 0) +
-      (special ? 300 : 0);
-
-   
-
-
-    const updateData = {
-      makeup: { selected: makeup || false, price: 300 },
-      dress: { selected: dress || false, price: 500 },
-      nail: { selected: nail || false, price: 70 },
-      hairstyle: { selected: hairstyle || false, price: 200 },
-      shoes: { selected: shoes || false, price: 100 },
-      special: { selected: special || false, price: 300 },
-      total, 
-    };
-
-
-
-
-    // Update or create the document
-    const feature = await Makeup.findOneAndUpdate(
-      { userID: new mongoose.Types.ObjectId(userID) },
-      { $set: updateData },
-      { new: true, upsert: true, setDefaultsOnInsert: true }
-    );
-
-  
-    res.status(200).json({ message: "Makeup updated successfully", feature });
+    res.status(200).json({ message: "Makeup data saved successfully.", data: makeupData });
   } catch (error) {
-    console.error("Error in createOrUpdateMakeup:", error);
-    res.status(500).json({ message: "Error saving makeup data", error });
+    console.error("Error saving makeup data", error);
+    res.status(500).json({ message: "Failed to save makeup data" });
   }
 };
 
-
-
-
 export const getMakeups = async (req, res) => {
   try {
-   
     const userID = req.query.userID || req.body.userID;
 
     if (!userID) {
       return res.status(400).json({ message: "User ID is required" });
     }
 
-    // Fetch the user's Makeup selections
-    const music = await Makeup.findOne({ userID })
-      .populate('userID', 'name family') // Populate user's name and family
+    const makeup = await Makeup.findOne({ userID }).populate('userID', 'name family');
 
-     
-
-    if (!music) {
+    if (!makeup) {
       return res.status(404).json({ message: "No selections found for this user" });
     }
 
- 
-    res.status(200).json(music);
+    res.status(200).json(makeup);
   } catch (error) {
     res.status(500).json({ message: "Error fetching user selections", error });
   }
 };
 
-
-// Get a makeup by ID
 export const getMakeupById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -97,12 +63,12 @@ export const getMakeupById = async (req, res) => {
   }
 };
 
-// Update a makeup
 export const updateMakeup = async (req, res) => {
   try {
     const { id } = req.params;
     const updatedData = req.body;
 
+    // Update data without touching the `total` field, since it's calculated automatically
     const makeup = await Makeup.findByIdAndUpdate(id, updatedData, { new: true });
 
     if (!makeup) {
@@ -115,7 +81,6 @@ export const updateMakeup = async (req, res) => {
   }
 };
 
-// Delete a makeup
 export const deleteMakeup = async (req, res) => {
   try {
     const { id } = req.params;
@@ -130,4 +95,4 @@ export const deleteMakeup = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Error deleting makeup", error });
   }
-};  
+};
