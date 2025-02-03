@@ -158,7 +158,10 @@ export const AppProvider = ({ children }) => {
   const removeFromShoppingCard = (itemId) =>
     dispatch({ type: "REMOVE_FROM_SHOPPING_CARD", payload: { id: itemId } });
 
-  const shoppingCardCount = state.shoppingCard.length;
+  //const shoppingCardCount = state.shoppingCard.length;
+  const shoppingCardCount = state.isAuthenticated
+    ? state.shoppingCard.length
+    : 0;
 
   const signOut = () => dispatch({ type: "SIGN_OUT" });
   // AppProvider.propTypes = {
