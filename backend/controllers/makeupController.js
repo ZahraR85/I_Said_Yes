@@ -3,47 +3,52 @@ import mongoose from "mongoose";
 
 export const createOrUpdateMakeup = async (req, res) => {
   try {
-    const { userID, makeup, dress, nail, hairstyle, shoes, special } = req.body;
+    const { userID, makeup, dyeHair, nail, hairstyle, EyelashExtensions, special } = req.body;
 
- 
-
+    // Ensure userID is provided
     if (!userID) {
       return res.status(400).json({ message: "UserID is required." });
     }
 
-    // Calculate the total price
-    const total =
-      (makeup ? 300 : 0) +
-      (dress ? 500 : 0) +
-      (nail ? 70 : 0) +
-      (hairstyle ? 200 : 0) +
-      (shoes ? 100 : 0) +
-      (special ? 300 : 0);
-
-   
-
-
-    const updateData = {
-      makeup: { selected: makeup || false, price: 300 },
-      dress: { selected: dress || false, price: 500 },
-      nail: { selected: nail || false, price: 70 },
-      hairstyle: { selected: hairstyle || false, price: 200 },
-      shoes: { selected: shoes || false, price: 100 },
-      special: { selected: special || false, price: 300 },
-      total, 
+    // Default values for makeup options
+    const makeupPrices = { Budget: 150, Luxury: 300, VIP: 500 };
+    const hairstylePrices = { "Simple Shenyun": 100, "Complex Shenyun": 150, Babyliss: 100, "Extra Hair Extension": 150 };
+    const dyeHairPrices = {
+      "Highlights Short": 80, "Highlights Medium": 120, "Highlights Long": 170, "Highlights Very Long": 170,
+      "Balayage Short": 100, "Balayage Medium": 200, "Balayage Long": 300, "Balayage Very Long": 400,
+      "Full Color Short": 50, "Full Color Medium": 80, "Full Color Long": 120, "Full Color Very Long": 150,
     };
 
+    // Calculate total makeup price
+    const total =
+      (makeup && makeupPrices[makeup] ? makeupPrices[makeup] : 0) +
+      (dyeHair && dyeHairPrices[dyeHair] ? dyeHairPrices[dyeHair] : 0) +
+      (nail ? 70 : 0) +
+      (hairstyle && hairstylePrices[hairstyle] ? hairstylePrices[hairstyle] : 0) +
+      (EyelashExtensions ? 100 : 0) +
+      (special ? 300 : 0);
 
+    // Create the makeup data object
+    const updateData = {
+      makeup,
+      makeupPrice: makeupPrices[makeup] || 150,
+      dyeHair,
+      dyeHairPrice: dyeHairPrices[dyeHair] || 50,
+      nail: { selected: nail || false, price: 70 },
+      hairstyle,
+      hairstylePrice: hairstylePrices[hairstyle] || 100,
+      EyelashExtensions: { selected: EyelashExtensions || false, price: 100 },
+      special: { selected: special || false, price: 300 },
+      total,
+    };
 
-
-    // Update or create the document
+    // Use mongoose's findOneAndUpdate to update or create the makeup entry
     const feature = await Makeup.findOneAndUpdate(
       { userID: new mongoose.Types.ObjectId(userID) },
       { $set: updateData },
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
 
-  
     res.status(200).json({ message: "Makeup updated successfully", feature });
   } catch (error) {
     console.error("Error in createOrUpdateMakeup:", error);
@@ -52,36 +57,26 @@ export const createOrUpdateMakeup = async (req, res) => {
 };
 
 
-
-
 export const getMakeups = async (req, res) => {
   try {
-   
     const userID = req.query.userID || req.body.userID;
 
     if (!userID) {
       return res.status(400).json({ message: "User ID is required" });
     }
 
-    // Fetch the user's Makeup selections
-    const music = await Makeup.findOne({ userID })
-      .populate('userID', 'name family') // Populate user's name and family
+    const makeup = await Makeup.findOne({ userID }).populate('userID', 'name family');
 
-     
-
-    if (!music) {
+    if (!makeup) {
       return res.status(404).json({ message: "No selections found for this user" });
     }
 
- 
-    res.status(200).json(music);
+    res.status(200).json(makeup);
   } catch (error) {
     res.status(500).json({ message: "Error fetching user selections", error });
   }
 };
 
-
-// Get a makeup by ID
 export const getMakeupById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -97,7 +92,6 @@ export const getMakeupById = async (req, res) => {
   }
 };
 
-// Update a makeup
 export const updateMakeup = async (req, res) => {
   try {
     const { id } = req.params;
@@ -115,7 +109,6 @@ export const updateMakeup = async (req, res) => {
   }
 };
 
-// Delete a makeup
 export const deleteMakeup = async (req, res) => {
   try {
     const { id } = req.params;
@@ -130,4 +123,4 @@ export const deleteMakeup = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Error deleting makeup", error });
   }
-};  
+};

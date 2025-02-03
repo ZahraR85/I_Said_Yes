@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../App.css";
-
 const features = [
   {
     id: "makeup",
@@ -15,15 +14,15 @@ const features = [
       "Professional makeup for the bride and groom, including high-definition airbrush techniques, contouring, and personalized palettes tailored to skin tone and style. Includes trials and touch-ups throughout the day.",
   },
   {
-    id: "shoes",
-    label: "Shoes",
+    id: "eyelashExtensions",
+    label: "eyelashExtensions",
     price: 100,
     description:
       "Elegant shoes for the perfect look, available in custom designs and a variety of styles including stilettos, flats, and classic formal shoes. Comfort and style ensured for all-day wear. Set by your dress and style!",
   },
   {
-    id: "dress",
-    label: "Dress Rental ",
+    id: "dyeHair",
+    label: "dyeHair ",
     price: 500,
     description:
       "Designer dress for the big day for 24 hours with options for traditional gowns, modern silhouettes, and custom-made designs. Includes fitting sessions and fabric customization for a flawless fit.",
@@ -50,23 +49,28 @@ const features = [
       "Special package with unique add-ons like skincare treatments, personalized gift boxes, or additional beauty services for family members. Perfect for an all-inclusive wedding experience.",
   },
 ];
-
-const MakeupSelector = () => {
+const MakeupForm = () => {
   const { userId, isAuthenticated, addToShoppingCard } = useAppContext();
   const navigate = useNavigate();
   const [selectedFeatures, setSelectedFeatures] = useState({
     makeup: { selected: false, price: 300 },
-    dress: { selected: false, price: 500 },
+    dyeHair: { selected: false, price: 500 },
     nail: { selected: false, price: 70 },
     hairstyle: { selected: false, price: 200 },
-    shoes: { selected: false, price: 100 },
+    eyelashExtensions: { selected: false, price: 100 },
     special: { selected: false, price: 300 },
   });
-  const [total, setTotal] = useState(0); // Total for UI display
+  const [makeupData, setMakeupData] = useState(null);
+  const [makeup, setMakeup] = useState("Budget Makeup");
+  const [hairstyle, setHairstyle] = useState("Simple Shenyun");
+  const [dyeHair, setDyeHair] = useState("Full Hair Color - Short Hair");
+  const [nail, setNail] = useState(false);
+  const [eyelashExtensions, setEyelashExtensions] = useState(false);
+  const [special, setSpecial] = useState(false);
+  const [total, setTotal] = useState(0);
   const [currentDescription, setCurrentDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-
   useEffect(() => {
     if (!isAuthenticated) {
       toast.warn("You must sign in to access this page.");
@@ -75,39 +79,31 @@ const MakeupSelector = () => {
       }, 3000);
     }
   }, [isAuthenticated, navigate]);
-
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchMakeupData = async () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/makeups?userID=${userId}`
         );
-        if (response.data) {
-          const existingData = response.data;
-          setSelectedFeatures({
-            makeup: existingData.makeup || { selected: false, price: 300 },
-            dress: existingData.dress || { selected: false, price: 500 },
-            nail: existingData.nail || { selected: false, price: 70 },
-            hairstyle: existingData.hairstyle || {
-              selected: false,
-              price: 200,
-            },
-            shoes: existingData.shoes || { selected: false, price: 100 },
-            special: existingData.special || { selected: false, price: 300 },
-          });
-          setIsEditMode(true);
-        }
+        setMakeupData(response.data);
+        // You can directly set the state from the response, like:
+        setMakeup(response.data.makeup);
+        setHairstyle(response.data.hairstyle);
+        setDyeHair(response.data.dyeHair);
+        setNail(response.data.nail.selected);
+        setEyelashExtensions(response.data.eyelashExtensions.selected);
+        setSpecial(response.data.special.selected);
+        setTotal(response.data.total);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error fetching makeup data", error);
         toast.error("Failed to fetch data. Please try again later.");
       }
     };
 
     if (userId) {
-      fetchUserData();
+      fetchMakeupData();
     }
   }, [userId]);
-
   // Calculate the total dynamically
   useEffect(() => {
     const calculatedTotal = Object.keys(selectedFeatures).reduce((sum, key) => {
@@ -124,25 +120,36 @@ const MakeupSelector = () => {
     }));
   };
 
-  const handleSubmit = async () => {
-    setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const validTotal = isNaN(total) ? 0 : total;
+    const data = {
+      userID: userId,
+      makeup,
+      hairstyle,
+      dyeHair,
+      nail,
+      eyelashExtensions,
+      special,
+      total: validTotal, // Use valid total here
+    };
+
     try {
       const makeupUrl = `${import.meta.env.VITE_API_URL}/makeups`;
       const shoppingCartUrl = `${import.meta.env.VITE_API_URL}/shoppingcards`;
       const requestData = {
         userID: userId,
         makeup: selectedFeatures.makeup?.selected || false,
-        dress: selectedFeatures.dress?.selected || false,
+        dyeHair: selectedFeatures.dyeHair?.selected || false,
         nail: selectedFeatures.nail?.selected || false,
         hairstyle: selectedFeatures.hairstyle?.selected || false,
-        shoes: selectedFeatures.shoes?.selected || false,
+        eyelashExtensions:
+          selectedFeatures.eyelashExtensions?.selected || false,
         special: selectedFeatures.special?.selected || false,
       };
-
       await axios.post(makeupUrl, requestData, {
         headers: { "Content-Type": "application/json" },
       });
-
       // Save shopping cart data
       const shoppingCartData = {
         userID: userId,
@@ -153,7 +160,6 @@ const MakeupSelector = () => {
       await axios.post(shoppingCartUrl, shoppingCartData, {
         headers: { "Content-Type": "application/json" },
       });
-
       // Frontend-only addition (optional if the backend handles the cart data)
       addToShoppingCard(shoppingCartData);
 
@@ -175,75 +181,106 @@ const MakeupSelector = () => {
   };
 
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <ToastContainer />
-      <div className="relative min-h-screen bg-cover bg-center lg:pt-20 sm:p-6 bg-pink-100 lg:bg-[url('https://i.postimg.cc/TwNqd9Bm/makeup2.jpg')]">
-        <div className="absolute inset-0 bg-white/50"></div>
-        <div className="relative mx-auto w-full lg:max-w-[calc(60%-250px)] sm:max-w-[calc(100%-40px)] bg-opacity-80 shadow-md rounded-lg p-4 sm:p-6 space-y-3">
-          <h1 className="text-lg lg:text-2xl font-bold text-BgFont m-10 text-center">
-            Select your Makeup services that you need:
-          </h1>
-
-          {/* Feature Selection */}
-          <form className="space-y-3 font-bold">
-            {features.map((feature) => (
-              <div
-                key={feature.id}
-                className="flex items-center justify-between text-BgFont"
-              >
-                <div
-                  onMouseEnter={() =>
-                    setCurrentDescription(feature.description)
-                  }
-                  onMouseLeave={() => setCurrentDescription("")}
-                  className="cursor-pointer"
-                >
-                  <input
-                    type="checkbox"
-                    id={feature.id}
-                    checked={selectedFeatures[feature.id]?.selected || false}
-                    onChange={() => handleCheckboxChange(feature.id)}
-                    className="mr-2 w-5 h-5"
-                  />
-                  <label
-                    htmlFor={feature.id}
-                    className="text-sm lg:text-lg font-semibold lg:font-bold"
-                  >
-                    {feature.label} ({feature.price} €)
-                  </label>
-                </div>
-              </div>
-            ))}
-          </form>
-
-          {/* Total Price */}
-          <div className="text-center text-lg lg:text-xl text-BgFont mt-4 font-bold">
-            Total: {total} €
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="w-full bg-BgPinkMiddle text-m lg:text-lg text-BgFont font-bold py-2 px-4 rounded hover:bg-BgPinkDark"
-            disabled={loading}
-          >
-            {loading ? "Processing..." : isEditMode ? "Update" : "Submit"}
-          </button>
-        </div>
-
-        {/* Fixed Description Box */}
-        <div className="absolute top-20 right-2 lg:right-20 bg-white shadow-lg p-3 lg:p-5 w-80 lg:w-96 rounded-lg">
-          <h3 className="text-m lg:text-lg font-bold text-BgFont mb-2">
-            Feature Description:
-          </h3>
-          <p className="text-BgFont text-sm sm:text-base">
-            {currentDescription || "Hover over a feature to see its details!"}
-          </p>
-        </div>
+      <h2>Select your Makeup services that you need:</h2>
+      <div>
+        <label>Makeup Type:</label>
+        <select value={makeup} onChange={(e) => setMakeup(e.target.value)}>
+          <option value="Budget Makeup">Budget Makeup</option>
+          <option value="Luxury Makeup">Luxury Makeup</option>
+          <option value="VIP Makeup">VIP Makeup</option>
+        </select>
       </div>
-    </div>
+
+      <div>
+        <label>Hairstyle:</label>
+        <select
+          value={hairstyle}
+          onChange={(e) => setHairstyle(e.target.value)}
+        >
+          <option value="Simple Shenyun">Simple Shenyun</option>
+          <option value="Complex Shenyun">Complex Shenyun</option>
+          <option value="Babylis">Babylis</option>
+          <option value="Extra Hair Extension">Extra Hair Extension</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Dye Hair:</label>
+        <select value={dyeHair} onChange={(e) => setDyeHair(e.target.value)}>
+          {/* List of hair colors */}
+          <option value="Full Hair Color - Short Hair">
+            Full Hair Color (Short Hair)
+          </option>
+          <option value="Full Hair Color - Medium Hair">
+            Full Hair Color (Medium Hair)
+          </option>
+          <option value="Full Hair Color - Long Hair">
+            Full Hair Color (Long Hair)
+          </option>
+          <option value="Full Hair Color - Very Long Hair">
+            Full Hair Color (Very Long Hair)
+          </option>
+          <option value="Highlights - Short Hair">
+            Highlights (Short Hair)
+          </option>
+          <option value="Highlights - Medium Hair">
+            Highlights (Medium Hair)
+          </option>
+          <option value="Highlights - Long Hair">Highlights (Long Hair)</option>
+          <option value="Highlights - Very Long Hair">
+            Highlights (Very Long Hair)
+          </option>
+          <option value="Balayage - Short Hair">Balayage (Short Hair)</option>
+          <option value="Balayage - Medium Hair">Balayage (Medium Hair)</option>
+          <option value="Balayage - Long Hair">Balayage (Long Hair)</option>
+          <option value="Balayage - Very Long Hair">
+            Balayage (Very Long Hair)
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={nail}
+            onChange={(e) => setNail(e.target.checked)}
+          />
+          Nail
+        </label>
+      </div>
+
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={eyelashExtensions}
+            onChange={(e) => setEyelashExtensions(e.target.checked)}
+          />
+          Eyelash Extensions
+        </label>
+      </div>
+
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={special}
+            onChange={(e) => setSpecial(e.target.checked)}
+          />
+          Special
+        </label>
+      </div>
+
+      <div>
+        <h3>Total: ${total}</h3>
+      </div>
+
+      <button type="submit">Save</button>
+    </form>
   );
 };
 
-export default MakeupSelector;
+export default MakeupForm;
