@@ -251,7 +251,7 @@ const Menu = () => {
         },
         {
           name: "Lemonade",
-          price: 4,
+          price: 6,
           variants: ["Classic", "Strawberry", "Mint", "Ginger", "Sugar-Free"],
         },
         {
@@ -272,16 +272,16 @@ const Menu = () => {
         },
         {
           name: "Sparkling Water",
-          price: 2,
+          price: 3,
           variants: ["Classic", "Lime", "Orange", "Berry", "Mint"],
         },
-        { name: "Fresh Orange Juice", price: 5 },
-        { name: "Apple Juice", price: 5 },
-        { name: "Pineapple Juice", price: 6 },
-        { name: "Mango Juice", price: 6 },
+        { name: "Fresh Orange Juice", price: 9 },
+        { name: "Apple Juice", price: 8 },
+        { name: "Pineapple Juice", price: 9 },
+        { name: "Mango Juice", price: 10 },
         {
           name: "Smoothies",
-          price: 7,
+          price: 10,
           variants: [
             "Strawberry Banana",
             "Green Detox",
@@ -292,7 +292,7 @@ const Menu = () => {
         },
         {
           name: "Milkshakes",
-          price: 8,
+          price: 10,
           variants: ["Chocolate", "Vanilla", "Strawberry", "Oreo", "Banana"],
         },
         {
@@ -318,7 +318,7 @@ const Menu = () => {
         },
         {
           name: "Whiskey",
-          price: 12,
+          price: 10,
           variants: ["Single Malt", "Blended", "Bourbon", "Rye", "Irish"],
         },
         {
@@ -333,7 +333,7 @@ const Menu = () => {
         },
         {
           name: "Tequila",
-          price: 11,
+          price: 10,
           variants: ["Blanco", "Reposado", "Añejo", "Gold", "Silver"],
         },
       ],
