@@ -8,6 +8,8 @@ import AdminVenuePage from "./AdminVenue/AdminVenuePage.jsx";
 import AdminCatering from "./AdminVenue/AdminCatering.jsx";
 import CategoryItems from "./AdminVenue/CategoryItems.jsx";
 import EditCateringItem from "./AdminVenue/EditCateringItem.jsx";
+import Designing from "./AdminVenue/AdminDesign.jsx";
+import CategoryItemsDesign from "./AdminVenue/CategoryItemsDesign.jsx";
 //import VenueList from './pages/AdminVenue/VenueList.jsx';
 import VenueDetialsAdmin from "./AdminVenue/VenueDetialsAdmin.jsx";
 //import VenueCard from './AdminVenue/VenueCard.jsx';
@@ -77,8 +79,12 @@ function App() {
               path="/Admin/AdminCatering/edit/:id"
               element={<EditCateringItem />}
             />
-
             <Route path="/Admin/Venue/:id" element={<VenueDetialsAdmin />} />
+            <Route path="/Admin/Designing" element={<Designing />} />
+            <Route
+              path="/Admin/AdminDesign/category/:category"
+              element={<CategoryItemsDesign />}
+            />
             {/* User Routes */}
             <Route path="/venueSelections" element={<VenueSelection />} />
             <Route path="/venueBooking/:venueId" element={<VenueBooking />} />
