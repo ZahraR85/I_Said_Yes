@@ -4,7 +4,7 @@ import Music from "../models/music.js";
 import Photography from "../models/photography.js";
 import Makeup from "../models/makeup.js";
 import Venue from '../models/venueSelection.js';
-import Catering from '../models/cateringSelection.js';
+import Catering from '../models/cateringUser.js';
 
 // Add or update service in the shopping card
 export const createOrUpdateShoppingCard = async (req, res) => {

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAppContext } from "../context/AppContext";
 
-const UserCatering = () => {
+const UserSelections = () => {
   const { userId } = useAppContext();
   const [userSelections, setUserSelections] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,8 +16,9 @@ const UserCatering = () => {
         }
 
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/cateringusers/${userId}`
+          `${import.meta.env.VITE_API_URL}/cateringselections/${userId}`
         );
+
         setUserSelections(response.data);
       } catch (err) {
         console.error("Error fetching user selections:", err);
@@ -51,14 +52,16 @@ const UserCatering = () => {
     return <p>No data available for this user.</p>;
   }
 
-  // Process the items array from the schema
-  const items = userSelections.items.map((item) => ({
-    // Here we use description as the name/label of the item.
-    name: item.description || "Item",
-    quantity: item.quantity,
-    price: item.price,
-    total: item.totalPrice,
-  }));
+  // Process the nested items into a flat structure
+  const items = userSelections.selectedItems.flatMap((category) =>
+    category.items.map((item) => ({
+      category: category.category,
+      name: item.ItemName,
+      quantity: item.quantity,
+      price: item.price,
+      total: item.price * item.quantity,
+    }))
+  );
 
   if (items.length === 0) {
     return <p>No items selected for this user.</p>;
@@ -71,15 +74,15 @@ const UserCatering = () => {
           <div key={index} className="text-xs font-bold">
             {item.quantity > 0 ? (
               <>
-                ✔ {item.name}:{" "}
+                ✔ {item.name} ({item.category}):{" "}
                 <span className="text-xs text-BgFont font-semibold">
-                  ${item.price} x {item.quantity}{" "}
+                  ${item.price} for {item.quantity} person{" "}
                   <span className="text-red-600">Total: ${item.total}</span>
                 </span>
               </>
             ) : (
               <>
-                ❌ {item.name}:{" "}
+                ❌ {item.name} ({item.category}):{" "}
                 <span className="text-xs text-BgFont">${item.price}</span>
               </>
             )}
@@ -100,4 +103,4 @@ const UserCatering = () => {
   );
 };
 
-export default UserCatering;
+export default UserSelections;
