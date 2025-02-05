@@ -18,7 +18,7 @@ const EditDesignItem = () => {
     category: "",
     imagePath: null,
   });
-  const { isAuthenticated, role } = useAppContext();
+  const { userId, isAuthenticated, role } = useAppContext();
   const navigate = useNavigate();
 
   // Ensure the user is an authenticated admin
@@ -76,10 +76,15 @@ const EditDesignItem = () => {
       updateData.append("description", formData.description);
       updateData.append("price", formData.price);
       updateData.append("category", formData.category);
+      updateData.append("userId", userId); // Ensure userId is sent
+      updateData.append(
+        "keepExistingImage",
+        formData.imagePath ? "false" : "true"
+      );
 
-      // Append image file only if a new one is selected
+      // Append image file if a new one is selected
       if (formData.imagePath) {
-        updateData.append("imagePath", formData.imagePath);
+        updateData.append("image", formData.imagePath);
       }
 
       await axios.put(
