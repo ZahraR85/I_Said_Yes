@@ -48,7 +48,7 @@ const AdminDesign = () => {
   }, []);
 
   // Add a new design
-  const handleAddDesign = async (e) => {
+  const handleAddDesign = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -101,69 +101,67 @@ const AdminDesign = () => {
             Add Designing Items
           </h2>
           <div>
-            <form onSubmit={handleAddDesign} style={{ marginBottom: "40px" }}>
-              <input
-                type="text"
-                placeholder="Item Name"
-                value={itemName}
-                onChange={(e) => setItemName(e.target.value)}
-                className="w-full lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
-              />
-              <input
-                type="file"
-                onChange={(e) => setImagePath(e.target.files[0])}
-                className="w-full lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
-              />
-              <textarea
-                placeholder="Description of Variant and ..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
-              />
-              <input
-                type="number"
-                placeholder="Price"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className="w-full lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
-              />
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full text-BgFont lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
-              >
-                <option value="" disabled>
-                  Select a Category
+            <input
+              type="text"
+              placeholder="Item Name"
+              value={itemName}
+              onChange={(e) => setItemName(e.target.value)}
+              className="w-full lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
+            />
+            <input
+              type="file"
+              onChange={(e) => setImagePath(e.target.files[0])}
+              className="w-full lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
+            />
+            <textarea
+              placeholder="Description of Variant and ..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
+            />
+            <input
+              type="number"
+              placeholder="Price"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              className="w-full lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
+            />
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full text-BgFont lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
+            >
+              <option value="" disabled>
+                Select a Category
+              </option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
                 </option>
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="submit"
-                className="bg-BgPinkMiddle text-BgFont text-sm lg:text-lg font-bold hover:bg-BgPinkDark lg:hover:text-xl hover:text-lg w-full lg:p-4 p-2 rounded"
-              >
-                Add Design
-              </button>
-            </form>
+              ))}
+            </select>
+            <button
+              onClick={handleAddDesign}
+              className="bg-BgPinkMiddle text-BgFont text-sm lg:text-lg font-bold hover:bg-BgPinkDark lg:hover:text-xl hover:text-lg w-full lg:p-4 p-2 rounded"
+            >
+              Add Design
+            </button>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-BgFont ">
-            {categories.map((cat) => (
-              <Link
-                to={`/Admin/AdminDesign/category/${cat}`}
-                key={cat}
-                className="bg-white shadow-md p-4 rounded-lg border-4 border-BgPinkDark cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-primary transition-all duration-300 ease-out"
-              >
-                <h3 className="text-xl text-BgFont font-bold mb-4">{cat}</h3>
-                <p className="text-sm text-BgFont">
-                  See & Manage all <span className="font-bold">{cat}</span>{" "}
-                  items by clicking here
-                </p>
-              </Link>
-            ))}
-          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-BgFont ">
+          {categories.map((cat) => (
+            <Link
+              to={`/Admin/AdminDesign/category/${cat}`}
+              key={cat}
+              className="bg-white shadow-md p-4 rounded-lg border-4 border-BgPinkDark cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-primary transition-all duration-300 ease-out"
+            >
+              <h3 className="text-xl text-BgFont font-bold mb-4">{cat}</h3>
+              <p className="text-sm text-BgFont">
+                See & Manage all <span className="font-bold">{cat}</span> items
+                by clicking here
+              </p>
+            </Link>
+          ))}
         </div>
       </div>
     </div>

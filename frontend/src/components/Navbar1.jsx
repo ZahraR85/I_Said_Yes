@@ -272,6 +272,12 @@ const Navbar1 = () => {
                   >
                     Music Management
                   </Link>
+                  <Link
+                    to="/AdminMusicOption"
+                    className="text-BgFont hover:underline"
+                  >
+                    Design Management
+                  </Link>
                 </div>
               )}
             </div>
