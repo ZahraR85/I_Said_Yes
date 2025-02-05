@@ -181,7 +181,7 @@ const Navbar1 = () => {
             <Link to="/photography">Photography</Link>
           </li>
           <li className="hover:underline">
-            <Link to="/Makeup">Makeup, Wedding Dress</Link>
+            <Link to="/Makeup">Makeup for Bride</Link>
           </li>
           <li className="hover:underline">
             <Link to="/Musics">Music Band</Link>
@@ -231,7 +231,7 @@ const Navbar1 = () => {
                 Photography
               </Link>
               <Link to="/Makeup" className="text-BgFont hover:underline">
-                Makeup, Wedding Dress
+                Makeup for Bride
               </Link>
               <Link to="/Musics" className="text-BgFont hover:underline">
                 Music Band
