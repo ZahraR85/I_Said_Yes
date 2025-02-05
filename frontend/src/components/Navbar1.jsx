@@ -150,6 +150,14 @@ const Navbar1 = () => {
                       Music Management
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      to="/Admin/Designing"
+                      className="hover:underline hover:bg-BgKhaki p-2 rounded-md"
+                    >
+                      Design Management
+                    </Link>
+                  </li>
                 </ul>
               </div>
             </li>
