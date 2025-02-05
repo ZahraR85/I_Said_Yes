@@ -46,23 +46,38 @@ const CategoryItems = () => {
   }, [category]);
 
   const handleDeleteItem = async (id) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("No token found in localStorage");
-      }
+    toast.warn(
+      <div>
+        <p>Are you sure you want to delete this item?</p>
+        <button
+          onClick={async () => {
+            try {
+              const token = localStorage.getItem("token");
+              if (!token) throw new Error("No token found");
 
-      await axios.delete(`${import.meta.env.VITE_API_URL}/caterings/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+              await axios.delete(
+                `${import.meta.env.VITE_API_URL}/caterings/${id}`,
+                {
+                  headers: { Authorization: `Bearer ${token}` },
+                }
+              );
 
-      // Refresh items after deletion
-      setItems((prevItems) => prevItems.filter((item) => item._id !== id));
-    } catch (error) {
-      console.error("Error deleting item:", error);
-    }
+              setItems((prevItems) =>
+                prevItems.filter((item) => item._id !== id)
+              );
+              toast.success("Item deleted successfully!");
+            } catch (error) {
+              console.error("Error deleting item:", error);
+              toast.error("Failed to delete item.");
+            }
+          }}
+          className="bg-red-500 text-white px-4 py-2 rounded mt-2"
+        >
+          Yes, Delete
+        </button>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   // Pagination logic

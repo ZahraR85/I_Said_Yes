@@ -51,23 +51,41 @@ const ShoppingCard = () => {
 
   // Remove a service from the shopping card
   const removeService = async (serviceName) => {
-    try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/shoppingcards`, {
-        data: { userID: userId, serviceName },
-      });
+    toast.warn(
+      <div>
+        <p>Are you sure you want to delete this item?</p>
+        <button
+          onClick={async () => {
+            try {
+              await axios.delete(
+                `${import.meta.env.VITE_API_URL}/shoppingcards`,
+                {
+                  data: { userID: userId, serviceName },
+                }
+              );
 
-      // Update the state locally
-      const updatedCard = shoppingCard.filter(
-        (item) => item.serviceName !== serviceName
-      );
-      setShoppingCard(updatedCard);
-      setTotalPrice(updatedCard.reduce((sum, item) => sum + item.price, 0));
+              // Update the state locally
+              const updatedCard = shoppingCard.filter(
+                (item) => item.serviceName !== serviceName
+              );
+              setShoppingCard(updatedCard);
+              setTotalPrice(
+                updatedCard.reduce((sum, item) => sum + item.price, 0)
+              );
 
-      toast.success("Service removed completely!");
-    } catch (error) {
-      console.error("Failed to remove service:", error);
-      toast.error("Failed to remove service!");
-    }
+              toast.success("Service removed completely!");
+            } catch (error) {
+              console.error("Failed to remove service:", error);
+              toast.error("Failed to remove service!");
+            }
+          }}
+          className="bg-red-500 text-white px-4 py-2 rounded mt-2"
+        >
+          Yes, Delete
+        </button>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   // Handle checkout (Stripe)

@@ -1,7 +1,14 @@
 /* eslint-disable react/prop-types */
-import VenueCard from './VenueCard';
+import VenueCard from "./VenueCard";
 
-const VenueList = ({ venues, onEdit, onDelete, currentPage, totalPages, handlePageChange }) => {
+const VenueList = ({
+  venues,
+  onEdit,
+  onDelete,
+  currentPage,
+  totalPages,
+  handlePageChange,
+}) => {
   return (
     <div className="min-h-screen bg-cover bg-center p-5 lg:p-10 bg-customBg1">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -19,7 +26,11 @@ const VenueList = ({ venues, onEdit, onDelete, currentPage, totalPages, handlePa
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`px-4 py-2 rounded ${currentPage === 1 ? 'bg-gray-300' : 'bg-BgPinkMiddle hover:bg-BgPinkDark text-white'}`}
+          className={`px-4 py-2 rounded ${
+            currentPage === 1
+              ? "bg-gray-300"
+              : "bg-BgPinkMiddle hover:bg-BgPinkDark text-white"
+          }`}
         >
           Previous
         </button>
@@ -29,7 +40,11 @@ const VenueList = ({ venues, onEdit, onDelete, currentPage, totalPages, handlePa
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`px-4 py-2 rounded ${currentPage === totalPages ? 'bg-gray-300' : 'bg-BgPinkMiddle hover:bg-BgPinkDark text-white'}`}
+          className={`px-4 py-2 rounded ${
+            currentPage === totalPages
+              ? "bg-gray-300"
+              : "bg-BgPinkMiddle hover:bg-BgPinkDark text-white"
+          }`}
         >
           Next
         </button>

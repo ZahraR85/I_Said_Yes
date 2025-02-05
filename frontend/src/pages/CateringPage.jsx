@@ -103,40 +103,55 @@ const CateringPage = () => {
   };
   // Delete row from the List Table
   const handleDeleteRow = async (index) => {
-    const itemToDelete = cart[index];
-    console.log("Item to delete:", itemToDelete);
+    toast.warn(
+      <div>
+        <p>Are you sure you want to delete this item?</p>
+        <button
+          onClick={async () => {
+            const itemToDelete = cart[index];
+            console.log("Item to delete:", itemToDelete);
 
-    if (!itemToDelete || !itemToDelete._id) {
-      toast.error("Invalid item. No _id found.");
-      return;
-    }
+            if (!itemToDelete || !itemToDelete._id) {
+              toast.error("Invalid item. No _id found.");
+              return;
+            }
 
-    const cateringItemId = itemToDelete._id;
-    console.log("Converted cateringItemId:", cateringItemId);
+            const cateringItemId = itemToDelete._id;
+            console.log("Converted cateringItemId:", cateringItemId);
 
-    const updatedCart = [...cart];
-    updatedCart.splice(index, 1);
+            const updatedCart = [...cart];
+            updatedCart.splice(index, 1);
 
-    try {
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_API_URL
-        }/cateringselections/${userId}/${cateringItemId}`,
-        { method: "DELETE" }
-      );
-      if (response.ok) {
-        setCart(updatedCart);
-        toast.success("Item removed successfully.");
-      } else {
-        const errorData = await response.json();
-        toast.error(
-          `Failed to delete item: ${errorData.message || "Unknown error"}`
-        );
-      }
-    } catch (error) {
-      console.error("Error deleting item:", error);
-      toast.error("Error deleting item.");
-    }
+            try {
+              const response = await fetch(
+                `${
+                  import.meta.env.VITE_API_URL
+                }/cateringselections/${userId}/${cateringItemId}`,
+                { method: "DELETE" }
+              );
+              if (response.ok) {
+                setCart(updatedCart);
+                toast.success("Item removed successfully.");
+              } else {
+                const errorData = await response.json();
+                toast.error(
+                  `Failed to delete item: ${
+                    errorData.message || "Unknown error"
+                  }`
+                );
+              }
+            } catch (error) {
+              console.error("Error deleting item:", error);
+              toast.error("Error deleting item.");
+            }
+          }}
+          className="bg-red-500 text-white px-4 py-2 rounded mt-2"
+        >
+          Yes, Delete
+        </button>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   const handleAddToCart = (item) => {

@@ -274,7 +274,7 @@ const VenueForm = ({ venue, onCancel }) => {
             onChange={handleFileChange}
             className="border mx-2 p-2 text-sm lg:text-lg rounded w-full text-BgFont border-BgPinkDark focus:outline-none focus:ring focus:ring-BgPinkDark"
           />
-          <div className="flex flex-wrap gap-2 mt-2">
+          <div className="flex flex-wrap gap-2 lg:mt-2 mt-1">
             {newImageFiles.map((file, index) => (
               <div key={index} className="relative">
                 <img

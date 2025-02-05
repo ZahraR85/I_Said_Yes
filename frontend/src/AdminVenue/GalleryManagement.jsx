@@ -145,19 +145,35 @@ const GalleryManagement = () => {
   };
 
   const handleDeleteImage = async (id) => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.delete(`${import.meta.env.VITE_API_URL}/galleries/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      fetchImages(); // Reload images after deleting
-      toast.success("Image deleted successfully");
-    } catch (error) {
-      console.error("Error deleting image:", error);
-      toast.alert("Failed to delete image");
-    }
+    toast.warn(
+      <div>
+        <p>Are you sure you want to delete this item?</p>
+        <button
+          onClick={async () => {
+            try {
+              const token = localStorage.getItem("token");
+              await axios.delete(
+                `${import.meta.env.VITE_API_URL}/galleries/${id}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+              fetchImages(); // Reload images after deleting
+              toast.success("Image deleted successfully");
+            } catch (error) {
+              console.error("Error deleting image:", error);
+              toast.alert("Failed to delete image");
+            }
+          }}
+          className="bg-red-500 text-white px-4 py-2 rounded mt-2"
+        >
+          Yes, Delete
+        </button>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   const handleEditClick = (image) => {

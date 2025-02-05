@@ -120,14 +120,29 @@ const MusicOptionsPage = () => {
 
   // Handle deleting a music option
   const handleDeleteOption = async (id) => {
-    try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/musicoptions/${id}`);
-      toast.success("Music option deleted successfully");
-      fetchMusicOptions(); // Refresh the list after deleting
-    } catch (error) {
-      console.error("Error deleting music option", error);
-      toast.alert("Failed to delete Music option");
-    }
+    toast.warn(
+      <div>
+        <p>Are you sure you want to delete this item?</p>
+        <button
+          onClick={async () => {
+            try {
+              await axios.delete(
+                `${import.meta.env.VITE_API_URL}/musicoptions/${id}`
+              );
+              toast.success("Music option deleted successfully");
+              fetchMusicOptions(); // Refresh the list after deleting
+            } catch (error) {
+              console.error("Error deleting music option", error);
+              toast.alert("Failed to delete Music option");
+            }
+          }}
+          className="bg-red-500 text-white px-4 py-2 rounded mt-2"
+        >
+          Yes, Delete
+        </button>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   return (

@@ -95,11 +95,11 @@ const AdminCatering = () => {
   ];
 
   return (
-    <div className="flex justify-center items-start pt-10 min-h-screen bg-[url('./images/cateringso2.jpg')] bg-cover bg-center">
+    <div className="flex justify-center items-start lg:pt-10 min-h-screen bg-[url('./images/cateringso2.jpg')] bg-cover bg-center">
       <ToastContainer />
       <div className="max-w-full sm:max-w-5xl sm:w-3/5 w-full text-center p-4 sm:p-8 bg-customBg1 shadow-lg rounded-lg space-y-5">
         <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-          <h2 className="text-BgFont text-2xl font-bold mb-4">
+          <h2 className="text-BgFont text-xl lg:text-2xl font-bold mb-4">
             Add Catering Items
           </h2>
           <input
@@ -145,11 +145,11 @@ const AdminCatering = () => {
             onClick={handleAddItem}
             className="bg-BgPinkMiddle text-BgFont text-sm lg:text-lg font-bold hover:bg-BgPinkDark lg:hover:text-xl hover:text-lg w-full lg:p-4 p-2 rounded"
           >
-            Add Item
+            Submit
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-BgFont ">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-BgFont ">
           {categories.map((cat) => (
             <Link
               to={`/Admin/AdminCatering/category/${cat}`}

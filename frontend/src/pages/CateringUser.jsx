@@ -322,60 +322,85 @@ const CateringUser = () => {
   };
 
   const handleRemoveItem = async (index, item) => {
-    if (!userId) {
-      console.error("User ID is not available");
-      return;
-    }
+    toast.warn(
+      <div>
+        <p>Are you sure you want to delete this item?</p>
+        <button
+          onClick={async () => {
+            if (!userId) {
+              console.error("User ID is not available");
+              return;
+            }
 
-    console.log("Deleting item with cateringItemId:", item.cateringItemId);
+            console.log(
+              "Deleting item with cateringItemId:",
+              item.cateringItemId
+            );
 
-    try {
-      // Send DELETE request with userId and cateringItemId
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
-          item.cateringItemId._id
-        }`
-      );
+            try {
+              // Send DELETE request with userId and cateringItemId
+              await axios.delete(
+                `${import.meta.env.VITE_API_URL}/cateringusers/${userId}/${
+                  item.cateringItemId._id
+                }`
+              );
 
-      // Remove the item from the selected items list in the frontend
-      setSelectedItems((prevItems) => prevItems.filter((_, i) => i !== index));
+              // Remove the item from the selected items list in the frontend
+              setSelectedItems((prevItems) =>
+                prevItems.filter((_, i) => i !== index)
+              );
 
-      // Remove the item from the selected items list in the frontend
-      const updatedItems = [...selectedItems];
-      updatedItems.splice(index, 1); // Remove the item from the list
-      setSelectedItems(updatedItems);
-      // Recalculate grand total after item removal
-      const grandTotal = updatedItems.reduce((total, item) => {
-        return (
-          total +
-          (item.cateringItemId?.price * item.quantity ||
-            item.price * item.quantity ||
-            0)
-        );
-      }, 0);
+              // Remove the item from the selected items list in the frontend
+              const updatedItems = [...selectedItems];
+              updatedItems.splice(index, 1); // Remove the item from the list
+              setSelectedItems(updatedItems);
+              // Recalculate grand total after item removal
+              const grandTotal = updatedItems.reduce((total, item) => {
+                return (
+                  total +
+                  (item.cateringItemId?.price * item.quantity ||
+                    item.price * item.quantity ||
+                    0)
+                );
+              }, 0);
 
-      const shoppingCartData = {
-        userID: userId,
-        serviceName: "Catering",
-        price: grandTotal,
-      };
+              const shoppingCartData = {
+                userID: userId,
+                serviceName: "Catering",
+                price: grandTotal,
+              };
 
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/shoppingcards`,
-        shoppingCartData,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+              await axios.post(
+                `${import.meta.env.VITE_API_URL}/shoppingcards`,
+                shoppingCartData,
+                {
+                  headers: { "Content-Type": "application/json" },
+                }
+              );
 
-      // Optional: Add to frontend shopping cart state
-      addToShoppingCard(shoppingCartData);
+              // Optional: Add to frontend shopping cart state
+              addToShoppingCard(shoppingCartData);
 
-      toast.success("Catering item removed successfully and cart updated!");
-    } catch (err) {
-      console.error("Error deleting item:", err.response?.data || err.message);
-      toast.error("Failed to remove catering item or update shopping cart.");
-    }
+              toast.success(
+                "Catering item removed successfully and cart updated!"
+              );
+            } catch (err) {
+              console.error(
+                "Error deleting item:",
+                err.response?.data || err.message
+              );
+              toast.error(
+                "Failed to remove catering item or update shopping cart."
+              );
+            }
+          }}
+          className="bg-red-500 text-white px-4 py-2 rounded mt-2"
+        >
+          Yes, Delete
+        </button>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   const handleCategoryChange = (e) => {
