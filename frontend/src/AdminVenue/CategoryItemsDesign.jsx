@@ -94,14 +94,13 @@ const CategoryItemsDesing = () => {
           >
             <img
               src={item.imagePath}
-              alt={item.ItemName}
+              alt={item.itemName}
               className="w-full h-48 object-cover rounded-md mb-2"
             />
             <div className="p-4">
               <h3 className="text-m lg:text-lg text-BgFont font-semibold">
-                {item.ItemName}
+                {item.itemName}
               </h3>
-              <p>{item.description}</p>
               <p className="text-lg text-red-500 font-bold">${item.price}</p>
               <button
                 onClick={() => navigate(`/Admin/AdminDesign/edit/${item._id}`)}

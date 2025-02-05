@@ -101,7 +101,6 @@ const CategoryItems = () => {
               <h3 className="text-m lg:text-lg text-BgFont font-semibold">
                 {item.ItemName}
               </h3>
-              <p>{item.description}</p>
               <p className="text-lg text-red-500 font-bold">${item.price}</p>
               <button
                 onClick={() =>
