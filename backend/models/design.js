@@ -17,9 +17,7 @@ const designSchema = new Schema(
       ],
     },
     designItemId: {
-      type: Schema.Types.ObjectId,
-      ref: 'Catering',
-      required: true,
+      type: String, unique: true,  default: function () { return this._id.toString(); } 
     },
     itemName: {
       type: String,

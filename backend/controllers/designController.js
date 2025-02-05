@@ -48,7 +48,7 @@ export const createDesign = async (req, res) => {
 };
 
 // Update an existing design
-export const updateDesign = async (req, res, next) => {
+export const updateDesign = async (req, res) => {
   try {
     const design = await Design.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -64,14 +64,41 @@ export const updateDesign = async (req, res, next) => {
 };
 
 // Delete a design
-export const deleteDesign = async (req, res, next) => {
+export const deleteDesign = async (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Access denied" });
+  }
   try {
     const design = await Design.findByIdAndDelete(req.params.id);
     if (!design) {
-      return res.status(404).json({ message: "Design not found" });
+      return res.status(404).json({ message: "Design item not found" });
     }
-    res.json({ message: "Design deleted successfully" });
+    res.json({ message: "Design item deleted successfully" });
   } catch (error) {
-    next(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+// Get all unique catering categories
+export const getDesigningCategories = async (req, res) => {
+  try {
+    const categories = await Design.distinct("category"); // Fetch unique categories
+    res.status(200).json(categories); // Return the list of categories
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    res.status(500).json({ message: "Failed to fetch categories", error });
+  }
+};
+// Get catering items by category
+export const getDesigningByCategory = async (req, res) => {
+  try {
+    const category = req.params.category;
+    const items = await Design.find({
+      category: { $regex: new RegExp(`^${category}$`, "i") },
+    });
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

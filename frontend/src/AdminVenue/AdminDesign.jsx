@@ -9,7 +9,7 @@ import "../App.css";
 // Define the categories available for designs
 const categories = ["Flowers", "Decoration", "Lighting", "Sound", "Fireworks"];
 
-const Designing = () => {
+const AdminDesign = () => {
   const [allItems, setAllItems] = useState([]); // All catering items
   const [itemName, setItemName] = useState("");
   const [imagePath, setImagePath] = useState(null);
@@ -152,7 +152,7 @@ const Designing = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-BgFont ">
             {categories.map((cat) => (
               <Link
-                to={`/Admin/AdminCatering/category/${cat}`}
+                to={`/Admin/AdminDesign/category/${cat}`}
                 key={cat}
                 className="bg-white shadow-md p-4 rounded-lg border-4 border-BgPinkDark cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-primary transition-all duration-300 ease-out"
               >
@@ -170,4 +170,4 @@ const Designing = () => {
   );
 };
 
-export default Designing;
+export default AdminDesign;

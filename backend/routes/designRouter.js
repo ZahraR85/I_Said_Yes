@@ -5,6 +5,8 @@ import {
   createDesign,
   updateDesign,
   deleteDesign,
+  getDesigningCategories,
+  getDesigningByCategory
 } from "../controllers/designController.js";
 import { verifyToken, adminOnly } from "../middleware/auth.js";
 import fileUploader from "../middleware/multer.js";
@@ -27,4 +29,9 @@ router.put("/:id", verifyToken, adminOnly, fileUploader.single("image"), cloudUp
 // Route to delete a design
 router.delete("/:id", verifyToken, adminOnly, deleteDesign);
 
+// Get design items by category
+router.get("/category/:category", getDesigningByCategory);
+
+// Get all unique design categories
+router.get("/categories", getDesigningCategories);
 export default router;
