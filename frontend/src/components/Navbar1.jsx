@@ -152,7 +152,7 @@ const Navbar1 = () => {
                   </li>
                   <li>
                     <Link
-                      to="/Admin/Designing"
+                      to="/Admin/AdminDesign"
                       className="hover:underline hover:bg-BgKhaki p-2 rounded-md"
                     >
                       Design Management
@@ -229,7 +229,7 @@ const Navbar1 = () => {
               >
                 Book your Venue
               </Link>
-              <Link to="/cateringPage" className="text-BgFont hover:underline">
+              <Link to="/cateringUser" className="text-BgFont hover:underline">
                 Catering
               </Link>
               {/*<Link to="/Reception" className="text-BgFont hover:underline">
@@ -273,7 +273,7 @@ const Navbar1 = () => {
                     Music Management
                   </Link>
                   <Link
-                    to="/AdminMusicOption"
+                    to="/Admin/AdminDesign"
                     className="text-BgFont hover:underline"
                   >
                     Design Management
