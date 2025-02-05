@@ -5,23 +5,23 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Define the categories available for designs
+// Use predefined categories
 const categories = ["Flowers", "Decoration", "Lighting", "Sound", "Fireworks"];
 
 const EditDesignItem = () => {
   const { id } = useParams();
   const [design, setDesign] = useState(null);
-  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     itemName: "",
     description: "",
     price: "",
     category: "",
-    imagePath: "",
+    imagePath: null,
   });
-  const { userId, isAuthenticated, role } = useAppContext();
+  const { isAuthenticated, role } = useAppContext();
   const navigate = useNavigate();
 
+  // Ensure the user is an authenticated admin
   useEffect(() => {
     if (!isAuthenticated || role !== "admin") {
       toast.warn("You must sign in as Admin to access this page.");
@@ -31,6 +31,7 @@ const EditDesignItem = () => {
     }
   }, [isAuthenticated, role, navigate]);
 
+  // Fetch the design item by ID
   useEffect(() => {
     const fetchDesign = async () => {
       try {
@@ -38,7 +39,7 @@ const EditDesignItem = () => {
           `${import.meta.env.VITE_API_URL}/designs/${id}`
         );
         setDesign(response.data);
-        setFormData(response.data);
+        setFormData(response.data); // Pre-fill form with fetched data
       } catch (error) {
         console.error("Error fetching design:", error);
       }
@@ -54,6 +55,13 @@ const EditDesignItem = () => {
     }));
   };
 
+  const handleFileChange = (e) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      imagePath: e.target.files[0], // Handle file input
+    }));
+  };
+
   const handleUpdateItem = async (e) => {
     e.preventDefault();
     try {
@@ -62,9 +70,21 @@ const EditDesignItem = () => {
         throw new Error("No token found in localStorage");
       }
 
+      // Use FormData for file upload
+      const updateData = new FormData();
+      updateData.append("itemName", formData.itemName);
+      updateData.append("description", formData.description);
+      updateData.append("price", formData.price);
+      updateData.append("category", formData.category);
+
+      // Append image file only if a new one is selected
+      if (formData.imagePath) {
+        updateData.append("imagePath", formData.imagePath);
+      }
+
       await axios.put(
         `${import.meta.env.VITE_API_URL}/designs/${id}`,
-        formData,
+        updateData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -73,15 +93,15 @@ const EditDesignItem = () => {
         }
       );
 
-      toast.success("Designing item updated successfully.");
-      navigate(-1);
+      toast.success("Design item updated successfully.");
+      navigate(-1); // Navigate back after successful update
     } catch (error) {
       console.error("Error updating item:", error);
       toast.error("Failed to update item.");
     }
   };
 
-  if (!design || !categories.length) return <div>Loading...</div>;
+  if (!design) return <div>Loading...</div>;
 
   return (
     <div className="flex justify-center items-start pt-10 min-h-screen bg-[url('./images/cateringso2.jpg')] bg-cover bg-center">
@@ -108,16 +128,7 @@ const EditDesignItem = () => {
           </div>
 
           <div className="mt-4">
-            <input
-              type="file"
-              name="imagePath"
-              onChange={(e) =>
-                setFormData((prevData) => ({
-                  ...prevData,
-                  imagePath: e.target.files[0],
-                }))
-              }
-            />
+            <input type="file" name="imagePath" onChange={handleFileChange} />
           </div>
 
           <div>
@@ -132,6 +143,7 @@ const EditDesignItem = () => {
               className="w-full mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium mb-1">Price</label>
             <input
@@ -144,21 +156,25 @@ const EditDesignItem = () => {
               required
             />
           </div>
+
           <div>
+            <label className="block text-sm font-medium mb-1">Category</label>
             <select
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="mb-4"
+              className="w-full mb-4 p-2 border border-BgPinkDark rounded"
+              required
             >
               <option value="">Select Category</option>
               {categories.map((category) => (
-                <option key={category._id} value={category._id}>
-                  {category.name}
+                <option key={category} value={category}>
+                  {category}
                 </option>
               ))}
             </select>
           </div>
+
           <button
             type="submit"
             className="bg-BgPinkMiddle text-BgFont text-sm lg:text-lg font-bold hover:bg-BgPinkDark lg:hover:text-xl hover:text-lg w-full lg:p-4 p-2 rounded"
