@@ -152,7 +152,7 @@ const Navbar1 = () => {
                   </li>
                   <li>
                     <Link
-                      to="/Admin/Designing"
+                      to="/Admin/AdminDesign"
                       className="hover:underline hover:bg-BgKhaki p-2 rounded-md"
                     >
                       Design Management

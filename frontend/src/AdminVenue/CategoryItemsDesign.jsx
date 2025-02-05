@@ -6,7 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../App.css";
 
-const CategoryItemsDesing = () => {
+const CategoryItemsDesign = () => {
   const { category } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated, role } = useAppContext();
@@ -152,4 +152,4 @@ const CategoryItemsDesing = () => {
   );
 };
 
-export default CategoryItemsDesing;
+export default CategoryItemsDesign;

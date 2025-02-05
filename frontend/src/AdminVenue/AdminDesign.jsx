@@ -10,7 +10,7 @@ import "../App.css";
 const categories = ["Flowers", "Decoration", "Lighting", "Sound", "Fireworks"];
 
 const AdminDesign = () => {
-  const [allItems, setAllItems] = useState([]); // All catering items
+  const [allItems, setAllItems] = useState([]);
   const [itemName, setItemName] = useState("");
   const [imagePath, setImagePath] = useState(null);
   const [description, setDescription] = useState("");
