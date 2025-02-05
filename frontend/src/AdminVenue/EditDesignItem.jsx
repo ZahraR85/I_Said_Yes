@@ -10,13 +10,15 @@ const categories = ["Flowers", "Decoration", "Lighting", "Sound", "Fireworks"];
 
 const EditDesignItem = () => {
   const { id } = useParams();
-  const [allItems, setAllItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [itemName, setItemName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
-  const [imagePath, setImagePath] = useState(null);
+  const [design, setDesign] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [formData, setFormData] = useState({
+    itemName: "",
+    description: "",
+    price: "",
+    category: "",
+    imagePath: "",
+  });
   const { userId, isAuthenticated, role } = useAppContext();
   const navigate = useNavigate();
 
@@ -30,27 +32,27 @@ const EditDesignItem = () => {
   }, [isAuthenticated, role, navigate]);
 
   useEffect(() => {
-    const fetchDesignItem = async () => {
+    const fetchDesign = async () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/designs/${id}`
         );
-        const data = response.data;
-        setAllItems(data);
-        setItemName(data.ItemName);
-        setDescription(data.VariantDescription);
-        setPrice(data.price);
-        setCategory(data.category);
+        setDesign(response.data);
+        setFormData(response.data);
       } catch (error) {
-        console.error("Error fetching item details:", error);
-        toast.error("Failed to fetch item details.");
-      } finally {
-        setLoading(false);
+        console.error("Error fetching design:", error);
       }
     };
-
-    fetchDesignItem();
+    fetchDesign();
   }, [id]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const handleUpdateItem = async (e) => {
     e.preventDefault();
@@ -59,15 +61,6 @@ const EditDesignItem = () => {
       if (!token) {
         throw new Error("No token found in localStorage");
       }
-
-      const formData = new FormData();
-      formData.append("userId", userId);
-      formData.append("itemName", itemName);
-      if (imagePath) formData.append("image", imagePath);
-      else formData.append("keepExistingImage", true);
-      formData.append("description", description);
-      formData.append("price", price);
-      formData.append("category", category);
 
       await axios.put(
         `${import.meta.env.VITE_API_URL}/designs/${id}`,
@@ -88,7 +81,7 @@ const EditDesignItem = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (!design || !categories.length) return <div>Loading...</div>;
 
   return (
     <div className="flex justify-center items-start pt-10 min-h-screen bg-[url('./images/cateringso2.jpg')] bg-cover bg-center">
@@ -105,37 +98,37 @@ const EditDesignItem = () => {
             <label className="block text-sm font-medium mb-1">Item Name</label>
             <input
               type="text"
-              value={itemName}
-              onChange={(e) => setItemName(e.target.value)}
+              name="itemName"
+              value={formData.itemName}
+              onChange={handleChange}
+              placeholder="Item Name"
               className="w-full mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
               required
             />
           </div>
-          {allItems?.image && (
-            <div className="mt-4">
-              <p>Current Image:</p>
-              <img
-                src={`${import.meta.env.VITE_API_URL}/${allItems.image}`}
-                alt={itemName}
-                className="h-20 mt-2 border"
-              />
-            </div>
-          )}
-          <div>
-            <label className="block text-sm font-medium mb-1">New Image</label>
+
+          <div className="mt-4">
             <input
               type="file"
-              onChange={(e) => setImagePath(e.target.files[0])}
-              className="w-full mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
+              name="imagePath"
+              onChange={(e) =>
+                setFormData((prevData) => ({
+                  ...prevData,
+                  imagePath: e.target.files[0],
+                }))
+              }
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium mb-1">
               Description
             </label>
             <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Description"
               className="w-full mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
             />
           </div>
@@ -143,26 +136,25 @@ const EditDesignItem = () => {
             <label className="block text-sm font-medium mb-1">Price</label>
             <input
               type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              placeholder="Price"
               className="w-full mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Category</label>
             <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full text-BgFont lg:mb-4 mb-2 lg:p-2 p-1 text-sm lg:text-m border border-BgPinkDark rounded focus:outline-none focus:ring focus:ring-BgPinkDark"
-              required
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="mb-4"
             >
-              <option value="" disabled>
-                Select a Category
-              </option>
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
+              <option value="">Select Category</option>
+              {categories.map((category) => (
+                <option key={category._id} value={category._id}>
+                  {category.name}
                 </option>
               ))}
             </select>
