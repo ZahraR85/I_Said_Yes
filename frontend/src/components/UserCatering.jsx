@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAppContext } from "../context/AppContext";
 
-const UserCatering = () => {
+const UserSelections = () => {
   const { userId } = useAppContext();
   const [userSelections, setUserSelections] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -52,9 +52,10 @@ const UserCatering = () => {
   }
 
   // Process the items array from the schema
+  // Here we expect the `cateringItemId` to be populated with the Catering document
   const items = userSelections.items.map((item) => ({
-    // Here we use description as the name/label of the item.
-    name: item.description || "Item",
+    // Use ItemName from the populated Catering document
+    name: item.cateringItemId?.ItemName || "Item",
     quantity: item.quantity,
     price: item.price,
     total: item.totalPrice,
@@ -100,4 +101,4 @@ const UserCatering = () => {
   );
 };
 
-export default UserCatering;
+export default UserSelections;
