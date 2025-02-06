@@ -5,6 +5,7 @@ import Photography from "../models/photography.js";
 import Makeup from "../models/makeup.js";
 import Venue from '../models/venueSelection.js';
 import Catering from '../models/cateringUser.js';
+import Design from '../models/designUser.js'
 
 // Add or update service in the shopping card
 export const createOrUpdateShoppingCard = async (req, res) => {
@@ -108,10 +109,14 @@ export const removeFromShoppingCard = async (req, res) => {
         model = Venue;
         query = { userId: userID }; // Handle lowercase userId specifically for Venue
         break;
-        case 'Catering':
-          model = Catering;
-          query = { userId: userID };  // Handle lowercase userId specifically for Venue
-          break;
+      case 'Catering':
+        model = Catering;
+        query = { userId: userID };  // Handle lowercase userId specifically for Venue
+        break;
+      case 'Designing':
+        model = Design;
+        query = { userId: userID };  // Handle lowercase userId specifically for Venue
+        break;
       default:
         return res.status(400).json({ message: 'Invalid serviceName provided.' });
     }
@@ -182,6 +187,7 @@ export const removeAllFromShoppingCard = async (req, res) => {
       { model: Makeup, query: { userID } },
       { model: Music, query: { userID } },
       { model: Catering, query: { userID } },
+      { model: Design, query: { userID } },
       { model: Photography, query: { userID } },
       { model: Venue, query: { userId: userID } } // Handle userId for Venue model
     ];

@@ -529,14 +529,14 @@ const DesignUser = () => {
           className="w-1/5 text-center p-2 text-sm lg:text-lg border border-BgPinkDark rounded"
         >
           <option value="All">All</option>
-          <option value="Flowers">Flowers</option>
-          <option value="Decoration">Decoration</option>
-          <option value="Lighting">Lighting</option>
-          <option value="Fireworks">Fireworks</option>
-          <option value="Sound">Sound</option>
+          <option value="flowers">Flowers</option>
+          <option value="decoration">Decoration</option>
+          <option value="lighting">Lighting</option>
+          <option value="fireworks">Fireworks</option>
+          <option value="sound">Sound</option>
         </select>
       </div>
-      {/* Catering Items Cards */}
+      {/* Design Items Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-BgFont text-center">
         {Array.isArray(currentItems) && currentItems.length > 0 ? (
           currentItems.map((item) => (
@@ -552,6 +552,7 @@ const DesignUser = () => {
               <h2 className="text-sm lg:text-lg font-bold">{item.itemName}</h2>
               <p className="text-sm lg:text-lg">{item.category}</p>
               <p className="text-sm lg:text-lg font-bold ">{item.price} €</p>
+              <p className="text-xs lg:text-m ">{item.description} </p>
               <button
                 onClick={() => handleAddItem(item)}
                 className="lg:m-2 lg:p-2 m-1 py-1 px-2 text-sm lg:text-lg lg:font-bold font-semibold bg-BgPinkMiddle hover:bg-BgPinkDark rounded"

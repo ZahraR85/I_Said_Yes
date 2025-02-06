@@ -9,7 +9,7 @@ export const getDesignUser = async (req, res) => {
     const designUser = await DesignUser.findOne({ userId })
       .populate({
         path: "items.designItemId",  // Populate the designItemId field
-        select: "itemName design price"  
+        select: "itemName category price" 
       });
 
     if (!designUser) {
