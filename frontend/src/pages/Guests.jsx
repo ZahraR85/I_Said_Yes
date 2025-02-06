@@ -27,7 +27,7 @@ function Guest() {
       toast.error("You must sign in to access this page.");
       setTimeout(() => {
         navigate("/signin");
-      }, 4000);
+      }, 2000);
     }
   }, [isAuthenticated, navigate]);
 

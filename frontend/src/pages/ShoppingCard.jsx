@@ -24,6 +24,15 @@ const ShoppingCard = () => {
   const stripe = useStripe();
   const elements = useElements();
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      toast.warn("You must sign in to access this page.");
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000);
+    }
+  }, [isAuthenticated, navigate]);
+
   // Fetch shopping card items from the backend
   const fetchShoppingCard = async () => {
     if (!userId) {
