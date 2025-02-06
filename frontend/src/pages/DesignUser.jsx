@@ -107,7 +107,7 @@ const DesignUser = () => {
     );
 
     if (existingIndex !== -1) {
-      // Update item quantity and description
+      // Update item quantity and descriptionUser
       const updatedItems = [...selectedItems];
       updatedItems[existingIndex].quantity += 1;
       setSelectedItems(updatedItems);
@@ -127,7 +127,7 @@ const DesignUser = () => {
               {
                 designItemId: item._id,
                 quantity: updatedItems[existingIndex].quantity,
-                description: updatedItems[existingIndex].description,
+                descriptionUser: updatedItems[existingIndex].descriptionUser,
                 price: item.price,
               },
             ],
@@ -174,7 +174,7 @@ const DesignUser = () => {
         ...item,
         designItemId: item._id,
         quantity: 1,
-        description: "",
+        descriptionUser: "",
         price: item.price,
         totalPrice: totalPrice, // Set totalPrice
       };
@@ -243,7 +243,7 @@ const DesignUser = () => {
         `${import.meta.env.VITE_API_URL}/designusers/${userId}/${designItemId}`,
         {
           quantity: newQuantity,
-          description: updatedItems[index].description,
+          descriptionUser: updatedItems[index].descriptionUser,
           totalPrice, // Ensure totalPrice is sent
         }
       );
@@ -285,9 +285,9 @@ const DesignUser = () => {
     }
   };
 
-  const handleDescriptionChange = async (index, newDescription) => {
+  const handleDescriptionChange = async (index, newDescriptionUser) => {
     const updatedItems = [...selectedItems];
-    updatedItems[index].description = newDescription;
+    updatedItems[index].descriptionUser = newDescriptionUser;
     setSelectedItems(updatedItems);
 
     try {
@@ -303,12 +303,12 @@ const DesignUser = () => {
         `${import.meta.env.VITE_API_URL}/designusers/${userId}/${designItemId}`,
         {
           quantity: updatedItems[index].quantity, // Keep quantity unchanged
-          description: newDescription,
+          descriptionUser: newDescriptionUser,
         }
       );
     } catch (err) {
       console.error(
-        "Error updating item description:",
+        "Error updating item description:User",
         err.response?.data || err.message
       );
     }

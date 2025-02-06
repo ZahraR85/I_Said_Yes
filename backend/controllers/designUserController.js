@@ -74,35 +74,37 @@ export const addDesignItemToDesignUser = async (req, res) => {
 // Delete an item from the user's design order
 export const deleteDesignItemFromUser = async (req, res) => {
   const { userId, designItemId } = req.params;
-
   try {
     const designUser = await DesignUser.findOne({ userId });
     if (!designUser) {
-      return res.status(404).json({ message: "Designing order not found" });
+      return res.status(404).json({ message: "Design order not found" });
     }
 
+    // Convert `designItemId` to ObjectId
     designUser.items = designUser.items.filter(
-      (item) => item.designItemId.toString() !== designItemId
+      (item) => item.designItemId.toString() !== designItemId.toString()
     );
 
-    // Recalculate the grandTotal after deletion
+    // Recalculate the grandTotal
     designUser.grandTotal = designUser.items.reduce(
       (acc, item) => acc + item.totalPrice, 0
     );
 
     await designUser.save();
     res.status(200).json({ message: "Item removed successfully", designUser });
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
+  } catch (error) {
+    console.error("Error in deleteDesignItemFromUser:", error);
+    res.status(500).json({ message: error.message });
   }
 };
+
 
 
 
 // Update an existing item
 export const updateDesignUserItem = async (req, res) => {
   const { userId, designItemId } = req.params;
-  const { quantity, description } = req.body;
+  const { quantity, descriptionUser } = req.body;
 
   try {
     const designUser = await DesignUser.findOne({ userId });
@@ -111,29 +113,29 @@ export const updateDesignUserItem = async (req, res) => {
       return res.status(404).json({ message: "Design order not found" });
     }
 
-    // Find the item within the user's Design items
+    // Find the item in the array
     const itemIndex = designUser.items.findIndex(
-      (item) => item.designItemId.toString() === designItemId
+      (item) => item.designItemId.toString() === designItemId.toString()
     );
 
     if (itemIndex === -1) {
       return res.status(404).json({ message: "Item not found" });
     }
 
-    // Fetch the price from the Design table
+    // Fetch price from Design table
     const designItem = await Design.findById(designItemId);
-    if (!designItem || !designItem.price) {
-      return res.status(404).json({ message: "Design item not found or price missing" });
+    if (!designItem) {
+      return res.status(404).json({ message: "Design item not found" });
     }
 
-    const itemPrice = designItem.price; // Ensure we have a valid price
+    const itemPrice = designItem.price;
 
-    // Update quantity and description
+    // Update item
     designUser.items[itemIndex].quantity = quantity;
-    designUser.items[itemIndex].description = description;
+    designUser.items[itemIndex].descriptionUser = descriptionUser;
     designUser.items[itemIndex].totalPrice = quantity * itemPrice;
 
-    // Recalculate the grandTotal
+    // Recalculate grandTotal
     designUser.grandTotal = designUser.items.reduce(
       (total, item) => total + item.totalPrice,
       0
@@ -143,6 +145,7 @@ export const updateDesignUserItem = async (req, res) => {
 
     res.json({ message: "Item updated successfully", designUser });
   } catch (error) {
+    console.error("Error in updateDesignUserItem:", error);
     res.status(500).json({ message: error.message });
   }
 };
