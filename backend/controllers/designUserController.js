@@ -29,51 +29,47 @@ export const addDesignItemToDesignUser = async (req, res) => {
   const { userId, items } = req.body; 
 
   try {
-    // Find the Designing order for the user
     let designUser = await DesignUser.findOne({ userId });
 
     if (!designUser) {
-      // If no order exists for the user, create a new order with the items
-      designUser = new DesignUser({
-        userId,
-        items,
-        grandTotal: items.reduce((total, item) => total + item.price * item.quantity, 0), // Calculate grandTotal
-      });
+      designUser = new DesignUser({ userId, items });
     } else {
-      // Update existing items or add new items to the existing order
-      items.forEach(item => {
+      for (const item of items) {
         const existingItem = designUser.items.find(
-          (existingItem) => existingItem.designItemId.toString() === item.designItemId.toString()
+          (i) => i.designItemId.toString() === item.designItemId.toString()
         );
 
-        if (existingItem) {
-          // If the item exists, update its quantity and description
-          existingItem.quantity += item.quantity;
-          existingItem.description = item.description;
-        } else {
-          // If the item doesn't exist, add it to the items array
-          designUser.items.push(item);
+        const designItem = await Design.findById(item.designItemId);
+        if (!designItem) {
+          return res.status(404).json({ message: `Design item not found for ID: ${item.designItemId}` });
         }
-      });
 
-      // Recalculate the grandTotal
-      designUser.grandTotal = designUser.items.reduce(
-        (total, item) => total + item.price * item.quantity, 0
-      );
+        if (existingItem) {
+          existingItem.quantity += item.quantity;
+          existingItem.descriptionUser = item.descriptionUser;
+          existingItem.totalPrice = existingItem.quantity * designItem.price;
+        } else {
+          designUser.items.push({
+            designItemId: item.designItemId,
+            quantity: item.quantity,
+            price: designItem.price,
+            totalPrice: item.quantity * designItem.price,
+            descriptionUser: item.descriptionUser
+          });
+        }
+      }
+
+      designUser.grandTotal = designUser.items.reduce((total, item) => total + item.totalPrice, 0);
     }
 
-    // Save the updated Designing user order
     await designUser.save();
-
-    // Return success message and updated order
     res.status(200).json({ message: "Item added/updated successfully", designUser });
+
   } catch (error) {
-    // Handle errors
+    console.error("Error in addDesignItemToDesignUser:", error);
     res.status(500).json({ message: error.message });
   }
 };
-
-
 
 // Delete an item from the user's design order
 export const deleteDesignItemFromUser = async (req, res) => {

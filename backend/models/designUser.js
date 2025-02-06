@@ -56,7 +56,7 @@ DesignUserSchema.pre('validate', async function(next) {
       }
 
       const designItem = await Design.findById(item.designItemId);
-      if (!cateringItem) {
+      if (!designItem) {  
         return next(new Error(`Design item not found for ID: ${item.designItemId}`));
       }
 
