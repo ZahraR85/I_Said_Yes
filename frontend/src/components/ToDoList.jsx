@@ -6,7 +6,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 // Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const Todolist = ({ userId }) => {
+const ToDoList = ({ userId }) => {
   const [progressData, setProgressData] = useState(null);
   const [error, setError] = useState(null);
 
@@ -73,10 +73,10 @@ const Todolist = ({ userId }) => {
             <tbody>
               {Object.entries(modelProgress).map(([key, value], index) => (
                 <tr key={index}>
-                  <td className="lg:p-2 p-1/3 text-center">
+                  <td className="lg:p-1 p-1/3 text-center">
                     {value ? "✔️" : "❌"}
                   </td>
-                  <td className="p-1 lg:p-2 lg:text-lg text-xs">{key}</td>
+                  <td className="p-1 lg:text-lg text-xs">{key}</td>
                 </tr>
               ))}
             </tbody>
@@ -102,4 +102,4 @@ const Todolist = ({ userId }) => {
   );
 };
 
-export default Todolist;
+export default ToDoList;
