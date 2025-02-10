@@ -1,6 +1,7 @@
 import Guest from '../models/guest.js';
 import Makeup from '../models/makeup.js';
 import Catering from '../models/cateringSelection.js';
+import Designing from '../models/designUser.js';
 import Music from '../models/music.js';
 import Photography from '../models/photography.js';
 import Userinfo from '../models/userinfo.js';
@@ -10,6 +11,7 @@ const models = [
     { model: Guest, name: "Guest" },
     { model: Makeup, name: "Makeup" },
     { model: Catering, name: "Catering" },
+    { model: Designing, name: "Designing" },
     { model: Music, name: "Music" },
     { model: Photography, name: "Photography" },
     { model: Userinfo, name: "Detail Information" },
@@ -25,7 +27,7 @@ export async function getUserProgress(userID) {
     for (const { model, name } of models) {
         try {
             let exists;
-            if (name === "Venue" || name === "Catering") {
+            if (name === "Venue" || name === "Catering" || name === "Designing") {
                 // Query using 'userId' for Venue and Catering models
                 exists = await model.exists({ userId: userID });
             } else {
