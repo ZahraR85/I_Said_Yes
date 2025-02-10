@@ -226,6 +226,7 @@ const GalleryManagement = () => {
             </option>
             <option value="Venue">Venue</option>
             <option value="Makeup">Makeup</option>
+            <option value="Designing">Designing</option>
             <option value="Photography">Photography</option>
             <option value="Wedding-dress">Wedding-dress</option>
             <option value="Musician">Musician</option>

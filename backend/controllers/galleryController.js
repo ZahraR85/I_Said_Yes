@@ -15,7 +15,7 @@ export const getGalleryImages = async (req, res) => {
 export const addGalleryImage = async (req, res) => {
   const { userId, imageName, description, category } = req.body;
 
-  if (!imageName || !description || !category || !userId || !req.file) {
+  if (!imageName || !category || !userId || !req.file) {
     return res.status(400).json({ error: 'Missing required fields or image file' });
   }
 
