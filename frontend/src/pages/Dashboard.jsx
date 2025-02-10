@@ -93,7 +93,7 @@ const Dashboard = () => {
           <h2 className="text-lg lg:text-2xl font-bold text-BgFont text-center mb-2 lg:mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
             Music
           </h2>
-          <div className="flex justify-center items-center p-1 lg:p-4 rounded-3xl shadow bg-[#f5d0cb] w-[230px] h-[350px] lg:w-[300px] lg:h-[500px]">
+          <div className="flex justify-center items-center p-1 lg:p-4 rounded-3xl shadow bg-[#f5d0cb] w-[230px] h-[350px] lg:w-[300px] lg:h-[450px]">
             <Music userId={userId} />
           </div>
         </div>
@@ -101,7 +101,7 @@ const Dashboard = () => {
           <h2 className="text-xl lg:text-2xl font-bold text-BgFont text-center mb-2 lg:mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
             Catering
           </h2>
-          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#e8dfcf] bg-gradient-to-br w-[230px] h-[350px] lg:w-[300px] lg:h-[500px]">
+          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#e8dfcf] bg-gradient-to-br w-[230px] h-[350px] lg:w-[300px] lg:h-[450px]">
             <Catering userId={userId} />
           </div>
         </div>
@@ -109,7 +109,7 @@ const Dashboard = () => {
           <h2 className="text-xl lg:text-2xl font-bold text-BgFont text-center mb-2 lg:mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
             Designing
           </h2>
-          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#EEE9F8] bg-gradient-to-br w-[230px] h-[350px] lg:w-[300px] lg:h-[500px]">
+          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#EEE9F8] bg-gradient-to-br w-[230px] h-[350px] lg:w-[300px] lg:h-[450px]">
             <Designing userId={userId} />
           </div>
         </div>
@@ -117,7 +117,7 @@ const Dashboard = () => {
           <h2 className="text-xl lg:text-2xl font-bold text-BgFont text-center mb-2 lg:mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
             Makeup
           </h2>
-          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#fff2f4] w-[230px] h-[350px] lg:w-[300px] lg:h-[500px]">
+          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#fff2f4] w-[230px] h-[350px] lg:w-[300px] lg:h-[450px]">
             <MakeupUser userId={userId} />
           </div>
         </div>
@@ -125,7 +125,7 @@ const Dashboard = () => {
           <h2 className="text-xl lg:text-2xl font-bold text-BgFont text-center mb-2 lg:mb-4 bg-[#e8dfcf] p-2 rounded-full font-serif shadow">
             Photography
           </h2>
-          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#d5c0b5] w-[230px] h-[350px] lg:w-[300px] lg:h-[500px]">
+          <div className="flex justify-center items-center p-4 rounded-3xl shadow bg-[#d5c0b5] w-[230px] h-[350px] lg:w-[300px] lg:h-[450px]">
             <PhotographyUserSelection userId={userId} />
           </div>
         </div>
